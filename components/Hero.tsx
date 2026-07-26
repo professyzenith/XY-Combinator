@@ -422,7 +422,7 @@ export default function Hero({ visible }: { visible: boolean }) {
         justifyContent: "center",
         position: "relative",
         overflow: "hidden",
-        padding: "120px 24px 80px",
+        padding: "100px 24px 60px",
       }}
     >
       <ParticleField />
@@ -451,7 +451,7 @@ export default function Hero({ visible }: { visible: boolean }) {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          gap: 28,
+          gap: 22,
         }}
       >
         {/* Badge */}

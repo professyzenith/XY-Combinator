@@ -44,7 +44,11 @@
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  overscroll-behavior: none;
+}
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -54,6 +58,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   line-height: 1.6;
+  overscroll-behavior-y: auto;
 }
 
 /* ─── Font Utilities ─── */
@@ -361,7 +366,7 @@ body {
 }
 
 /* ─── Section spacing ─── */
-.section { padding: 100px 24px; }
+.section { padding: 72px 24px; }
 
 /* ─── Container ─── */
 .container {

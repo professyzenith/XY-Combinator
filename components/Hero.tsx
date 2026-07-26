@@ -585,13 +585,14 @@ export default function Hero({ visible }: { visible: boolean }) {
                 gap: 14,
               }}
             >
+              {/* Avatars */}
               <div style={{ display: "flex" }}>
                 {[
-                  { c: "#22c55e", l: "Z" },
+                  { c: "#22c55e", l: "J" },
                   { c: "#3b82f6", l: "A" },
                   { c: "#a855f7", l: "M" },
-                  { c: "#f59e0b", l: "S" },
-                  { c: "#ec4899", l: "L" },
+                  { c: "#f59e0b", l: "R" },
+                  { c: "#ec4899", l: "T" },
                 ].map(({ c, l }, i) => (
                   <div
                     key={l}
@@ -626,7 +627,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                     letterSpacing: "-0.01em",
                   }}
                 >
-                  12,000+ teams worldwide
+                  Early access · Free to join
                 </div>
                 <div
                   style={{
@@ -636,7 +637,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                     letterSpacing: "0.01em",
                   }}
                 >
-                  Notion · Raycast · Linear · Vercel · Figma
+                  No credit card · No download · No waiting room
                 </div>
               </div>
             </motion.div>

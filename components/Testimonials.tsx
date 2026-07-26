@@ -1,23 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
-const QUOTE = {
-  text: "We tried six video tools in 2024. XY Combinator is the only one where nobody complained — about call quality, about joining, about anything. It just works.",
-  name: "Sarah Chen",
-  role: "Head of Engineering",
-  company: "Notion",
-};
-
-const STATS = [
-  { v: "12k+", l: "Active teams" },
-  { v: "99.97%", l: "Uptime" },
-  { v: "< 50ms", l: "Avg latency" },
-  { v: "4.9", l: "User rating" },
+/* Real product specs — not fake business metrics */
+const SPECS = [
+  { v: "1080p", l: "Video quality" },
+  { v: "256-bit", l: "AES encrypted" },
+  { v: "Zero", l: "Downloads needed" },
+  { v: "Free", l: "To get started" },
 ];
 
 export default function Testimonials() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "200px" });
+
   return (
     <section
       id="about"
@@ -27,50 +24,66 @@ export default function Testimonials() {
       }}
     >
       <div className="container">
-        {/* Stats row */}
+        {/* Label */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 80,
+          }}
+        >
+          <span className="section-label">Product specs</span>
+          <div
+            style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }}
+          />
+        </div>
+
+        {/* Spec grid — honest product facts */}
         <motion.div
+          ref={ref}
           initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0, margin: "200px" }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: 1,
-            background: "rgba(255,255,255,0.06)",
+            background: "rgba(255,255,255,0.055)",
             borderRadius: 14,
             overflow: "hidden",
             marginBottom: 100,
           }}
         >
-          {STATS.map(({ v, l }) => (
+          {SPECS.map(({ v, l }) => (
             <div
               key={l}
               style={{
                 background: "#060810",
-                padding: "28px 24px",
+                padding: "32px 24px",
                 textAlign: "center",
               }}
             >
               <div
                 style={{
                   fontFamily: "'Outfit', sans-serif",
-                  fontSize: "2rem",
+                  fontSize: "2.2rem",
                   fontWeight: 900,
                   letterSpacing: "-0.05em",
                   color: "#f0f4ff",
                   lineHeight: 1,
-                  marginBottom: 7,
+                  marginBottom: 8,
                 }}
               >
                 {v}
               </div>
               <div
                 style={{
-                  fontSize: "0.72rem",
-                  color: "rgba(255,255,255,0.28)",
-                  letterSpacing: "0.06em",
+                  fontSize: "0.7rem",
+                  color: "rgba(255,255,255,0.25)",
+                  letterSpacing: "0.07em",
                   fontFamily: "ui-monospace, monospace",
+                  textTransform: "uppercase",
                 }}
               >
                 {l}
@@ -79,90 +92,90 @@ export default function Testimonials() {
           ))}
         </motion.div>
 
-        {/* Single large quote */}
+        {/* Editorial statement — no fake quotes */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0, margin: "200px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          style={{ maxWidth: 800 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          style={{ maxWidth: 780 }}
         >
-          {/* Serif quote mark */}
-          <div
-            style={{
-              fontFamily: "Georgia, 'Times New Roman', serif",
-              fontSize: "5rem",
-              lineHeight: 0.7,
-              color: "rgba(34,197,94,0.18)",
-              marginBottom: 28,
-              userSelect: "none",
-            }}
-          >
-            &ldquo;
-          </div>
-
-          <blockquote
+          {/* Section headline */}
+          <h2
             style={{
               fontFamily: "'Outfit', sans-serif",
-              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
-              lineHeight: 1.25,
+              fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
+              fontWeight: 900,
+              letterSpacing: "-0.06em",
+              lineHeight: 1.05,
               color: "#f0f4ff",
-              marginBottom: 36,
+              marginBottom: 24,
             }}
           >
-            {QUOTE.text}
-          </blockquote>
+            Built for the way
+            <br />
+            remote teams actually work.
+          </h2>
 
+          <p
+            style={{
+              fontSize: "1rem",
+              color: "rgba(255,255,255,0.35)",
+              lineHeight: 1.85,
+              maxWidth: 560,
+              letterSpacing: "-0.005em",
+              marginBottom: 48,
+            }}
+          >
+            Most meeting tools were designed around the office. XY Combinator
+            was built from scratch for distributed teams — where clarity,
+            speed, and simplicity aren&apos;t features, they&apos;re the
+            foundation.
+          </p>
+
+          {/* Honest feature list */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              paddingTop: 24,
-              borderTop: "1px solid rgba(255,255,255,0.06)",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "14px 40px",
             }}
           >
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, rgba(34,197,94,0.25), rgba(34,197,94,0.1))",
-                border: "1px solid rgba(34,197,94,0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 800,
-                fontSize: "0.9rem",
-                color: "rgba(34,197,94,0.8)",
-              }}
-            >
-              {QUOTE.name[0]}
-            </div>
-            <div>
-              <div
+            {[
+              "HD video that adapts to your connection",
+              "End-to-end encrypted on every call",
+              "No download required for guests",
+              "Persistent chat after the call ends",
+              "Share your screen in one click",
+              "Works in every major browser",
+            ].map((item) => (
+              <motion.div
+                key={item}
+                initial={{ opacity: 0, x: -8 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.25 }}
                 style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 10,
                   fontSize: "0.875rem",
-                  fontWeight: 600,
-                  color: "#f0f4ff",
-                  letterSpacing: "-0.01em",
+                  color: "rgba(255,255,255,0.45)",
+                  letterSpacing: "-0.005em",
+                  lineHeight: 1.5,
                 }}
               >
-                {QUOTE.name}
-              </div>
-              <div
-                style={{
-                  fontSize: "0.75rem",
-                  color: "rgba(255,255,255,0.3)",
-                  marginTop: 1,
-                }}
-              >
-                {QUOTE.role}, {QUOTE.company}
-              </div>
-            </div>
+                <div
+                  style={{
+                    width: 5,
+                    height: 5,
+                    borderRadius: "50%",
+                    background: "rgba(34,197,94,0.5)",
+                    marginTop: 6,
+                    flexShrink: 0,
+                  }}
+                />
+                {item}
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>

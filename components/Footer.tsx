@@ -31,9 +31,9 @@ export default function Footer() {
                 maxWidth: 900,
               }}
             >
-              Your team deserves
+              Set the standard.
               <br />
-              <span style={{ color: "rgba(34,197,94,0.8)" }}>better meetings.</span>
+              <span style={{ color: "rgba(34,197,94,0.85)" }}>Raise the bar.</span>
             </h2>
 
             <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>

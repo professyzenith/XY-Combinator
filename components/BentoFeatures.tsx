@@ -94,9 +94,9 @@ function AnimatedLink() {
 /* ─── Chat messages preview ─── */
 function ChatPreview() {
   const messages = [
-    { text: "Call was great 🔥", from: "A", color: "#3b82f6" },
-    { text: "Syncing the doc now", from: "M", color: "#a855f7" },
-    { text: "Ship it today 🚀", from: "Z", color: "#22c55e" },
+    { text: "Strong call today.", from: "A", color: "#3b82f6" },
+    { text: "Syncing the brief now", from: "M", color: "#a855f7" },
+    { text: "Shipping at 3pm.", from: "Z", color: "#22c55e" },
   ];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -260,10 +260,10 @@ export default function BentoFeatures() {
             color: "#f0f4ff",
             maxWidth: 600,
           }}>
-            Everything in one
+            Built for precision.
             <br />
-            <span style={{ background: "linear-gradient(135deg, #3b82f6 0%, #a855f7 60%, #ec4899 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-              seamless experience.
+            <span style={{ background: "linear-gradient(135deg, #3b82f6 0%, #a855f7 55%, #ec4899 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+              Engineered for speed.
             </span>
           </h2>
         </motion.div>

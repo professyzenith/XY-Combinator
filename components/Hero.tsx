@@ -404,7 +404,7 @@ export default function Hero({ visible }: { visible: boolean }) {
               transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 fontFamily: "'Outfit', sans-serif",
-                fontSize: "clamp(3rem, 5.5vw, 5.2rem)",
+                fontSize: "clamp(2.8rem, 5.2vw, 5rem)",
                 fontWeight: 900,
                 letterSpacing: "-0.065em",
                 lineHeight: 1.0,
@@ -412,17 +412,17 @@ export default function Hero({ visible }: { visible: boolean }) {
                 marginBottom: 26,
               }}
             >
-              Meetings that
+              The standard for
               <br />
               <span
                 style={{
-                  background: "linear-gradient(135deg, #ffffff 30%, #4ade80 100%)",
+                  background: "linear-gradient(135deg, #ffffff 20%, #4ade80 80%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
                 }}
               >
-                don&apos;t suck.
+                team communication.
               </span>
             </motion.h1>
 
@@ -440,7 +440,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                 letterSpacing: "-0.01em",
               }}
             >
-              HD video. Zero friction. End-to-end encrypted. A link your entire team will actually click.
+              HD video, end-to-end encrypted, zero setup. Your entire team joins in seconds &mdash; with nothing to install.
             </motion.p>
 
             {/* CTAs */}

@@ -1,107 +1,154 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
+/* ─── One massive statement per feature ─── */
 const FEATURES = [
   {
-    number: "01",
-    title: "Crystal-clear video, always.",
-    spec: "1080p · AI noise cancel",
-    body: "Adaptive HD video that stays sharp on any connection. AI noise cancellation removes background sound before it reaches your teammates.",
+    index: "01",
+    statement: "Crystal-clear video. Always.",
+    detail:
+      "1080p with adaptive bitrate. AI noise cancellation removes background sound before it reaches your teammates. Every call feels like the same room.",
+    metric: "1080p",
+    color: "#22c55e",
   },
   {
-    number: "02",
-    title: "Zero-knowledge encrypted.",
-    spec: "256-bit AES",
-    body: "End-to-end encryption on every meeting, by default. We cannot see your calls. Your data never leaves your control.",
+    index: "02",
+    statement: "No account. No download. Ever.",
+    detail:
+      "Send a link. They click. They're in. Your clients, investors, and guests join instantly — no friction, no install, no IT ticket required.",
+    metric: "< 5s to join",
+    color: "#3b82f6",
   },
   {
-    number: "03",
-    title: "Share anything. Instantly.",
-    spec: "Screen · Window · Tab",
-    body: "Share your full screen, a specific window, or a single browser tab. Real-time annotation is built in — no plugins, no extensions.",
+    index: "03",
+    statement: "End-to-end encrypted. Always.",
+    detail:
+      "Zero-knowledge 256-bit AES encryption on every meeting. We cannot read your calls. Neither can anyone else. Architecture, not policy.",
+    metric: "256-bit AES",
+    color: "#a855f7",
   },
   {
-    number: "04",
-    title: "Works in any browser.",
-    spec: "No downloads. Ever.",
-    body: "Click a link. Join a meeting. Zero plugins, zero setup. Your clients, guests, and executives can join in under five seconds.",
-  },
-  {
-    number: "05",
-    title: "Persistent team messaging.",
-    spec: "Context lives on",
-    body: "Chat, reactions, threads, and file sharing that outlive the meeting. Your conversation history never disappears when the call ends.",
-  },
-  {
-    number: "06",
-    title: "Built for real scale.",
-    spec: "< 50ms · 100 participants",
-    body: "Sub-50 millisecond latency. Up to 100 participants on any plan. No enterprise contract needed to run your company all-hands.",
+    index: "04",
+    statement: "Context that outlives the call.",
+    detail:
+      "Persistent chat, reactions, and shared files that live after the meeting ends. Your team's work doesn't disappear when you hang up.",
+    metric: "Forever",
+    color: "#f59e0b",
   },
 ];
 
-/* Mouse-follow spotlight row */
-function FeatureRow({
-  number,
-  title,
-  spec,
-  body,
+function FeatureStatement({
   index,
-  isLast,
-}: (typeof FEATURES)[0] & { index: number; isLast: boolean }) {
+  statement,
+  detail,
+  metric,
+  color,
+  i,
+}: (typeof FEATURES)[0] & { i: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "200px" });
-  const [spotlight, setSpotlight] = useState({ x: 50, y: 50, visible: false });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setSpotlight({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-      visible: true,
-    });
-  };
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => setSpotlight((p) => ({ ...p, visible: false }))}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6, delay: 0.1 }}
       style={{
         display: "grid",
-        gridTemplateColumns: "60px 1fr auto",
-        alignItems: "start",
-        gap: "0 32px",
-        padding: "36px 0",
-        borderBottom: isLast ? "none" : "1px solid rgba(255,255,255,0.06)",
+        gridTemplateColumns: "80px 1fr",
+        gap: "0 40px",
+        padding: "52px 0",
+        borderBottom: i < FEATURES.length - 1 ? "1px solid rgba(255,255,255,0.055)" : "none",
         position: "relative",
         cursor: "default",
-        overflow: "hidden",
-        transition: "background 0.2s ease",
       }}
     >
-      {/* Spotlight overlay */}
+      {/* Left: number column */}
+      <div style={{ paddingTop: 6 }}>
+        <div
+          style={{
+            fontFamily: "ui-monospace, monospace",
+            fontSize: "0.68rem",
+            color: "rgba(255,255,255,0.18)",
+            letterSpacing: "0.1em",
+          }}
+        >
+          {index}
+        </div>
+      </div>
+
+      {/* Right: content */}
       <div
         style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background: spotlight.visible
-            ? `radial-gradient(350px circle at ${spotlight.x}% ${spotlight.y}%, rgba(34,197,94,0.04) 0%, transparent 70%)`
-            : "transparent",
-          transition: spotlight.visible ? "none" : "background 0.4s ease",
-          zIndex: 0,
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
+          gap: "0 60px",
+          alignItems: "start",
         }}
-      />
+      >
+        {/* Text */}
+        <div>
+          <motion.h3
+            initial={{ opacity: 0, y: 18 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
+              fontWeight: 800,
+              letterSpacing: "-0.05em",
+              lineHeight: 1.1,
+              color: "#f0f4ff",
+              marginBottom: 18,
+            }}
+          >
+            {statement}
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontSize: "0.925rem",
+              color: "rgba(255,255,255,0.35)",
+              lineHeight: 1.8,
+              maxWidth: 560,
+              letterSpacing: "-0.005em",
+            }}
+          >
+            {detail}
+          </motion.p>
+        </div>
 
-      {/* Hover left accent line */}
+        {/* Metric — right column */}
+        <motion.div
+          initial={{ opacity: 0, x: 10 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          style={{ textAlign: "right", paddingTop: 4 }}
+        >
+          <div
+            style={{
+              fontFamily: "ui-monospace, monospace",
+              fontSize: "0.75rem",
+              color: color,
+              opacity: 0.6,
+              letterSpacing: "0.04em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {metric}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Hover glow — left edge */}
       <motion.div
-        animate={{ scaleY: spotlight.visible ? 1 : 0, opacity: spotlight.visible ? 1 : 0 }}
+        initial={{ scaleY: 0, opacity: 0 }}
+        whileHover={{ scaleY: 1, opacity: 1 }}
         transition={{ duration: 0.2 }}
         style={{
           position: "absolute",
@@ -109,153 +156,74 @@ function FeatureRow({
           top: 0,
           bottom: 0,
           width: 2,
-          background: "linear-gradient(180deg, rgba(34,197,94,0.6), rgba(34,197,94,0))",
+          background: `linear-gradient(180deg, ${color}60, transparent)`,
           transformOrigin: "top",
+          pointerEvents: "none",
         }}
       />
-
-      {/* Number */}
-      <div
-        className="font-display"
-        style={{
-          fontSize: "0.7rem",
-          fontWeight: 700,
-          color: "rgba(255,255,255,0.2)",
-          letterSpacing: "0.08em",
-          paddingTop: 3,
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        {number}
-      </div>
-
-      {/* Text */}
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <h3
-          className="font-display"
-          style={{
-            fontSize: "1.2rem",
-            fontWeight: 700,
-            color: "var(--text-100)",
-            letterSpacing: "-0.03em",
-            marginBottom: 10,
-            lineHeight: 1.3,
-          }}
-        >
-          {title}
-        </h3>
-        <p
-          style={{
-            fontSize: "0.9rem",
-            color: "var(--text-300)",
-            lineHeight: 1.75,
-            maxWidth: 560,
-          }}
-        >
-          {body}
-        </p>
-      </div>
-
-      {/* Spec — right side, monospace, subtle */}
-      <div
-        style={{
-          fontFamily: "ui-monospace, 'Cascadia Code', monospace",
-          fontSize: "0.72rem",
-          color: "rgba(34,197,94,0.5)",
-          letterSpacing: "0.04em",
-          textAlign: "right",
-          whiteSpace: "nowrap",
-          paddingTop: 3,
-          position: "relative",
-          zIndex: 1,
-          lineHeight: 1.6,
-        }}
-      >
-        {spec.split(" · ").map((s, i) => (
-          <div key={i}>{s}</div>
-        ))}
-      </div>
     </motion.div>
   );
 }
 
 export default function Features() {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "200px" });
+  const labelRef = useRef<HTMLDivElement>(null);
+  const labelInView = useInView(labelRef, { once: true, margin: "200px" });
 
   return (
-    <section id="features" style={{ padding: "100px 24px" }}>
+    <section id="features" style={{ padding: "120px 40px" }}>
       <div className="container">
-        {/* Top divider with label */}
-        <div
+        {/* Section label */}
+        <motion.div
+          ref={labelRef}
+          initial={{ opacity: 0 }}
+          animate={labelInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5 }}
           style={{
             display: "flex",
             alignItems: "center",
             gap: 16,
-            marginBottom: 72,
+            marginBottom: 80,
           }}
         >
-          <span
+          <span className="section-label">Platform</span>
+          <div
             style={{
-              fontFamily: "ui-monospace, 'Cascadia Code', monospace",
-              fontSize: "0.68rem",
-              color: "rgba(255,255,255,0.25)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
+              flex: 1,
+              height: 1,
+              background: "rgba(255,255,255,0.06)",
             }}
-          >
-            Platform capabilities
-          </span>
-          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
-        </div>
+          />
+        </motion.div>
 
-        {/* Section header */}
+        {/* Giant section headline */}
         <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          style={{ marginBottom: 64 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={labelInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          style={{ marginBottom: 80 }}
         >
           <h2
-            className="font-display"
             style={{
-              fontSize: "clamp(2.4rem, 5vw, 3.8rem)",
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "clamp(2.8rem, 6vw, 5rem)",
               fontWeight: 900,
-              letterSpacing: "-0.05em",
-              lineHeight: 1.05,
-              color: "var(--text-100)",
-              maxWidth: 640,
+              letterSpacing: "-0.06em",
+              lineHeight: 1.0,
+              color: "#f0f4ff",
+              maxWidth: 720,
             }}
           >
             Everything your team
             <br />
-            needs to do great work.
+            needs.{" "}
+            <span style={{ color: "rgba(255,255,255,0.2)" }}>Nothing it doesn&apos;t.</span>
           </h2>
-          <p
-            style={{
-              fontSize: "1rem",
-              color: "var(--text-400)",
-              marginTop: 18,
-              maxWidth: 480,
-              lineHeight: 1.75,
-            }}
-          >
-            Purpose-built for remote teams that care about the quality of their communication, not just the quantity of their meetings.
-          </p>
         </motion.div>
 
-        {/* Feature rows */}
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        {/* Feature statements */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.055)" }}>
           {FEATURES.map((f, i) => (
-            <FeatureRow
-              key={f.number}
-              {...f}
-              index={i}
-              isLast={i === FEATURES.length - 1}
-            />
+            <FeatureStatement key={f.index} {...f} i={i} />
           ))}
         </div>
       </div>

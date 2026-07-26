@@ -5,32 +5,32 @@ import { motion, useInView } from "framer-motion";
 
 const STEPS = [
   {
-    number: "01",
-    title: "Create your room.",
-    body: "One permanent link. No configuration. No waiting room. Share it in Slack, drop it in an email, or text it. It just works.",
-    footnote: "Ready in under 10 seconds",
+    n: "01",
+    head: "Create your room.",
+    body: "One permanent link. No configuration, no waiting room, no app install. Share it in Slack, in an email, or as a text.",
+    sub: "Ready in under 10 seconds",
   },
   {
-    number: "02",
-    title: "Invite your team.",
-    body: "Guests click the link and join. No account required. No 'please install the update' friction. Zero barrier to entry.",
-    footnote: "No download for guests",
+    n: "02",
+    head: "Invite anyone.",
+    body: "Guests click the link and they're in. No account. No download. Zero barrier. Your clients will thank you.",
+    sub: "No account needed for guests",
   },
   {
-    number: "03",
-    title: "Meet. Ship. Repeat.",
-    body: "HD video, real-time collaboration, persistent chat and file sharing that keep the context alive long after the call ends.",
-    footnote: "Everything stays, nothing is lost",
+    n: "03",
+    head: "Meet. Ship. Repeat.",
+    body: "HD video, real-time annotation, chat that outlives the call. Everything your team needs, nothing they don't.",
+    sub: "Context survives every call",
   },
 ];
 
-function StepItem({
-  number,
-  title,
+function Step({
+  n,
+  head,
   body,
-  footnote,
-  index,
-}: (typeof STEPS)[0] & { index: number }) {
+  sub,
+  i,
+}: (typeof STEPS)[0] & { i: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "200px" });
 
@@ -39,69 +39,67 @@ function StepItem({
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      style={{ display: "flex", flexDirection: "column", gap: 0 }}
+      transition={{ duration: 0.65, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Number */}
+      {/* Big faded number */}
       <div
-        className="font-display"
         style={{
-          fontSize: "4rem",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "5rem",
           fontWeight: 900,
-          letterSpacing: "-0.06em",
-          color: "rgba(255,255,255,0.06)",
+          letterSpacing: "-0.08em",
+          color: "rgba(255,255,255,0.05)",
           lineHeight: 1,
           marginBottom: 24,
           userSelect: "none",
         }}
       >
-        {number}
+        {n}
       </div>
 
-      {/* Thin top line */}
+      {/* Thin accent line */}
       <div
         style={{
-          width: "100%",
           height: 1,
-          background: `linear-gradient(90deg, rgba(34,197,94,${index === 0 ? "0.5" : "0.15"}) 0%, rgba(255,255,255,0.06) 100%)`,
+          background:
+            i === 0
+              ? "linear-gradient(90deg, rgba(34,197,94,0.45), rgba(255,255,255,0.06))"
+              : "rgba(255,255,255,0.07)",
           marginBottom: 28,
         }}
       />
 
-      {/* Title */}
       <h3
-        className="font-display"
         style={{
-          fontSize: "1.55rem",
+          fontFamily: "'Outfit', sans-serif",
+          fontSize: "1.5rem",
           fontWeight: 800,
-          color: "var(--text-100)",
           letterSpacing: "-0.04em",
           lineHeight: 1.2,
-          marginBottom: 16,
+          color: "#f0f4ff",
+          marginBottom: 14,
         }}
       >
-        {title}
+        {head}
       </h3>
 
-      {/* Body */}
       <p
         style={{
           fontSize: "0.9rem",
-          color: "var(--text-400)",
+          color: "rgba(255,255,255,0.35)",
           lineHeight: 1.8,
-          flex: 1,
-          marginBottom: 24,
+          letterSpacing: "-0.005em",
+          marginBottom: 20,
         }}
       >
         {body}
       </p>
 
-      {/* Footnote */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 8,
+          gap: 7,
         }}
       >
         <div
@@ -109,18 +107,18 @@ function StepItem({
             width: 5,
             height: 5,
             borderRadius: "50%",
-            background: "rgba(34,197,94,0.5)",
+            background: "rgba(34,197,94,0.45)",
           }}
         />
         <span
           style={{
-            fontFamily: "ui-monospace, 'Cascadia Code', monospace",
-            fontSize: "0.72rem",
-            color: "rgba(255,255,255,0.3)",
+            fontFamily: "ui-monospace, monospace",
+            fontSize: "0.68rem",
+            color: "rgba(255,255,255,0.22)",
             letterSpacing: "0.04em",
           }}
         >
-          {footnote}
+          {sub}
         </span>
       </div>
     </motion.div>
@@ -128,81 +126,77 @@ function StepItem({
 }
 
 export default function HowItWorks() {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const headerInView = useInView(headerRef, { once: true, margin: "200px" });
+  const labelRef = useRef<HTMLDivElement>(null);
+  const labelInView = useInView(labelRef, { once: true, margin: "200px" });
 
   return (
-    <section id="how-it-works" style={{ padding: "100px 24px" }}>
+    <section
+      id="how-it-works"
+      style={{
+        padding: "120px 40px",
+        borderTop: "1px solid rgba(255,255,255,0.055)",
+      }}
+    >
       <div className="container">
-        {/* Label + divider */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 72 }}>
-          <span
-            style={{
-              fontFamily: "ui-monospace, 'Cascadia Code', monospace",
-              fontSize: "0.68rem",
-              color: "rgba(255,255,255,0.25)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-            }}
-          >
-            How it works
-          </span>
-          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+        {/* Label */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 80,
+          }}
+        >
+          <span className="section-label">How it works</span>
+          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
         </div>
 
         {/* Header */}
         <motion.div
-          ref={headerRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          ref={labelRef}
+          initial={{ opacity: 0, y: 24 }}
+          animate={labelInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           style={{
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "space-between",
             gap: 32,
-            marginBottom: 72,
+            marginBottom: 80,
             flexWrap: "wrap",
           }}
         >
           <h2
-            className="font-display"
             style={{
-              fontSize: "clamp(2.4rem, 5vw, 3.8rem)",
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "clamp(2.5rem, 5.5vw, 4.5rem)",
               fontWeight: 900,
-              letterSpacing: "-0.05em",
-              lineHeight: 1.05,
-              color: "var(--text-100)",
-              maxWidth: 540,
+              letterSpacing: "-0.065em",
+              lineHeight: 1.0,
+              color: "#f0f4ff",
             }}
           >
             Up and running
             <br />
-            <span style={{ color: "rgba(34,197,94,0.85)" }}>in 60 seconds.</span>
+            <span style={{ color: "rgba(34,197,94,0.8)" }}>in 60 seconds.</span>
           </h2>
           <p
             style={{
-              fontSize: "0.925rem",
-              color: "var(--text-400)",
-              maxWidth: 320,
-              lineHeight: 1.75,
+              fontSize: "0.9rem",
+              color: "rgba(255,255,255,0.3)",
+              maxWidth: 280,
+              lineHeight: 1.8,
+              letterSpacing: "-0.005em",
             }}
           >
-            No IT setup. No enterprise contracts. No 47-step onboarding. Just a link.
+            No IT setup. No enterprise contracts. No 47-step onboarding.
           </p>
         </motion.div>
 
-        {/* Three columns */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 48,
-          }}
-        >
-          {STEPS.map((step, i) => (
-            <StepItem key={step.number} {...step} index={i} />
+        {/* Steps */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 48 }}>
+          {STEPS.map((s, i) => (
+            <Step key={s.n} {...s} i={i} />
           ))}
         </div>
       </div>

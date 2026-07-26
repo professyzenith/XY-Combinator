@@ -1,587 +1,686 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import Link from "next/link";
-import { motion, useInView } from "framer-motion";
-import gsap from "gsap";
-import { ArrowRight, Video, Shield, Zap } from "lucide-react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-/* ─── Animated gradient orbs ─── */
-function Orbs() {
+/* ─── Camera Feed ─── */
+function CameraFeed({
+  name,
+  initials,
+  color,
+  speaking,
+  muted = false,
+}: {
+  name: string;
+  initials: string;
+  color: string;
+  speaking: boolean;
+  muted?: boolean;
+}) {
   return (
-    <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
-      {/* Top left orb */}
-      <motion.div
-        animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.1, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          width: 700,
-          height: 700,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(34,197,94,0.09) 0%, transparent 70%)",
-          top: "-20%",
-          left: "-15%",
-          filter: "blur(40px)",
-        }}
-      />
-      {/* Bottom right orb */}
-      <motion.div
-        animate={{ x: [0, -50, 0], y: [0, 40, 0], scale: [1, 0.9, 1] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        style={{
-          position: "absolute",
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)",
-          bottom: "-20%",
-          right: "-10%",
-          filter: "blur(60px)",
-        }}
-      />
-      {/* Center subtle glow */}
+    <div
+      style={{
+        position: "relative",
+        borderRadius: 10,
+        overflow: "hidden",
+        aspectRatio: "16/9",
+        background: `linear-gradient(160deg, ${color}0d 0%, rgba(6,8,16,0.8) 100%)`,
+        border: speaking
+          ? `1.5px solid ${color}`
+          : "1px solid rgba(255,255,255,0.06)",
+        boxShadow: speaking
+          ? `0 0 0 3px ${color}20, inset 0 0 40px ${color}06`
+          : "inset 0 0 20px rgba(0,0,0,0.3)",
+      }}
+    >
+      {/* Ambient glow */}
       <div
         style={{
           position: "absolute",
-          width: 800,
-          height: 400,
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(34,197,94,0.04) 0%, transparent 70%)",
-          top: "30%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          filter: "blur(80px)",
+          inset: 0,
+          background: `radial-gradient(ellipse 80% 70% at 50% 30%, ${color}0c, transparent 60%)`,
+          pointerEvents: "none",
         }}
       />
+
+      {/* Avatar */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 42,
+          height: 42,
+          borderRadius: "50%",
+          background: `linear-gradient(135deg, ${color}30, ${color}12)`,
+          border: `1px solid ${color}35`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "'Outfit', sans-serif",
+          fontWeight: 800,
+          fontSize: "1rem",
+          color,
+        }}
+      >
+        {initials}
+      </div>
+
+      {/* Name tag */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 8,
+          left: 8,
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+        }}
+      >
+        <span
+          style={{
+            fontSize: "0.62rem",
+            color: "rgba(255,255,255,0.72)",
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(8px)",
+            padding: "2px 7px",
+            borderRadius: 4,
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 500,
+            letterSpacing: "0.01em",
+          }}
+        >
+          {name}
+        </span>
+        {muted && (
+          <span
+            style={{
+              fontSize: "0.58rem",
+              background: "rgba(239,68,68,0.15)",
+              color: "#ef4444",
+              padding: "2px 5px",
+              borderRadius: 4,
+            }}
+          >
+            muted
+          </span>
+        )}
+      </div>
+
+      {/* Speaking pulse */}
+      {speaking && (
+        <motion.div
+          animate={{ scale: [1, 1.4, 1], opacity: [0.9, 0.4, 0.9] }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: color,
+            boxShadow: `0 0 10px ${color}`,
+          }}
+        />
+      )}
     </div>
   );
 }
 
-/* ─── Particle canvas ─── */
-function ParticleField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+/* ─── Inline SVG Icons ─── */
+const MicIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z" />
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+    <line x1="12" y1="19" x2="12" y2="22" />
+  </svg>
+);
+const CamIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m22 8-6 4 6 4V8z" />
+    <rect x="2" y="6" width="14" height="12" rx="2" />
+  </svg>
+);
+const ShareIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="14" rx="2" />
+    <path d="m8 21 4-4 4 4" />
+    <path d="M12 17V13" />
+  </svg>
+);
+const ChatIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-
-    const init = () => {
-      particles.length = 0;
-      const count = Math.floor((canvas.width * canvas.height) / 18000);
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          size: Math.random() * 1.5 + 0.3,
-          opacity: Math.random() * 0.4 + 0.1,
-        });
-      }
-    };
-
-    const draw = () => {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(34, 197, 94, ${p.opacity})`;
-        ctx.fill();
-      });
-      animId = requestAnimationFrame(draw);
-    };
-
-    resize();
-    init();
-    draw();
-
-    const ro = new ResizeObserver(() => { resize(); init(); });
-    ro.observe(canvas);
-
-    return () => { cancelAnimationFrame(animId); ro.disconnect(); };
-  }, []);
-
+/* ─── Control Button ─── */
+function CtrlBtn({ children, label, danger = false }: {
+  children: React.ReactNode;
+  label: string;
+  danger?: boolean;
+}) {
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: 0.6 }}
-    />
-  );
-}
-
-/* ─── Stat item ─── */
-function Stat({ value, label, delay }: { value: string; label: string; delay: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
-      style={{ textAlign: "center" }}
-    >
-      <div
-        className="font-display"
-        style={{ fontSize: "2.2rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1 }}
-      >
-        {value}
-      </div>
-      <div style={{ fontSize: "0.8rem", color: "var(--text-300)", marginTop: 6, fontWeight: 500 }}>
-        {label}
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─── Meeting preview card ─── */
-function MeetingPreview() {
-  const participants = [
-    { name: "Zenith", color: "#22c55e", speaking: true },
-    { name: "Alex", color: "#3b82f6", speaking: false },
-    { name: "Maria", color: "#a855f7", speaking: false },
-    { name: "Sam", color: "#f59e0b", speaking: false },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+    <motion.button
+      whileHover={{ scale: 1.1, y: -1 }}
+      whileTap={{ scale: 0.9 }}
+      title={label}
       style={{
-        width: "100%",
-        maxWidth: 700,
-        margin: "0 auto",
-        position: "relative",
+        width: 36,
+        height: 36,
+        borderRadius: 9,
+        background: danger ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.06)",
+        border: `1px solid ${danger ? "rgba(239,68,68,0.25)" : "rgba(255,255,255,0.07)"}`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        color: danger ? "#ef4444" : "rgba(255,255,255,0.65)",
+        flexShrink: 0,
       }}
     >
-      {/* Glow behind card */}
+      {children}
+    </motion.button>
+  );
+}
+
+/* ─── Meeting Room UI ─── */
+function MeetingRoomUI() {
+  return (
+    <div
+      style={{
+        borderRadius: 16,
+        overflow: "hidden",
+        background: "#07091a",
+        border: "1px solid rgba(255,255,255,0.07)",
+        boxShadow:
+          "0 48px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04)",
+        width: "100%",
+        userSelect: "none",
+      }}
+    >
+      {/* Chrome */}
       <div
         style={{
-          position: "absolute",
-          inset: -40,
-          background: "radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-          filter: "blur(20px)",
-        }}
-      />
-
-      {/* Main card */}
-      <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          borderRadius: 20,
-          overflow: "hidden",
-          background: "var(--bg-card)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)",
-          position: "relative",
+          height: 44,
+          background: "#060814",
+          borderBottom: "1px solid rgba(255,255,255,0.055)",
+          display: "flex",
+          alignItems: "center",
+          padding: "0 14px",
+          gap: 0,
         }}
       >
-        {/* Top bar */}
-        <div
+        {/* Traffic lights */}
+        <div style={{ display: "flex", gap: 5, marginRight: 14 }}>
+          {["#ef4444", "#f59e0b", "#22c55e"].map((c, i) => (
+            <div
+              key={i}
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                background: c,
+                opacity: 0.7,
+              }}
+            />
+          ))}
+        </div>
+
+        <span
           style={{
-            padding: "14px 18px",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: "rgba(0,0,0,0.2)",
+            fontSize: "0.7rem",
+            color: "rgba(255,255,255,0.25)",
+            fontFamily: "ui-monospace, monospace",
+            letterSpacing: "0.02em",
+            flex: 1,
           }}
         >
-          <div style={{ display: "flex", gap: 6 }}>
-            {["#ff5f57", "#febc2e", "#28c840"].map((c, i) => (
-              <div key={i} style={{ width: 11, height: 11, borderRadius: "50%", background: c }} />
-            ))}
-          </div>
+          XY Combinator — Team Standup
+        </span>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <motion.div
+            style={{ display: "flex", alignItems: "center", gap: 5 }}
+          >
+            <motion.div
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.6, repeat: Infinity }}
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#22c55e",
+              }}
+            />
+            <span
+              style={{
+                fontSize: "0.62rem",
+                color: "rgba(34,197,94,0.75)",
+                fontFamily: "monospace",
+                fontWeight: 600,
+              }}
+            >
+              LIVE
+            </span>
+          </motion.div>
           <div
             style={{
-              flex: 1,
-              height: 24,
-              background: "rgba(255,255,255,0.04)",
-              borderRadius: 6,
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: 10,
-              fontSize: "0.7rem",
-              color: "var(--text-400)",
+              padding: "2px 8px",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.05)",
+              fontSize: "0.62rem",
+              color: "rgba(255,255,255,0.3)",
               fontFamily: "monospace",
             }}
           >
-            xycombinator.app/room/team-standup
+            04:32
           </div>
+        </div>
+      </div>
+
+      {/* Video grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 5,
+          background: "#050810",
+          padding: "8px 8px 0",
+        }}
+      >
+        <CameraFeed name="Zenith" initials="Z" color="#22c55e" speaking={true} />
+        <CameraFeed name="Alex" initials="A" color="#3b82f6" speaking={false} />
+        <CameraFeed name="Maria" initials="M" color="#a855f7" speaking={false} muted={true} />
+        <CameraFeed name="Sam" initials="S" color="#f59e0b" speaking={false} />
+      </div>
+
+      {/* Controls */}
+      <div
+        style={{
+          height: 58,
+          background: "#060814",
+          borderTop: "1px solid rgba(255,255,255,0.055)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 14px",
+          marginTop: 5,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "ui-monospace, monospace",
+            fontSize: "0.65rem",
+            color: "rgba(255,255,255,0.2)",
+          }}
+        >
+          4 participants
+        </div>
+
+        <div style={{ display: "flex", gap: 7, alignItems: "center" }}>
+          <CtrlBtn label="Mute">
+            <MicIcon />
+          </CtrlBtn>
+          <CtrlBtn label="Camera">
+            <CamIcon />
+          </CtrlBtn>
+          <CtrlBtn label="Share screen">
+            <ShareIcon />
+          </CtrlBtn>
+          <CtrlBtn label="Chat">
+            <ChatIcon />
+          </CtrlBtn>
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              background: "rgba(34,197,94,0.1)",
-              border: "1px solid rgba(34,197,94,0.2)",
-              borderRadius: 6,
-              padding: "3px 10px",
-              fontSize: "0.7rem",
-              color: "#4ade80",
-              fontWeight: 600,
+              width: 1,
+              height: 22,
+              background: "rgba(255,255,255,0.07)",
+              margin: "0 2px",
             }}
-          >
-            <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", animation: "pulse-green 1.5s infinite" }} />
-            LIVE
-          </div>
-        </div>
-
-        {/* Video grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 4,
-            padding: 4,
-            background: "rgba(0,0,0,0.3)",
-          }}
-        >
-          {participants.map((p, i) => (
-            <motion.div
-              key={p.name}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 + i * 0.1 }}
-              style={{
-                borderRadius: 12,
-                padding: "24px 16px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 8,
-                background: `linear-gradient(145deg, ${p.color}14, ${p.color}06)`,
-                border: p.speaking
-                  ? `1.5px solid ${p.color}80`
-                  : "1.5px solid rgba(255,255,255,0.05)",
-                position: "relative",
-                minHeight: 90,
-                justifyContent: "center",
-                boxShadow: p.speaking ? `0 0 20px ${p.color}20` : "none",
-                transition: "all 0.3s ease",
-              }}
-            >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  background: `linear-gradient(135deg, ${p.color}, ${p.color}99)`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  color: "#fff",
-                  boxShadow: `0 4px 16px ${p.color}40`,
-                }}
-              >
-                {p.name[0]}
-              </div>
-              <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>
-                {p.name}
-              </span>
-              {p.speaking && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 8,
-                    right: 8,
-                    width: 8,
-                    height: 8,
-                    borderRadius: "50%",
-                    background: "#22c55e",
-                    animation: "pulse-green 1.2s ease-in-out infinite",
-                  }}
-                />
-              )}
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Controls */}
-        <div
-          style={{
-            padding: "14px 18px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            borderTop: "1px solid rgba(255,255,255,0.05)",
-            background: "rgba(0,0,0,0.2)",
-          }}
-        >
-          {[
-            { emoji: "🎤", active: true },
-            { emoji: "📹", active: true },
-            { emoji: "🖥️", active: false },
-            { emoji: "💬", active: false },
-            { emoji: "👥", active: false },
-          ].map(({ emoji, active }, i) => (
-            <motion.button
-              key={i}
-              whileHover={{ scale: 1.18, y: -2 }}
-              whileTap={{ scale: 0.88 }}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 10,
-                background: active ? "rgba(34,197,94,0.12)" : "rgba(255,255,255,0.05)",
-                border: active ? "1px solid rgba(34,197,94,0.25)" : "1px solid rgba(255,255,255,0.06)",
-                cursor: "pointer",
-                fontSize: "1rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {emoji}
-            </motion.button>
-          ))}
+          />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             style={{
-              padding: "9px 18px",
-              borderRadius: 10,
+              padding: "0 16px",
+              height: 32,
+              borderRadius: 8,
               background: "rgba(239,68,68,0.12)",
               border: "1px solid rgba(239,68,68,0.25)",
               color: "#ef4444",
-              fontSize: "0.78rem",
-              fontWeight: 700,
+              fontSize: "0.72rem",
+              fontWeight: 600,
               cursor: "pointer",
-              marginLeft: 8,
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "-0.01em",
             }}
           >
             End call
           </motion.button>
         </div>
-      </motion.div>
-    </motion.div>
+
+        <div
+          style={{
+            fontFamily: "ui-monospace, monospace",
+            fontSize: "0.62rem",
+            color: "rgba(255,255,255,0.18)",
+          }}
+        >
+          e2e encrypted
+        </div>
+      </div>
+    </div>
   );
 }
 
+/* ─── Hero ─── */
 export default function Hero({ visible }: { visible: boolean }) {
-  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!visible || !headlineRef.current) return;
-    const letters = headlineRef.current.querySelectorAll(".char");
-    gsap.fromTo(
-      letters,
-      { y: 60, opacity: 0, rotateX: -30 },
-      {
-        y: 0,
-        opacity: 1,
-        rotateX: 0,
-        stagger: 0.02,
-        duration: 0.8,
-        ease: "power3.out",
-        delay: 0.2,
-      }
-    );
-  }, [visible]);
+  const rawX = useMotionValue(0.5);
+  const rawY = useMotionValue(0.5);
+  const smoothX = useSpring(rawX, { stiffness: 50, damping: 22 });
+  const smoothY = useSpring(rawY, { stiffness: 50, damping: 22 });
 
-  if (!visible) return null;
+  const uiX        = useTransform(smoothX, [0, 1], [-10, 10]);
+  const uiY        = useTransform(smoothY, [0, 1], [-6, 6]);
+  const uiRotateX  = useTransform(smoothY, [0, 1], [4, -4]);
+  const uiRotateY  = useTransform(smoothX, [0, 1], [-5, 5]);
 
-  const headline = "The future of remote work is here.";
-  const words = headline.split(" ");
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    rawX.set((e.clientX - rect.left) / rect.width);
+    rawY.set((e.clientY - rect.top) / rect.height);
+  };
 
   return (
     <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
       style={{
-        minHeight: "80vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
         position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
         overflow: "hidden",
-        padding: "100px 24px 60px",
+        padding: "80px 40px 60px",
       }}
     >
-      <ParticleField />
-      <Orbs />
+      {/* Ambient scene light */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 70% 60% at 68% 50%, rgba(34,197,94,0.065) 0%, rgba(59,130,246,0.025) 45%, transparent 72%)",
+          pointerEvents: "none",
+        }}
+      />
 
-      {/* Subtle grid */}
+      {/* Subtle grid lines */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+            "linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px)",
           backgroundSize: "80px 80px",
+          maskImage:
+            "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)",
           pointerEvents: "none",
-          maskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%)",
         }}
       />
 
-      <div
-        className="container"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          gap: 22,
-        }}
-      >
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <div className="badge badge-green">
-            <Zap size={11} />
-            Now in public beta · Free forever
-          </div>
-        </motion.div>
-
-        {/* Headline with GSAP split text */}
-        <h1
-          ref={headlineRef}
-          className="font-display"
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+        <div
           style={{
-            fontSize: "clamp(2.6rem, 6.5vw, 5.5rem)",
-            fontWeight: 900,
-            letterSpacing: "-0.04em",
-            lineHeight: 1.05,
-            maxWidth: 860,
-            perspective: "800px",
-            overflow: "hidden",
+            display: "grid",
+            gridTemplateColumns: "1fr 1.15fr",
+            gap: 72,
+            alignItems: "center",
+            minHeight: "calc(100vh - 140px)",
           }}
         >
-          {words.map((word, wi) => (
-            <span key={wi} style={{ display: "inline-block", marginRight: "0.25em", overflow: "hidden" }}>
-              {word.split("").map((char, ci) => (
-                <span
-                  key={ci}
-                  className="char"
+          {/* ── Left ── */}
+          <div>
+            {/* Live badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 10 }}
+              transition={{ delay: 0.18, duration: 0.5 }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                marginBottom: 30,
+              }}
+            >
+              <motion.div
+                animate={{ opacity: [1, 0.35, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#22c55e",
+                  boxShadow: "0 0 8px rgba(34,197,94,0.9)",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: "0.72rem",
+                  color: "rgba(255,255,255,0.3)",
+                  letterSpacing: "0.08em",
+                  fontFamily: "ui-monospace, monospace",
+                }}
+              >
+                Now in public beta
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 28 }}
+              transition={{ delay: 0.3, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                fontFamily: "'Outfit', sans-serif",
+                fontSize: "clamp(3rem, 5.5vw, 5.2rem)",
+                fontWeight: 900,
+                letterSpacing: "-0.065em",
+                lineHeight: 1.0,
+                color: "#f0f4ff",
+                marginBottom: 26,
+              }}
+            >
+              Meetings that
+              <br />
+              <span
+                style={{
+                  background:
+                    "linear-gradient(135deg, #ffffff 30%, #4ade80 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                don&apos;t suck.
+              </span>
+            </motion.h1>
+
+            {/* Body */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
+              transition={{ delay: 0.46, duration: 0.7 }}
+              style={{
+                fontSize: "1rem",
+                color: "rgba(255,255,255,0.38)",
+                lineHeight: 1.8,
+                marginBottom: 36,
+                maxWidth: 380,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              HD video. Zero friction. End-to-end encrypted. A link your entire
+              team will actually click.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: visible ? 1 : 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              style={{ display: "flex", gap: 12, alignItems: "center" }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 500, damping: 28 }}
+              >
+                <Link
+                  href="/register"
+                  className="btn btn-primary"
+                  style={{ padding: "14px 32px" }}
+                >
+                  Start for free
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ x: 4 }}
+                transition={{ type: "spring", stiffness: 600, damping: 30 }}
+              >
+                <Link
+                  href="/join"
                   style={{
-                    display: "inline-block",
-                    color: ["future", "remote", "here."].includes(word.toLowerCase()) ? undefined : "#fff",
-                    background:
-                      ["future", "remote", "here."].includes(word.toLowerCase())
-                        ? "linear-gradient(135deg, #4ade80, #22c55e)"
-                        : undefined,
-                    WebkitBackgroundClip:
-                      ["future", "remote", "here."].includes(word.toLowerCase()) ? "text" : undefined,
-                    WebkitTextFillColor:
-                      ["future", "remote", "here."].includes(word.toLowerCase()) ? "transparent" : undefined,
-                    backgroundClip:
-                      ["future", "remote", "here."].includes(word.toLowerCase()) ? "text" : undefined,
-                    opacity: 0,
+                    fontSize: "0.875rem",
+                    color: "rgba(255,255,255,0.35)",
+                    textDecoration: "none",
+                    letterSpacing: "-0.01em",
                   }}
                 >
-                  {char}
-                </span>
-              ))}
-            </span>
-          ))}
-        </h1>
+                  Join a meeting →
+                </Link>
+              </motion.div>
+            </motion.div>
 
-        {/* Subtext */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            fontSize: "clamp(1rem, 2vw, 1.2rem)",
-            color: "var(--text-300)",
-            maxWidth: 540,
-            lineHeight: 1.75,
-            fontWeight: 400,
-          }}
-        >
-          XY Combinator gives your team a meeting space that&apos;s fast, beautiful,
-          and completely free — no downloads, no friction.
-        </motion.p>
+            {/* Social proof */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: visible ? 1 : 0 }}
+              transition={{ delay: 0.82, duration: 0.7 }}
+              style={{
+                marginTop: 44,
+                paddingTop: 28,
+                borderTop: "1px solid rgba(255,255,255,0.055)",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+              }}
+            >
+              <div style={{ display: "flex" }}>
+                {[
+                  { c: "#22c55e", l: "Z" },
+                  { c: "#3b82f6", l: "A" },
+                  { c: "#a855f7", l: "M" },
+                  { c: "#f59e0b", l: "S" },
+                  { c: "#ec4899", l: "L" },
+                ].map(({ c, l }, i) => (
+                  <div
+                    key={l}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, ${c}50, ${c}25)`,
+                      border: `2px solid #060810`,
+                      marginLeft: i === 0 ? 0 : -9,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "0.6rem",
+                      fontWeight: 800,
+                      color: c,
+                      position: "relative",
+                      zIndex: 5 - i,
+                      fontFamily: "'Outfit', sans-serif",
+                    }}
+                  >
+                    {l}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "rgba(255,255,255,0.52)",
+                    fontWeight: 600,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  12,000+ teams worldwide
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.68rem",
+                    color: "rgba(255,255,255,0.2)",
+                    marginTop: 2,
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  Notion · Raycast · Linear · Vercel · Figma
+                </div>
+              </div>
+            </motion.div>
+          </div>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}
-        >
-          <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}>
-            <Link href="/register" className="btn btn-primary" style={{ padding: "15px 32px", fontSize: "0.95rem" }}>
-              Start for free
-              <ArrowRight size={16} />
-            </Link>
+          {/* ── Right: Meeting Room ── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88, y: 24 }}
+            animate={{
+              opacity: visible ? 1 : 0,
+              scale: visible ? 1 : 0.88,
+              y: visible ? 0 : 24,
+            }}
+            transition={{ delay: 0.38, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              x: uiX,
+              y: uiY,
+              rotateX: uiRotateX,
+              rotateY: uiRotateY,
+              transformPerspective: 900,
+              position: "relative",
+            }}
+          >
+            {/* Ambient glow behind UI */}
+            <div
+              style={{
+                position: "absolute",
+                width: "90%",
+                height: "50%",
+                background:
+                  "radial-gradient(circle, rgba(34,197,94,0.1), transparent 70%)",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                filter: "blur(50px)",
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            />
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <MeetingRoomUI />
+            </div>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}>
-            <Link href="/join" className="btn btn-ghost" style={{ padding: "15px 32px", fontSize: "0.95rem" }}>
-              <Video size={15} />
-              Join a meeting
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Trust line */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
-          style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text-400)", fontSize: "0.8rem" }}
-        >
-          <Shield size={12} style={{ color: "#22c55e" }} />
-          End-to-end encrypted &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; Works in any browser
-        </motion.div>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.1 }}
-          style={{
-            display: "flex",
-            gap: 60,
-            justifyContent: "center",
-            flexWrap: "wrap",
-            padding: "20px 40px",
-            borderRadius: 16,
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid var(--border-100)",
-            marginTop: 8,
-          }}
-        >
-          <Stat value="10k+" label="Active users" delay={0} />
-          <div style={{ width: 1, background: "var(--border-100)" }} />
-          <Stat value="99.9%" label="Uptime SLA" delay={0.1} />
-          <div style={{ width: 1, background: "var(--border-100)" }} />
-          <Stat value="< 50ms" label="Avg latency" delay={0.2} />
-        </motion.div>
-
+        </div>
       </div>
     </section>
   );

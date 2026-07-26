@@ -47,7 +47,7 @@ export default function Footer() {
                   className="btn btn-primary"
                   style={{ padding: "16px 40px", fontSize: "0.95rem" }}
                 >
-                  Start for free
+                  Get started
                 </Link>
               </motion.div>
               <motion.div whileHover={{ x: 3 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}>
@@ -64,9 +64,6 @@ export default function Footer() {
               </motion.div>
             </div>
 
-            <p style={{ marginTop: 20, fontSize: "0.75rem", color: "rgba(255,255,255,0.18)", letterSpacing: "0.01em" }}>
-              Free forever · No credit card · Cancel anytime
-            </p>
           </motion.div>
         </div>
       </div>

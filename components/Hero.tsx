@@ -550,7 +550,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                   className="btn btn-primary"
                   style={{ padding: "14px 32px" }}
                 >
-                  Start for free
+                  Get started
                 </Link>
               </motion.div>
               <motion.div
@@ -627,7 +627,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                     letterSpacing: "-0.01em",
                   }}
                 >
-                  Early access · Free to join
+                  Early access · In beta
                 </div>
                 <div
                   style={{
@@ -637,7 +637,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                     letterSpacing: "0.01em",
                   }}
                 >
-                  No credit card · No download · No waiting room
+                  No setup · No download required
                 </div>
               </div>
             </motion.div>

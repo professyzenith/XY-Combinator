@@ -3,12 +3,12 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-/* Real product specs — not fake business metrics */
+/* Real product specs — no fluff */
 const SPECS = [
   { v: "1080p", l: "Video quality" },
   { v: "256-bit", l: "AES encrypted" },
   { v: "Zero", l: "Downloads needed" },
-  { v: "Free", l: "To get started" },
+  { v: "< 2s", l: "To join a meeting" },
 ];
 
 export default function Testimonials() {

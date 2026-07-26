@@ -6,15 +6,12 @@ import IntroAnimation from "@/components/IntroAnimation";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
-import HowItWorks from "@/components/HowItWorks";
-import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 
-// Custom cursor only on desktop — no SSR
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
 
-/* ─── Animated ambient orbs — break the pure-black void ─── */
+/* ─── Premium ambient background ─── */
 function AmbientBackground() {
   return (
     <div
@@ -26,65 +23,72 @@ function AmbientBackground() {
         overflow: "hidden",
       }}
     >
-      {/* Orb 1 — top right, green tint */}
+      {/* Primary glow — top right green */}
       <div
         style={{
           position: "absolute",
-          top: "-15%",
-          right: "-10%",
-          width: "55vw",
-          height: "55vw",
+          top: "-20%",
+          right: "-5%",
+          width: "70vw",
+          height: "70vw",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(34,197,94,0.055) 0%, transparent 65%)",
-          animation: "orb1 20s ease-in-out infinite",
+          background: "radial-gradient(circle, rgba(34,197,94,0.09) 0%, rgba(34,197,94,0.02) 40%, transparent 65%)",
+          animation: "orb1 22s ease-in-out infinite",
           willChange: "transform",
-          filter: "blur(1px)",
         }}
       />
 
-      {/* Orb 2 — bottom left, indigo tint */}
+      {/* Secondary glow — bottom left indigo */}
       <div
         style={{
           position: "absolute",
-          bottom: "5%",
+          bottom: "-10%",
           left: "-15%",
-          width: "60vw",
-          height: "60vw",
+          width: "65vw",
+          height: "65vw",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 65%)",
-          animation: "orb2 26s ease-in-out infinite",
+          background: "radial-gradient(circle, rgba(79,70,229,0.07) 0%, rgba(79,70,229,0.01) 40%, transparent 65%)",
+          animation: "orb2 28s ease-in-out infinite",
           willChange: "transform",
-          filter: "blur(1px)",
         }}
       />
 
-      {/* Orb 3 — center, very subtle warm */}
+      {/* Tertiary — center drift */}
       <div
         style={{
           position: "absolute",
-          top: "40%",
-          left: "35%",
-          width: "40vw",
-          height: "40vw",
+          top: "30%",
+          left: "30%",
+          width: "50vw",
+          height: "50vw",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(34,197,94,0.025) 0%, transparent 60%)",
-          animation: "orb3 32s ease-in-out infinite",
+          background: "radial-gradient(circle, rgba(34,197,94,0.04) 0%, transparent 55%)",
+          animation: "orb3 35s ease-in-out infinite",
           willChange: "transform",
-          filter: "blur(1px)",
         }}
       />
 
-      {/* Horizontal gradient sweep */}
+      {/* Top-left warm accent */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "-5%",
+          width: "30vw",
+          height: "30vw",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 60%)",
+          animation: "orb1 18s ease-in-out infinite reverse",
+          willChange: "transform",
+        }}
+      />
+
+      {/* Horizontal vignette for depth */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(180deg, rgba(34,197,94,0.015) 0%, transparent 30%, transparent 70%, rgba(99,102,241,0.01) 100%)",
-          pointerEvents: "none",
+          background: "radial-gradient(ellipse 120% 80% at 50% 50%, transparent 30%, rgba(6,8,16,0.4) 100%)",
         }}
       />
     </div>
@@ -93,30 +97,21 @@ function AmbientBackground() {
 
 export default function Home() {
   const [introComplete, setIntroComplete] = useState(false);
-
-  const handleIntroComplete = useCallback(() => {
-    setIntroComplete(true);
-  }, []);
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   return (
     <>
-      {/* Custom cursor */}
       <CustomCursor />
-
-      {/* Cinematic intro */}
       {!introComplete && <IntroAnimation onComplete={handleIntroComplete} />}
-
-      {/* Ambient animated background — always visible */}
       <AmbientBackground />
 
-      {/* Main site — fades in after intro */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
           opacity: introComplete ? 1 : 0,
-          transform: introComplete ? "scale(1)" : "scale(1.01)",
-          transition: "opacity 0.7s ease, transform 0.7s ease",
+          transform: introComplete ? "scale(1)" : "scale(1.02)",
+          transition: "opacity 0.8s ease, transform 0.8s ease",
           pointerEvents: introComplete ? "auto" : "none",
         }}
       >
@@ -125,8 +120,6 @@ export default function Home() {
           <main>
             <Hero visible={introComplete} />
             <Features />
-            <HowItWorks />
-            <Testimonials />
           </main>
           <Footer />
         </SmoothScroll>

@@ -4,6 +4,33 @@ import { useRef } from "react";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
+/* ─── Waveform bars (speaking animation) ─── */
+function Waveform({ color }: { color: string }) {
+  const heights = [3, 8, 14, 8, 5, 12, 6, 10, 4, 9, 14, 7, 3];
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 2, height: 16 }}>
+      {heights.map((h, i) => (
+        <motion.div
+          key={i}
+          animate={{ height: [h, h * 1.8, h * 0.5, h * 1.4, h] }}
+          transition={{
+            duration: 0.8,
+            repeat: Infinity,
+            delay: i * 0.06,
+            ease: "easeInOut",
+          }}
+          style={{
+            width: 2,
+            borderRadius: 2,
+            background: color,
+            opacity: 0.7,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ─── Camera Feed ─── */
 function CameraFeed({
   name,
@@ -25,27 +52,49 @@ function CameraFeed({
         borderRadius: 10,
         overflow: "hidden",
         aspectRatio: "16/9",
-        background: `linear-gradient(160deg, ${color}0d 0%, rgba(6,8,16,0.8) 100%)`,
         border: speaking
           ? `1.5px solid ${color}`
           : "1px solid rgba(255,255,255,0.06)",
         boxShadow: speaking
-          ? `0 0 0 3px ${color}20, inset 0 0 40px ${color}06`
-          : "inset 0 0 20px rgba(0,0,0,0.3)",
+          ? `0 0 0 3px ${color}20, 0 0 24px ${color}12`
+          : "none",
       }}
     >
-      {/* Ambient glow */}
-      <div
+      {/* Animated gradient background — each feed subtly breathes */}
+      <motion.div
+        animate={{
+          background: speaking
+            ? [
+                `linear-gradient(160deg, ${color}18 0%, rgba(6,8,16,0.95) 100%)`,
+                `linear-gradient(160deg, ${color}28 0%, rgba(6,8,16,0.85) 100%)`,
+                `linear-gradient(160deg, ${color}18 0%, rgba(6,8,16,0.95) 100%)`,
+              ]
+            : [
+                `linear-gradient(160deg, ${color}08 0%, rgba(6,8,16,0.98) 100%)`,
+                `linear-gradient(160deg, ${color}12 0%, rgba(6,8,16,0.95) 100%)`,
+                `linear-gradient(160deg, ${color}08 0%, rgba(6,8,16,0.98) 100%)`,
+              ],
+        }}
+        transition={{ duration: speaking ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: "absolute", inset: 0 }}
+      />
+
+      {/* Ambient glow from "camera light" */}
+      <motion.div
+        animate={{ opacity: speaking ? [0.6, 1, 0.6] : [0.3, 0.5, 0.3] }}
+        transition={{ duration: speaking ? 1.5 : 3, repeat: Infinity }}
         style={{
           position: "absolute",
           inset: 0,
-          background: `radial-gradient(ellipse 80% 70% at 50% 30%, ${color}0c, transparent 60%)`,
+          background: `radial-gradient(ellipse 70% 60% at 50% 20%, ${color}10, transparent 60%)`,
           pointerEvents: "none",
         }}
       />
 
       {/* Avatar */}
-      <div
+      <motion.div
+        animate={speaking ? { scale: [1, 1.04, 1] } : { scale: 1 }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "absolute",
           top: "50%",
@@ -54,8 +103,8 @@ function CameraFeed({
           width: 42,
           height: 42,
           borderRadius: "50%",
-          background: `linear-gradient(135deg, ${color}30, ${color}12)`,
-          border: `1px solid ${color}35`,
+          background: `linear-gradient(135deg, ${color}35, ${color}15)`,
+          border: `1px solid ${color}40`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -63,10 +112,11 @@ function CameraFeed({
           fontWeight: 800,
           fontSize: "1rem",
           color,
+          boxShadow: speaking ? `0 0 16px ${color}40` : "none",
         }}
       >
         {initials}
-      </div>
+      </motion.div>
 
       {/* Name tag */}
       <div
@@ -76,20 +126,25 @@ function CameraFeed({
           left: 8,
           display: "flex",
           alignItems: "center",
-          gap: 5,
+          gap: 6,
         }}
       >
+        {/* Waveform if speaking, name tag always */}
+        {speaking && (
+          <div style={{ marginRight: 2 }}>
+            <Waveform color={color} />
+          </div>
+        )}
         <span
           style={{
             fontSize: "0.62rem",
-            color: "rgba(255,255,255,0.72)",
+            color: "rgba(255,255,255,0.75)",
             background: "rgba(0,0,0,0.6)",
             backdropFilter: "blur(8px)",
             padding: "2px 7px",
             borderRadius: 4,
             fontFamily: "'Inter', sans-serif",
             fontWeight: 500,
-            letterSpacing: "0.01em",
           }}
         >
           {name}
@@ -109,11 +164,11 @@ function CameraFeed({
         )}
       </div>
 
-      {/* Speaking pulse */}
+      {/* Speaking pulse top-right */}
       {speaking && (
         <motion.div
-          animate={{ scale: [1, 1.4, 1], opacity: [0.9, 0.4, 0.9] }}
-          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.6, 1], opacity: [0.9, 0.3, 0.9] }}
+          transition={{ duration: 1.0, repeat: Infinity, ease: "easeInOut" }}
           style={{
             position: "absolute",
             top: 8,
@@ -122,7 +177,7 @@ function CameraFeed({
             height: 7,
             borderRadius: "50%",
             background: color,
-            boxShadow: `0 0 10px ${color}`,
+            boxShadow: `0 0 12px ${color}, 0 0 4px ${color}`,
           }}
         />
       )}
@@ -157,7 +212,6 @@ const ChatIcon = () => (
   </svg>
 );
 
-/* ─── Control Button ─── */
 function CtrlBtn({ children, label, danger = false }: {
   children: React.ReactNode;
   label: string;
@@ -165,18 +219,14 @@ function CtrlBtn({ children, label, danger = false }: {
 }) {
   return (
     <motion.button
-      whileHover={{ scale: 1.1, y: -1 }}
+      whileHover={{ scale: 1.12, y: -1 }}
       whileTap={{ scale: 0.9 }}
       title={label}
       style={{
-        width: 36,
-        height: 36,
-        borderRadius: 9,
+        width: 36, height: 36, borderRadius: 9,
         background: danger ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.06)",
         border: `1px solid ${danger ? "rgba(239,68,68,0.25)" : "rgba(255,255,255,0.07)"}`,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: "flex", alignItems: "center", justifyContent: "center",
         cursor: "pointer",
         color: danger ? "#ef4444" : "rgba(255,255,255,0.65)",
         flexShrink: 0,
@@ -195,9 +245,9 @@ function MeetingRoomUI() {
         borderRadius: 16,
         overflow: "hidden",
         background: "#07091a",
-        border: "1px solid rgba(255,255,255,0.07)",
+        border: "1px solid rgba(255,255,255,0.08)",
         boxShadow:
-          "0 48px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04)",
+          "0 48px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04), 0 0 80px rgba(34,197,94,0.05)",
         width: "100%",
         userSelect: "none",
       }}
@@ -211,87 +261,35 @@ function MeetingRoomUI() {
           display: "flex",
           alignItems: "center",
           padding: "0 14px",
-          gap: 0,
         }}
       >
-        {/* Traffic lights */}
         <div style={{ display: "flex", gap: 5, marginRight: 14 }}>
           {["#ef4444", "#f59e0b", "#22c55e"].map((c, i) => (
-            <div
-              key={i}
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                background: c,
-                opacity: 0.7,
-              }}
-            />
+            <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: 0.7 }} />
           ))}
         </div>
-
-        <span
-          style={{
-            fontSize: "0.7rem",
-            color: "rgba(255,255,255,0.25)",
-            fontFamily: "ui-monospace, monospace",
-            letterSpacing: "0.02em",
-            flex: 1,
-          }}
-        >
+        <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.25)", fontFamily: "ui-monospace, monospace", flex: 1 }}>
           XY Combinator — Team Standup
         </span>
-
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <motion.div
-            style={{ display: "flex", alignItems: "center", gap: 5 }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <motion.div
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.6, repeat: Infinity }}
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "#22c55e",
-              }}
+              animate={{ opacity: [1, 0.2, 1], scale: [1, 1.2, 1] }}
+              transition={{ duration: 1.4, repeat: Infinity }}
+              style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e" }}
             />
-            <span
-              style={{
-                fontSize: "0.62rem",
-                color: "rgba(34,197,94,0.75)",
-                fontFamily: "monospace",
-                fontWeight: 600,
-              }}
-            >
+            <span style={{ fontSize: "0.62rem", color: "rgba(34,197,94,0.8)", fontFamily: "monospace", fontWeight: 600 }}>
               LIVE
             </span>
-          </motion.div>
-          <div
-            style={{
-              padding: "2px 8px",
-              borderRadius: 4,
-              background: "rgba(255,255,255,0.05)",
-              fontSize: "0.62rem",
-              color: "rgba(255,255,255,0.3)",
-              fontFamily: "monospace",
-            }}
-          >
+          </div>
+          <div style={{ padding: "2px 8px", borderRadius: 4, background: "rgba(255,255,255,0.05)", fontSize: "0.62rem", color: "rgba(255,255,255,0.3)", fontFamily: "monospace" }}>
             04:32
           </div>
         </div>
       </div>
 
       {/* Video grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 5,
-          background: "#050810",
-          padding: "8px 8px 0",
-        }}
-      >
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5, background: "#050810", padding: "8px 8px 0" }}>
         <CameraFeed name="Zenith" initials="Z" color="#22c55e" speaking={true} />
         <CameraFeed name="Alex" initials="A" color="#3b82f6" speaking={false} />
         <CameraFeed name="Maria" initials="M" color="#a855f7" speaking={false} muted={true} />
@@ -311,65 +309,30 @@ function MeetingRoomUI() {
           marginTop: 5,
         }}
       >
-        <div
-          style={{
-            fontFamily: "ui-monospace, monospace",
-            fontSize: "0.65rem",
-            color: "rgba(255,255,255,0.2)",
-          }}
-        >
+        <div style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.65rem", color: "rgba(255,255,255,0.2)" }}>
           4 participants
         </div>
-
         <div style={{ display: "flex", gap: 7, alignItems: "center" }}>
-          <CtrlBtn label="Mute">
-            <MicIcon />
-          </CtrlBtn>
-          <CtrlBtn label="Camera">
-            <CamIcon />
-          </CtrlBtn>
-          <CtrlBtn label="Share screen">
-            <ShareIcon />
-          </CtrlBtn>
-          <CtrlBtn label="Chat">
-            <ChatIcon />
-          </CtrlBtn>
-          <div
-            style={{
-              width: 1,
-              height: 22,
-              background: "rgba(255,255,255,0.07)",
-              margin: "0 2px",
-            }}
-          />
+          <CtrlBtn label="Mute"><MicIcon /></CtrlBtn>
+          <CtrlBtn label="Camera"><CamIcon /></CtrlBtn>
+          <CtrlBtn label="Share screen"><ShareIcon /></CtrlBtn>
+          <CtrlBtn label="Chat"><ChatIcon /></CtrlBtn>
+          <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.07)", margin: "0 2px" }} />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             style={{
-              padding: "0 16px",
-              height: 32,
-              borderRadius: 8,
+              padding: "0 16px", height: 32, borderRadius: 8,
               background: "rgba(239,68,68,0.12)",
               border: "1px solid rgba(239,68,68,0.25)",
-              color: "#ef4444",
-              fontSize: "0.72rem",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: "-0.01em",
+              color: "#ef4444", fontSize: "0.72rem", fontWeight: 600,
+              cursor: "pointer", fontFamily: "'Inter', sans-serif", letterSpacing: "-0.01em",
             }}
           >
             End call
           </motion.button>
         </div>
-
-        <div
-          style={{
-            fontFamily: "ui-monospace, monospace",
-            fontSize: "0.62rem",
-            color: "rgba(255,255,255,0.18)",
-          }}
-        >
+        <div style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.62rem", color: "rgba(255,255,255,0.18)" }}>
           e2e encrypted
         </div>
       </div>
@@ -386,10 +349,10 @@ export default function Hero({ visible }: { visible: boolean }) {
   const smoothX = useSpring(rawX, { stiffness: 50, damping: 22 });
   const smoothY = useSpring(rawY, { stiffness: 50, damping: 22 });
 
-  const uiX        = useTransform(smoothX, [0, 1], [-10, 10]);
-  const uiY        = useTransform(smoothY, [0, 1], [-6, 6]);
-  const uiRotateX  = useTransform(smoothY, [0, 1], [4, -4]);
-  const uiRotateY  = useTransform(smoothX, [0, 1], [-5, 5]);
+  const uiX       = useTransform(smoothX, [0, 1], [-10, 10]);
+  const uiY       = useTransform(smoothY, [0, 1], [-6, 6]);
+  const uiRotateX = useTransform(smoothY, [0, 1], [4, -4]);
+  const uiRotateY = useTransform(smoothX, [0, 1], [-5, 5]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -411,30 +374,14 @@ export default function Hero({ visible }: { visible: boolean }) {
         padding: "80px 40px 60px",
       }}
     >
-      {/* Ambient scene light */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse 70% 60% at 68% 50%, rgba(34,197,94,0.065) 0%, rgba(59,130,246,0.025) 45%, transparent 72%)",
-          pointerEvents: "none",
-        }}
-      />
-
       {/* Subtle grid lines */}
       <div
         style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px)",
+          position: "absolute", inset: 0, pointerEvents: "none",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)",
           backgroundSize: "80px 80px",
-          maskImage:
-            "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)",
-          pointerEvents: "none",
+          maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 10%, transparent 100%)",
         }}
       />
 
@@ -448,48 +395,13 @@ export default function Hero({ visible }: { visible: boolean }) {
             minHeight: "calc(100vh - 140px)",
           }}
         >
-          {/* ── Left ── */}
+          {/* ── Left text ── */}
           <div>
-            {/* Live badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 10 }}
-              transition={{ delay: 0.18, duration: 0.5 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 30,
-              }}
-            >
-              <motion.div
-                animate={{ opacity: [1, 0.35, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#22c55e",
-                  boxShadow: "0 0 8px rgba(34,197,94,0.9)",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: "0.72rem",
-                  color: "rgba(255,255,255,0.3)",
-                  letterSpacing: "0.08em",
-                  fontFamily: "ui-monospace, monospace",
-                }}
-              >
-                Now in public beta
-              </span>
-            </motion.div>
-
             {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 28 }}
-              transition={{ delay: 0.3, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 fontFamily: "'Outfit', sans-serif",
                 fontSize: "clamp(3rem, 5.5vw, 5.2rem)",
@@ -504,8 +416,7 @@ export default function Hero({ visible }: { visible: boolean }) {
               <br />
               <span
                 style={{
-                  background:
-                    "linear-gradient(135deg, #ffffff 30%, #4ade80 100%)",
+                  background: "linear-gradient(135deg, #ffffff 30%, #4ade80 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -519,160 +430,61 @@ export default function Hero({ visible }: { visible: boolean }) {
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
-              transition={{ delay: 0.46, duration: 0.7 }}
+              transition={{ delay: 0.38, duration: 0.7 }}
               style={{
-                fontSize: "1rem",
+                fontSize: "1.05rem",
                 color: "rgba(255,255,255,0.38)",
                 lineHeight: 1.8,
-                marginBottom: 36,
+                marginBottom: 40,
                 maxWidth: 380,
                 letterSpacing: "-0.01em",
               }}
             >
-              HD video. Zero friction. End-to-end encrypted. A link your entire
-              team will actually click.
+              HD video. Zero friction. End-to-end encrypted. A link your entire team will actually click.
             </motion.p>
 
             {/* CTAs */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: visible ? 1 : 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              style={{ display: "flex", gap: 12, alignItems: "center" }}
+              transition={{ delay: 0.52, duration: 0.6 }}
+              style={{ display: "flex", gap: 14, alignItems: "center" }}
             >
               <motion.div
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 500, damping: 28 }}
               >
-                <Link
-                  href="/register"
-                  className="btn btn-primary"
-                  style={{ padding: "14px 32px" }}
-                >
+                <Link href="/register" className="btn btn-primary" style={{ padding: "14px 34px" }}>
                   Get started
                 </Link>
               </motion.div>
-              <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ type: "spring", stiffness: 600, damping: 30 }}
-              >
-                <Link
-                  href="/join"
-                  style={{
-                    fontSize: "0.875rem",
-                    color: "rgba(255,255,255,0.35)",
-                    textDecoration: "none",
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+              <motion.div whileHover={{ x: 4 }} transition={{ type: "spring", stiffness: 600, damping: 30 }}>
+                <Link href="/join" style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.32)", textDecoration: "none", letterSpacing: "-0.01em" }}>
                   Join a meeting →
                 </Link>
               </motion.div>
-            </motion.div>
-
-            {/* Social proof */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: visible ? 1 : 0 }}
-              transition={{ delay: 0.82, duration: 0.7 }}
-              style={{
-                marginTop: 44,
-                paddingTop: 28,
-                borderTop: "1px solid rgba(255,255,255,0.055)",
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-              }}
-            >
-              {/* Avatars */}
-              <div style={{ display: "flex" }}>
-                {[
-                  { c: "#22c55e", l: "J" },
-                  { c: "#3b82f6", l: "A" },
-                  { c: "#a855f7", l: "M" },
-                  { c: "#f59e0b", l: "R" },
-                  { c: "#ec4899", l: "T" },
-                ].map(({ c, l }, i) => (
-                  <div
-                    key={l}
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: "50%",
-                      background: `linear-gradient(135deg, ${c}50, ${c}25)`,
-                      border: `2px solid #060810`,
-                      marginLeft: i === 0 ? 0 : -9,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "0.6rem",
-                      fontWeight: 800,
-                      color: c,
-                      position: "relative",
-                      zIndex: 5 - i,
-                      fontFamily: "'Outfit', sans-serif",
-                    }}
-                  >
-                    {l}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "rgba(255,255,255,0.52)",
-                    fontWeight: 600,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Early access · In beta
-                </div>
-                <div
-                  style={{
-                    fontSize: "0.68rem",
-                    color: "rgba(255,255,255,0.2)",
-                    marginTop: 2,
-                    letterSpacing: "0.01em",
-                  }}
-                >
-                  No setup · No download required
-                </div>
-              </div>
             </motion.div>
           </div>
 
           {/* ── Right: Meeting Room ── */}
           <motion.div
             initial={{ opacity: 0, scale: 0.88, y: 24 }}
-            animate={{
-              opacity: visible ? 1 : 0,
-              scale: visible ? 1 : 0.88,
-              y: visible ? 0 : 24,
-            }}
-            transition={{ delay: 0.38, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              x: uiX,
-              y: uiY,
-              rotateX: uiRotateX,
-              rotateY: uiRotateY,
-              transformPerspective: 900,
-              position: "relative",
-            }}
+            animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.88, y: visible ? 0 : 24 }}
+            transition={{ delay: 0.3, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ x: uiX, y: uiY, rotateX: uiRotateX, rotateY: uiRotateY, transformPerspective: 900, position: "relative" }}
           >
             {/* Ambient glow behind UI */}
-            <div
+            <motion.div
+              animate={{ opacity: [0.6, 1, 0.6], scale: [1, 1.05, 1] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               style={{
                 position: "absolute",
-                width: "90%",
-                height: "50%",
-                background:
-                  "radial-gradient(circle, rgba(34,197,94,0.1), transparent 70%)",
-                top: "50%",
-                left: "50%",
+                width: "85%", height: "55%",
+                background: "radial-gradient(circle, rgba(34,197,94,0.12), transparent 70%)",
+                top: "50%", left: "50%",
                 transform: "translate(-50%, -50%)",
-                filter: "blur(50px)",
+                filter: "blur(40px)",
                 pointerEvents: "none",
                 zIndex: 0,
               }}

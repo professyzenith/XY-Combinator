@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import gsap from "gsap";
-import { ArrowRight, Video, Shield, Zap, ChevronRight } from "lucide-react";
+import { ArrowRight, Video, Shield, Zap } from "lucide-react";
 
 /* ─── Animated gradient orbs ─── */
 function Orbs() {
@@ -415,7 +415,7 @@ export default function Hero({ visible }: { visible: boolean }) {
   return (
     <section
       style={{
-        minHeight: "100vh",
+        minHeight: "80vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -582,28 +582,6 @@ export default function Hero({ visible }: { visible: boolean }) {
           <Stat value="< 50ms" label="Avg latency" delay={0.2} />
         </motion.div>
 
-        {/* Hero visual */}
-        <div style={{ width: "100%", marginTop: 24 }}>
-          <MeetingPreview />
-        </div>
-
-        {/* Scroll hint */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}
-        >
-          <span style={{ fontSize: "0.72rem", color: "var(--text-500)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            Scroll to explore
-          </span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronRight size={14} color="var(--text-500)" style={{ transform: "rotate(90deg)" }} />
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   );

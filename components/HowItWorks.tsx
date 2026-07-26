@@ -196,7 +196,7 @@ function StepRow({
   isLast: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "200px" });
   const isEven = index % 2 === 0;
 
   return (
@@ -300,7 +300,7 @@ function StepRow({
 
 export default function HowItWorks() {
   const titleRef = useRef<HTMLDivElement>(null);
-  const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
+  const titleInView = useInView(titleRef, { once: true, margin: "200px" });
 
   return (
     <section id="how-it-works" style={{ padding: "80px 24px" }}>

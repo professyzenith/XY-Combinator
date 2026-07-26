@@ -54,7 +54,7 @@ function TestimonialCard({
   index,
 }: (typeof TESTIMONIALS)[0] & { index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: true, margin: "200px" });
 
   return (
     <motion.div
@@ -166,7 +166,7 @@ function TestimonialCard({
 
 export default function Testimonials() {
   const titleRef = useRef<HTMLDivElement>(null);
-  const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
+  const titleInView = useInView(titleRef, { once: true, margin: "200px" });
 
   return (
     <section id="about" style={{ padding: "80px 24px" }}>

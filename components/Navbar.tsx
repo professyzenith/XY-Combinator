@@ -13,169 +13,213 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <motion.nav
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        padding: scrolled ? "14px 0" : "22px 0",
-        background: scrolled ? "rgba(8,11,16,0.88)" : "transparent",
-        backdropFilter: scrolled ? "blur(24px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(24px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
-        transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
-      }}
-    >
-      <div className="container" style={{ padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+    <>
+      <motion.header
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          padding: "0 24px",
+          height: 60,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          transition: "background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease",
+          background: scrolled ? "rgba(8,11,16,0.85)" : "transparent",
+          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+        }}
+      >
         {/* Logo */}
-        <Link href="/" style={{ textDecoration: "none" }}>
+        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
           <motion.div
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 8,
+              background: "linear-gradient(135deg, #22c55e, #16a34a)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "'Outfit', sans-serif",
+              fontWeight: 900,
+              fontSize: "0.75rem",
+              color: "#fff",
+              letterSpacing: "-0.02em",
+            }}
           >
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 10,
-                background: "linear-gradient(135deg, #22c55e, #16a34a)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 900,
-                fontSize: "0.85rem",
-                color: "#fff",
-                boxShadow: "0 0 16px rgba(34,197,94,0.35)",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              XY
-            </div>
-            <span
-              style={{
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 700,
-                fontSize: "1.05rem",
-                color: "#fff",
-                letterSpacing: "-0.03em",
-              }}
-            >
-              Combinator
-            </span>
+            XY
           </motion.div>
+          <span
+            style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontWeight: 700,
+              fontSize: "0.95rem",
+              color: "var(--text-100)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Combinator
+          </span>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <div
-          style={{ display: "flex", alignItems: "center", gap: 2 }}
+        {/* Desktop nav */}
+        <nav
           className="hidden md:flex"
+          style={{ display: "flex", alignItems: "center", gap: 4 }}
         >
-          {NAV_LINKS.map((link) => (
+          {NAV_LINKS.map(({ label, href }) => (
             <motion.a
-              key={link.label}
-              href={link.href}
-              whileHover={{ color: "#fff" }}
+              key={label}
+              href={href}
+              whileHover={{ color: "var(--text-100)" }}
               style={{
-                color: "var(--text-300)",
-                textDecoration: "none",
-                padding: "8px 16px",
+                padding: "6px 14px",
                 borderRadius: 8,
-                fontSize: "0.875rem",
-                fontWeight: 500,
-                transition: "background 0.2s ease",
-                display: "block",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.05)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                fontSize: "0.85rem",
+                color: "var(--text-400)",
+                textDecoration: "none",
+                letterSpacing: "-0.01em",
+                transition: "color 0.2s ease",
               }}
             >
-              {link.label}
+              {label}
             </motion.a>
           ))}
-        </div>
+        </nav>
 
-        {/* CTA */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }} className="hidden md:flex">
-          <Link
-            href="/login"
-            style={{ color: "var(--text-300)", textDecoration: "none", padding: "9px 18px", fontSize: "0.875rem", fontWeight: 500, borderRadius: 8, transition: "color 0.2s ease" }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-300)"; }}
-          >
-            Sign in
-          </Link>
+        {/* Desktop CTAs */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <motion.div whileHover={{ color: "var(--text-100)" }}>
+            <Link
+              href="/login"
+              style={{
+                padding: "7px 16px",
+                fontSize: "0.85rem",
+                color: "var(--text-400)",
+                textDecoration: "none",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              Sign in
+            </Link>
+          </motion.div>
+
           <motion.div
             whileHover={{ scale: 1.03, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={{ type: "spring", stiffness: 500, damping: 28 }}
           >
-            <Link href="/register" className="btn btn-primary btn-sm">
+            <Link
+              href="/register"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "8px 18px",
+                borderRadius: 8,
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                color: "#fff",
+                textDecoration: "none",
+                background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                boxShadow: "0 0 0 1px rgba(34,197,94,0.3), 0 4px 16px rgba(34,197,94,0.2)",
+                letterSpacing: "-0.01em",
+              }}
+            >
               Get started free
             </Link>
           </motion.div>
-        </div>
 
-        {/* Mobile toggle */}
-        <motion.button
-          className="md:hidden"
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: 8, borderRadius: 8 }}
-        >
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
-        </motion.button>
-      </div>
+          {/* Mobile menu toggle */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            style={{
+              display: "none",
+              width: 34,
+              height: 34,
+              borderRadius: 8,
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "var(--text-200)",
+            }}
+          >
+            {mobileOpen ? <X size={16} /> : <Menu size={16} />}
+          </motion.button>
+        </div>
+      </motion.header>
 
       {/* Mobile menu */}
       <AnimatePresence>
-        {menuOpen && (
+        {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            style={{ overflow: "hidden", borderTop: "1px solid var(--border-100)", marginTop: 12 }}
-            className="md:hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              position: "fixed",
+              top: 60,
+              left: 0,
+              right: 0,
+              zIndex: 999,
+              background: "rgba(8,11,16,0.98)",
+              backdropFilter: "blur(20px)",
+              borderBottom: "1px solid rgba(255,255,255,0.07)",
+              padding: "16px 24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
           >
-            <div style={{ padding: "12px 24px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  style={{ color: "var(--text-300)", textDecoration: "none", padding: "12px 0", fontSize: "0.95rem", fontWeight: 500 }}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-                <Link href="/login" className="btn btn-ghost btn-sm" style={{ flex: 1 }}>Sign in</Link>
-                <Link href="/register" className="btn btn-primary btn-sm" style={{ flex: 1 }}>Get started</Link>
-              </div>
+            {NAV_LINKS.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  padding: "12px 0",
+                  fontSize: "1rem",
+                  color: "var(--text-200)",
+                  textDecoration: "none",
+                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                {label}
+              </a>
+            ))}
+            <div style={{ paddingTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+              <Link href="/login" className="btn btn-ghost" style={{ width: "100%", justifyContent: "center" }}>
+                Sign in
+              </Link>
+              <Link href="/register" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                Get started free
+              </Link>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </>
   );
 }

@@ -118,16 +118,29 @@ body {
 .btn:active { transform: scale(0.97); }
 
 .btn-primary {
-  background: #22c55e;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
   color: #fff;
   padding: 12px 26px;
   font-weight: 600;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 1px rgba(34,197,94,0.4);
+  box-shadow: 0 2px 12px rgba(34,197,94,0.3), 0 0 0 1px rgba(34,197,94,0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  animation: btn-shimmer 2.8s ease-in-out infinite;
+  transform: skewX(-15deg);
 }
 
 .btn-primary:hover {
-  background: #1ea34f;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2dd86e 0%, #22c55e 100%);
+  box-shadow: 0 4px 24px rgba(34,197,94,0.5), 0 0 0 1px rgba(34,197,94,0.6), 0 0 60px rgba(34,197,94,0.15);
+  transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(34,197,94,0.3), 0 0 0 1px rgba(34,197,94,0.4);
 }
 
@@ -241,3 +254,10 @@ body {
   70%  { transform: translate(35px, 20px) scale(0.96); }
   100% { transform: translate(0, 0) scale(1); }
 }
+
+/* ─── Button shimmer ─── */
+@keyframes btn-shimmer {
+  0%        { left: -100%; }
+  40%, 100% { left: 160%; }
+}
+

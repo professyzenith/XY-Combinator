@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Video } from "lucide-react";
 
 export default function LoginPage() {
@@ -12,7 +13,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Auth logic will be wired in Phase 2
     setTimeout(() => setLoading(false), 1500);
   };
 
@@ -25,57 +25,68 @@ export default function LoginPage() {
         justifyContent: "center",
         padding: "24px",
         position: "relative",
+        background: "var(--bg-base)",
       }}
-      className="grid-bg"
     >
-      {/* Radial glow */}
+      {/* Background orb */}
+      <div
+        style={{
+          position: "fixed",
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          pointerEvents: "none",
+          filter: "blur(60px)",
+        }}
+      />
+
+      {/* Grid background */}
       <div
         style={{
           position: "fixed",
           inset: 0,
-          background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(34,197,94,0.07) 0%, transparent 70%)",
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
           pointerEvents: "none",
+          maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
         }}
       />
 
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 420,
-          position: "relative",
-          zIndex: 1,
-          animation: "fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards",
-        }}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 1 }}
       >
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 10 }}>
-            <div
+            <motion.div
+              whileHover={{ scale: 1.05 }}
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 14,
+                width: 42,
+                height: 42,
+                borderRadius: 12,
                 background: "linear-gradient(135deg, #22c55e, #16a34a)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontFamily: "'Syne', sans-serif",
-                fontWeight: 800,
-                fontSize: "1rem",
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: 900,
+                fontSize: "0.95rem",
                 color: "#fff",
-                boxShadow: "0 0 30px rgba(34,197,94,0.35)",
+                boxShadow: "0 0 24px rgba(34,197,94,0.35)",
               }}
             >
               XY
-            </div>
-            <span
-              style={{
-                fontFamily: "'Syne', sans-serif",
-                fontWeight: 700,
-                fontSize: "1.2rem",
-                color: "#fff",
-              }}
-            >
+            </motion.div>
+            <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: "1.1rem", color: "var(--text-100)", letterSpacing: "-0.03em" }}>
               Combinator
             </span>
           </Link>
@@ -83,43 +94,29 @@ export default function LoginPage() {
 
         {/* Card */}
         <div
-          className="glass"
           style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-100)",
             borderRadius: 24,
             padding: "40px 36px",
-            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 32px 64px rgba(0,0,0,0.4)",
           }}
         >
           <div style={{ marginBottom: 32 }}>
             <h1
               className="font-display"
-              style={{
-                fontSize: "1.8rem",
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                marginBottom: 8,
-              }}
+              style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.04em", marginBottom: 8, color: "var(--text-100)" }}
             >
               Welcome back
             </h1>
-            <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-400)" }}>
               Sign in to your XY Combinator account
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {/* Email */}
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.82rem",
-                  fontWeight: 600,
-                  color: "var(--text-secondary)",
-                  marginBottom: 8,
-                  letterSpacing: "0.02em",
-                }}
-              >
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-300)", marginBottom: 8, letterSpacing: "0.01em" }}>
                 Email address
               </label>
               <input
@@ -133,24 +130,13 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Password */}
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                <label
-                  style={{
-                    fontSize: "0.82rem",
-                    fontWeight: 600,
-                    color: "var(--text-secondary)",
-                    letterSpacing: "0.02em",
-                  }}
-                >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-300)", letterSpacing: "0.01em" }}>
                   Password
                 </label>
-                <a
-                  href="#"
-                  style={{ fontSize: "0.82rem", color: "#22c55e", textDecoration: "none" }}
-                >
-                  Forgot password?
+                <a href="#" style={{ fontSize: "0.8rem", color: "#22c55e", textDecoration: "none", fontWeight: 500 }}>
+                  Forgot?
                 </a>
               </div>
               <div style={{ position: "relative" }}>
@@ -162,10 +148,12 @@ export default function LoginPage() {
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   required
                   autoComplete="current-password"
-                  style={{ paddingRight: 48 }}
+                  style={{ paddingRight: 46 }}
                 />
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
                     position: "absolute",
@@ -174,90 +162,59 @@ export default function LoginPage() {
                     transform: "translateY(-50%)",
                     background: "none",
                     border: "none",
-                    color: "var(--text-muted)",
+                    color: "var(--text-400)",
                     cursor: "pointer",
-                    padding: 4,
                     display: "flex",
-                    transition: "color 0.2s ease",
+                    padding: 4,
                   }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#fff"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)"; }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+                </motion.button>
               </div>
             </div>
 
-            {/* Submit */}
-            <button
+            <motion.button
               type="submit"
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 500, damping: 28 }}
               className="btn btn-primary"
-              style={{ width: "100%", marginTop: 8, position: "relative" }}
+              style={{ width: "100%", marginTop: 4, padding: "14px 24px" }}
               disabled={loading}
             >
               {loading ? (
-                <div
-                  style={{
-                    width: 18,
-                    height: 18,
-                    border: "2px solid rgba(255,255,255,0.3)",
-                    borderTopColor: "#fff",
-                    borderRadius: "50%",
-                    animation: "spin-slow 0.6s linear infinite",
-                  }}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                  style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%" }}
                 />
               ) : (
-                <>
-                  Sign in
-                  <ArrowRight size={16} />
-                </>
+                <>Sign in <ArrowRight size={16} /></>
               )}
-            </button>
+            </motion.button>
           </form>
 
-          {/* Divider */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              margin: "28px 0",
-            }}
-          >
-            <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
-            <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>or</span>
-            <div style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
+            <div style={{ flex: 1, height: 1, background: "var(--border-100)" }} />
+            <span style={{ fontSize: "0.78rem", color: "var(--text-500)" }}>or</span>
+            <div style={{ flex: 1, height: 1, background: "var(--border-100)" }} />
           </div>
 
-          {/* Guest join */}
-          <Link
-            href="/join"
-            className="btn btn-ghost"
-            style={{ width: "100%" }}
-          >
-            <Video size={16} />
-            Join a meeting as guest
-          </Link>
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
+            <Link href="/join" className="btn btn-ghost" style={{ width: "100%", padding: "13px 24px" }}>
+              <Video size={15} />
+              Join as guest
+            </Link>
+          </motion.div>
 
-          {/* Register link */}
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "0.875rem",
-              color: "var(--text-muted)",
-              marginTop: 24,
-            }}
-          >
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/register"
-              style={{ color: "#22c55e", textDecoration: "none", fontWeight: 600 }}
-            >
+          <p style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--text-400)", marginTop: 24 }}>
+            No account?{" "}
+            <Link href="/register" style={{ color: "#22c55e", textDecoration: "none", fontWeight: 600 }}>
               Sign up free
             </Link>
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

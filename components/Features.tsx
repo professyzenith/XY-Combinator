@@ -1,228 +1,272 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import { Video, MessageSquare, Share2, Shield, Zap, Globe, Users, Mic } from "lucide-react";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Video, Shield, Share2, MessageSquare, Mic, Globe, Zap, Users } from "lucide-react";
 
 const FEATURES = [
   {
-    icon: <Video size={22} />,
-    title: "HD Video & Audio",
-    description:
-      "Crystal-clear 1080p video with noise-cancelling AI audio. Every call feels like you're in the same room.",
+    icon: Video,
+    title: "Crystal-clear HD video",
+    description: "1080p video with AI-powered noise cancellation. Every call feels like you're in the same room, whether you're across the hall or across the world.",
     color: "#22c55e",
+    tag: "Video",
   },
   {
-    icon: <Shield size={22} />,
-    title: "End-to-End Encrypted",
-    description:
-      "Every meeting is encrypted by default. Zero data stored on our servers. Your conversations stay private.",
+    icon: Shield,
+    title: "Zero-knowledge encryption",
+    description: "Every meeting uses end-to-end encryption by default. We can't read your conversations — and neither can anyone else.",
     color: "#3b82f6",
+    tag: "Security",
   },
   {
-    icon: <Share2 size={22} />,
-    title: "Screen Sharing",
-    description:
-      "Share your screen, a single window, or browser tab in one click. Annotate in real-time together.",
+    icon: Share2,
+    title: "One-click screen sharing",
+    description: "Share your screen, a window, or a single browser tab. Annotate in real-time. No plugins, no setup — just click and share.",
     color: "#a855f7",
+    tag: "Collaboration",
   },
   {
-    icon: <MessageSquare size={22} />,
-    title: "Live Chat",
-    description:
-      "Real-time chat with reactions, file sharing, and persistent history. Never lose important context.",
+    icon: MessageSquare,
+    title: "Persistent team chat",
+    description: "Real-time messages, reactions, and file sharing that persist after the meeting ends. Context never gets lost.",
     color: "#f59e0b",
+    tag: "Messaging",
   },
   {
-    icon: <Mic size={22} />,
-    title: "AI Noise Cancellation",
-    description:
-      "Background noise removed automatically. Works on construction sites, coffee shops, anywhere.",
+    icon: Mic,
+    title: "AI noise cancellation",
+    description: "Background noise disappears automatically. Works in coffee shops, co-working spaces, or anywhere your team actually works.",
     color: "#ec4899",
+    tag: "AI",
   },
   {
-    icon: <Globe size={22} />,
-    title: "No Download Required",
-    description:
-      "Works in any modern browser. Send a link, they join instantly. Zero friction for guests.",
+    icon: Globe,
+    title: "Works in any browser",
+    description: "No download, no plugin, no friction. Send a link. They click it. They're in the meeting. That's it.",
     color: "#06b6d4",
-  },
-  {
-    icon: <Users size={22} />,
-    title: "Up to 100 Participants",
-    description:
-      "Host team standups, all-hands, webinars, or 1-on-1s. Scales to your needs effortlessly.",
-    color: "#22c55e",
-  },
-  {
-    icon: <Zap size={22} />,
-    title: "Instant Join Links",
-    description:
-      "One-click meeting rooms with persistent links. Schedule, share, and join in seconds.",
-    color: "#f59e0b",
+    tag: "Accessibility",
   },
 ];
 
 function FeatureCard({
-  icon,
+  icon: Icon,
   title,
   description,
   color,
+  tag,
   index,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  color: string;
-  index: number;
-}) {
+}: (typeof FEATURES)[0] & { index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      className="card"
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 22 } }}
       style={{
-        padding: 28,
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(30px)",
-        transition: `opacity 0.6s ease ${index * 0.08}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${index * 0.08}s, border-color 0.3s ease, box-shadow 0.3s ease`,
+        background: "var(--bg-card)",
+        border: "1px solid var(--border-100)",
+        borderRadius: 20,
+        padding: "28px 28px 32px",
         cursor: "default",
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = `${color}44`;
-        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 40px ${color}12, 0 20px 40px rgba(0,0,0,0.3)`;
-        (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)";
+        const el = e.currentTarget;
+        el.style.borderColor = `${color}30`;
+        el.style.boxShadow = `0 0 48px ${color}0d, 0 20px 40px rgba(0,0,0,0.3)`;
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-subtle)";
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
-        (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
+        const el = e.currentTarget;
+        el.style.borderColor = "var(--border-100)";
+        el.style.boxShadow = "none";
       }}
     >
+      {/* Subtle corner glow */}
       <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          width: 120,
+          height: 120,
+          background: `radial-gradient(circle at 100% 0%, ${color}0a 0%, transparent 70%)`,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Tag */}
+      <div
+        style={{
+          display: "inline-flex",
+          alignSelf: "flex-start",
+          padding: "3px 10px",
+          borderRadius: 99,
+          fontSize: "0.7rem",
+          fontWeight: 700,
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          background: `${color}12`,
+          color: color,
+          border: `1px solid ${color}25`,
+        }}
+      >
+        {tag}
+      </div>
+
+      {/* Icon */}
+      <motion.div
+        whileHover={{ scale: 1.1, rotate: 3 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
         style={{
           width: 48,
           height: 48,
           borderRadius: 14,
-          background: `${color}15`,
-          border: `1px solid ${color}30`,
+          background: `${color}12`,
+          border: `1px solid ${color}25`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           color: color,
-          marginBottom: 18,
-          transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1)",
         }}
       >
-        {icon}
+        <Icon size={22} />
+      </motion.div>
+
+      {/* Text */}
+      <div>
+        <h3
+          className="font-display"
+          style={{
+            fontSize: "1.1rem",
+            fontWeight: 700,
+            color: "var(--text-100)",
+            letterSpacing: "-0.02em",
+            marginBottom: 10,
+          }}
+        >
+          {title}
+        </h3>
+        <p style={{ fontSize: "0.875rem", color: "var(--text-300)", lineHeight: 1.7 }}>
+          {description}
+        </p>
       </div>
-      <h3
-        style={{
-          fontSize: "1.05rem",
-          fontWeight: 700,
-          color: "var(--text-primary)",
-          marginBottom: 10,
-          letterSpacing: "-0.02em",
-        }}
-      >
-        {title}
-      </h3>
-      <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.65 }}>
-        {description}
-      </p>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Features() {
   const titleRef = useRef<HTMLDivElement>(null);
-  const [titleVisible, setTitleVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTitleVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (titleRef.current) observer.observe(titleRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
 
   return (
-    <section id="features" style={{ padding: "120px 24px", position: "relative" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        {/* Section header */}
-        <div
+    <section id="features" className="section" style={{ position: "relative" }}>
+      {/* Section divider */}
+      <div className="divider" style={{ marginBottom: 80, maxWidth: 1160, margin: "0 auto 80px" }} />
+
+      <div className="container">
+        {/* Header */}
+        <motion.div
           ref={titleRef}
-          style={{
-            textAlign: "center",
-            marginBottom: 72,
-            opacity: titleVisible ? 1 : 0,
-            transform: titleVisible ? "translateY(0)" : "translateY(24px)",
-            transition: "all 0.7s cubic-bezier(0.16,1,0.3,1)",
-          }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={titleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          style={{ textAlign: "center", marginBottom: 64 }}
         >
-          <div className="badge badge-green" style={{ marginBottom: 20, display: "inline-flex" }}>
-            Everything you need
+          <div className="badge badge-green" style={{ marginBottom: 20 }}>
+            <Zap size={11} />
+            Built different
           </div>
           <h2
             className="font-display"
             style={{
-              fontSize: "clamp(2rem, 5vw, 3.5rem)",
-              fontWeight: 800,
+              fontSize: "clamp(2rem, 4.5vw, 3.2rem)",
+              fontWeight: 900,
               letterSpacing: "-0.04em",
-              marginBottom: 20,
+              marginBottom: 18,
+              lineHeight: 1.1,
             }}
           >
-            <span className="text-gradient-white">Built different.</span>
+            <span style={{ color: "var(--text-100)" }}>Everything you need.</span>
             <br />
-            <span className="text-gradient">Works better.</span>
+            <span className="text-gradient-green">Nothing you don&apos;t.</span>
           </h2>
           <p
             style={{
-              color: "var(--text-secondary)",
               fontSize: "1.05rem",
-              maxWidth: 520,
+              color: "var(--text-300)",
+              maxWidth: 500,
               margin: "0 auto",
-              lineHeight: 1.7,
+              lineHeight: 1.75,
             }}
           >
-            Every feature designed to make your meetings faster, cleaner, and more productive
-            than anything else out there.
+            Every feature purpose-built to make your meetings faster, cleaner,
+            and more enjoyable than anything else on the market.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Features grid */}
+        {/* Grid */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 20,
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: 18,
           }}
         >
           {FEATURES.map((f, i) => (
             <FeatureCard key={f.title} {...f} index={i} />
           ))}
         </div>
+
+        {/* Bottom CTA strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            marginTop: 60,
+            padding: "24px 32px",
+            borderRadius: 16,
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-100)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+            {[
+              { icon: Users, text: "Up to 100 participants" },
+              { icon: Zap, text: "< 50ms latency" },
+              { icon: Globe, text: "Works globally" },
+            ].map(({ icon: I, text }) => (
+              <div key={text} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--text-300)", fontSize: "0.875rem" }}>
+                <I size={14} color="#22c55e" />
+                {text}
+              </div>
+            ))}
+          </div>
+          <motion.a
+            href="/register"
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="btn btn-primary btn-sm"
+          >
+            Try it free — no card needed
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );

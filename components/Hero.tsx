@@ -408,7 +408,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                 fontWeight: 900,
                 letterSpacing: "-0.065em",
                 lineHeight: 1.0,
-                color: "#f0f4ff",
+                color: "#ffffff",
                 marginBottom: 26,
               }}
             >
@@ -433,7 +433,7 @@ export default function Hero({ visible }: { visible: boolean }) {
               transition={{ delay: 0.38, duration: 0.7 }}
               style={{
                 fontSize: "1.05rem",
-                color: "rgba(255,255,255,0.38)",
+                color: "rgba(255,255,255,0.48)",
                 lineHeight: 1.8,
                 marginBottom: 40,
                 maxWidth: 380,

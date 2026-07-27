@@ -1,0 +1,323 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   XY COMBINATOR — DESIGN SYSTEM
+   Version 2.0 | "Precision Dark"
+
+   Philosophy:
+   - Pure black base. Maximum contrast.
+   - Green is ACCENT ONLY. ≤10% visual real estate.
+   - One font family for display (Outfit 900), one for body (Inter).
+   - Spacing is generous. White space is not wasted space.
+   - Motion is purposeful. Every animation has a reason.
+═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ─── Surface ──────────────────────────────────────────────────────────── */
+  --surface-base:     #000000;   /* Page background — pure black */
+  --surface-1:        #0a0a0a;   /* Card base */
+  --surface-2:        #111111;   /* Elevated card */
+  --surface-3:        #191919;   /* Most elevated — modal, tooltip */
+  --surface-overlay:  rgba(0,0,0,0.72);
+
+  /* ─── Text ─────────────────────────────────────────────────────────────── */
+  --text-primary:     #ffffff;             /* Headlines, primary content */
+  --text-secondary:   rgba(255,255,255,0.52);  /* Body, descriptions */
+  --text-tertiary:    rgba(255,255,255,0.28);  /* Labels, captions, meta */
+  --text-disabled:    rgba(255,255,255,0.14);  /* Disabled state */
+  --text-inverted:    #000000;             /* Text on accent background */
+
+  /* ─── Border ───────────────────────────────────────────────────────────── */
+  --border-subtle:    rgba(255,255,255,0.06);
+  --border-default:   rgba(255,255,255,0.09);
+  --border-strong:    rgba(255,255,255,0.16);
+  --border-focus:     rgba(34,197,94,0.7);   /* Accent focus ring */
+
+  /* ─── Accent — GREEN (use sparingly) ───────────────────────────────────── */
+  /* Permitted uses: CTA button, LIVE dot, scanner line, speaking indicator  */
+  --accent:           #22c55e;
+  --accent-hover:     #1fa854;
+  --accent-muted:     rgba(34,197,94,0.08);
+  --accent-glow:      rgba(34,197,94,0.25);
+  --accent-text:      rgba(34,197,94,0.85);
+
+  /* ─── Secondary accents (feature differentiation) ─────────────────────── */
+  --blue:             #3b82f6;
+  --blue-muted:       rgba(59,130,246,0.08);
+  --violet:           #7c3aed;
+  --violet-muted:     rgba(124,58,237,0.08);
+  --teal:             #14b8a6;
+  --teal-muted:       rgba(20,184,166,0.07);
+  --amber:            #f59e0b;
+  --amber-muted:      rgba(245,158,11,0.07);
+  --pink:             #ec4899;
+  --pink-muted:       rgba(236,72,153,0.07);
+
+  /* ─── Typography ───────────────────────────────────────────────────────── */
+  --font-display:     'Outfit', sans-serif;
+  --font-body:        'Inter', sans-serif;
+  --font-mono:        ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+
+  /* Type scale — fluid via clamp() */
+  --text-display:     clamp(3.5rem, 7vw, 6.5rem);
+  --text-h1:          clamp(2.5rem, 5vw, 4.5rem);
+  --text-h2:          clamp(2rem, 4vw, 3.5rem);
+  --text-h3:          clamp(1.4rem, 2.5vw, 2rem);
+  --text-h4:          clamp(1.1rem, 1.8vw, 1.4rem);
+  --text-lg:          1.1rem;
+  --text-base:        0.9375rem;
+  --text-sm:          0.8125rem;
+  --text-xs:          0.6875rem;
+  --text-mono:        0.85em;
+
+  /* Type weights */
+  --weight-black:     900;
+  --weight-extrabold: 800;
+  --weight-bold:      700;
+  --weight-medium:    500;
+  --weight-regular:   400;
+
+  /* Letter spacing */
+  --tracking-display: -0.07em;
+  --tracking-h1:      -0.055em;
+  --tracking-h2:      -0.04em;
+  --tracking-h3:      -0.025em;
+  --tracking-body:    -0.005em;
+  --tracking-label:   0.1em;
+
+  /* Line heights */
+  --leading-tight:    1.0;
+  --leading-snug:     1.2;
+  --leading-normal:   1.6;
+  --leading-relaxed:  1.8;
+
+  /* ─── Spacing (8px base unit) ──────────────────────────────────────────── */
+  --space-1:    4px;
+  --space-2:    8px;
+  --space-3:    12px;
+  --space-4:    16px;
+  --space-5:    20px;
+  --space-6:    24px;
+  --space-8:    32px;
+  --space-10:   40px;
+  --space-12:   48px;
+  --space-16:   64px;
+  --space-20:   80px;
+  --space-24:   96px;
+  --space-32:   128px;
+  --space-40:   160px;
+  --space-48:   192px;
+
+  /* ─── Border Radius ─────────────────────────────────────────────────────── */
+  --radius-sm:   5px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   18px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ─── Shadows ───────────────────────────────────────────────────────────── */
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:    0 12px 40px rgba(0,0,0,0.6);
+  --shadow-xl:    0 24px 80px rgba(0,0,0,0.7);
+  --shadow-glow:  0 0 40px var(--accent-glow);
+
+  /* ─── Z-index scale ─────────────────────────────────────────────────────── */
+  --z-background: -1;
+  --z-base:        0;
+  --z-raised:     10;
+  --z-floating:   20;
+  --z-overlay:    30;
+  --z-modal:      40;
+  --z-toast:      50;
+  --z-cursor:     100;
+
+  /* ─── Motion tokens ─────────────────────────────────────────────────────── */
+  /* Easing curves */
+  --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-back:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Durations */
+  --dur-instant:  80ms;
+  --dur-fast:     150ms;
+  --dur-base:     300ms;
+  --dur-slow:     600ms;
+  --dur-scene:    1200ms;
+  --dur-cinematic: 2500ms;
+
+  /* Standard transitions */
+  --transition-fast:   var(--dur-fast) var(--ease-out-expo);
+  --transition-base:   var(--dur-base) var(--ease-out-expo);
+  --transition-slow:   var(--dur-slow) var(--ease-out-expo);
+
+  /* ─── Layout ────────────────────────────────────────────────────────────── */
+  --container-max:   1200px;
+  --container-pad:   40px;
+  --section-gap:     var(--space-32);
+  --nav-height:      64px;
+
+}
+
+/* ─── prefers-reduced-motion ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Focus ring (WCAG 2.1 AA) ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Skip to content (accessibility) ──────────────────────────────────── */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: var(--z-cursor);
+  padding: var(--space-3) var(--space-6);
+  background: var(--accent);
+  color: var(--text-inverted);
+  font-family: var(--font-body);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: top var(--transition-fast);
+}
+.skip-to-content:focus {
+  top: var(--space-4);
+}
+
+/* ─── Selection ─────────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(34,197,94,0.22);
+  color: var(--text-primary);
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: var(--surface-base); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: var(--radius-full); }
+
+/* ─── Utility classes ───────────────────────────────────────────────────── */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+  width: 100%;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-tertiary);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.gradient-text-green {
+  background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-multi {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--violet) 50%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Button system ─────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  border-radius: var(--radius-lg);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.btn:active { transform: scale(0.97); }
+
+/* Primary — GREEN (accent only, main CTA) */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  color: var(--text-inverted);
+  padding: 13px 32px;
+  font-weight: var(--weight-bold);
+  box-shadow:
+    0 2px 12px var(--accent-glow),
+    0 0 0 1px rgba(34,197,94,0.35);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 28px var(--accent-glow),
+    0 0 0 1px rgba(34,197,94,0.5),
+    0 0 60px rgba(34,197,94,0.12);
+}
+
+.btn-primary:hover::before { opacity: 1; }
+
+/* Shimmer sweep */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: btn-shimmer 2.8s ease-in-out infinite;
+  transform: skewX(-15deg);
+}
+
+/* Ghost — secondary action */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 12px 22px;
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}

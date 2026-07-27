@@ -65,18 +65,18 @@ export default function SecuritySection() {
               <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
             </div>
             <h2 style={{
-              fontFamily: "'Outfit', sans-serif",
-              fontSize: "clamp(2.2rem, 4vw, 3.5rem)",
-              fontWeight: 900,
-              letterSpacing: "-0.06em",
-              lineHeight: 1.0,
-              color: "#f0f4ff",
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--text-h1)",
+              fontWeight: "var(--weight-black)",
+              letterSpacing: "var(--tracking-h1)",
+              lineHeight: "var(--leading-tight)",
+              color: "var(--text-primary)",
               marginBottom: 24,
             }}>
               Your conversations
               <br />
               <span style={{
-                background: "linear-gradient(135deg, #a855f7 0%, #3b82f6 100%)",
+                background: "linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

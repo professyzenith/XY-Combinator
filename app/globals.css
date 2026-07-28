@@ -373,6 +373,13 @@ body {
   padding: 1.5px;
 }
 
+/* Force hide Next.js dev indicators */
+nextjs-portal,
+#nextjs-portal,
+[data-nextjs-toast] {
+  display: none !important;
+}
+
 /* ─── 3D flip entrance ───────────────────────────────────────────────────── */
 @keyframes flip-in-x {
   0%   { transform: perspective(400px) rotateX(80deg); opacity: 0; }

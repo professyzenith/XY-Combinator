@@ -49,51 +49,57 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
             }}
           />
 
-          {/* Background Images */}
-          <motion.div
-            initial={{ opacity: 0, y: 40, rotate: -4 }}
-            animate={{ opacity: phase === "reveal" ? 0.3 : 0, y: phase === "reveal" ? 0 : 40, rotate: -4 }}
-            transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: "absolute", left: "15%", top: "20%", width: 280, height: 380,
-              backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600')",
-              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
-            }}
-          />
-          <motion.div
-            initial={{ opacity: 0, y: -40, rotate: 6 }}
-            animate={{ opacity: phase === "reveal" ? 0.4 : 0, y: phase === "reveal" ? 0 : -40, rotate: 6 }}
-            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: "absolute", right: "12%", top: "15%", width: 240, height: 320,
-              backgroundImage: "url('https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=600')",
-              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
-            }}
-          />
-          <motion.div
-            initial={{ opacity: 0, x: -40, rotate: -2 }}
-            animate={{ opacity: phase === "reveal" ? 0.25 : 0, x: phase === "reveal" ? 0 : -40, rotate: -2 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: "absolute", left: "25%", bottom: "10%", width: 300, height: 200,
-              backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600')",
-              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
-            }}
-          />
-          <motion.div
-            initial={{ opacity: 0, x: 40, rotate: 3 }}
-            animate={{ opacity: phase === "reveal" ? 0.3 : 0, x: phase === "reveal" ? 0 : 40, rotate: 3 }}
-            transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: "absolute", right: "20%", bottom: "15%", width: 260, height: 260,
-              backgroundImage: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600')",
-              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
-            }}
-          />
+          {/* Premium Mesh Gradient / Aurora Background */}
+          <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0, pointerEvents: "none" }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, x: "-30%", y: "-20%" }}
+              animate={{
+                opacity: phase === "reveal" ? 0.6 : 0,
+                scale: phase === "reveal" ? 1.5 : 0.8,
+                x: phase === "reveal" ? "10%" : "-30%",
+                y: phase === "reveal" ? "10%" : "-20%"
+              }}
+              transition={{ duration: 2.5, ease: "easeOut" }}
+              style={{
+                position: "absolute", width: "80vw", height: "80vw", borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(74,144,112,0.15) 0%, transparent 60%)",
+                filter: "blur(80px)",
+                mixBlendMode: "multiply"
+              }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, x: "30%", y: "20%" }}
+              animate={{
+                opacity: phase === "reveal" ? 0.5 : 0,
+                scale: phase === "reveal" ? 1.8 : 0.8,
+                x: phase === "reveal" ? "-10%" : "30%",
+                y: phase === "reveal" ? "-10%" : "20%"
+              }}
+              transition={{ duration: 2.5, ease: "easeOut", delay: 0.2 }}
+              style={{
+                position: "absolute", width: "70vw", height: "70vw", borderRadius: "50%", right: 0, bottom: 0,
+                background: "radial-gradient(circle, rgba(122,94,168,0.1) 0%, transparent 60%)",
+                filter: "blur(80px)",
+                mixBlendMode: "multiply"
+              }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: "40%" }}
+              animate={{
+                opacity: phase === "reveal" ? 0.7 : 0,
+                scale: phase === "reveal" ? 2 : 0.8,
+                y: phase === "reveal" ? "-10%" : "40%"
+              }}
+              transition={{ duration: 2.5, ease: "easeOut", delay: 0.1 }}
+              style={{
+                position: "absolute", width: "100vw", height: "50vw", borderRadius: "50%", left: "50%", bottom: "-20%",
+                transform: "translateX(-50%)",
+                background: "radial-gradient(ellipse, rgba(74,120,168,0.12) 0%, transparent 60%)",
+                filter: "blur(80px)",
+                mixBlendMode: "multiply"
+              }}
+            />
+          </div>
 
           <div style={{ textAlign: "center", position: "relative", zIndex: 10 }}>
             {/* XY mark */}

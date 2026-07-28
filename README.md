@@ -1,18 +1,13 @@
-<!-- Banner -->
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=111111&height=300&section=header&text=XY%20Combinator&fontSize=90&fontAlignY=35&desc=The%20Future%20of%20Video%20Conferencing&descAlignY=55&descAlign=62&fontColor=ffffff&animation=fadeIn" alt="XY Combinator Banner" />
-</div>
-
-<!-- Typing Tagline -->
+<!-- Animated Typing Banner -->
 <div align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Outfit&weight=800&size=28&duration=4000&pause=1000&color=3ECF8E&center=true&vCenter=true&width=800&lines=Seamless+Peer-to-Peer+Video.;End-to-End+Encrypted+Connections.;Zero+Downloads.+Zero+Friction.;The+World's+Best+Teams+Meet+On+XY." alt="Typing SVG" />
+    <img src="https://readme-typing-svg.herokuapp.com?font=Outfit&weight=900&size=45&duration=4000&pause=1000&color=3ECF8E&center=true&vCenter=true&width=800&height=120&lines=XY+Combinator;The+Future+of+Video+Conferencing;Instant+Peer-to-Peer+Rooms;End-to-End+Encrypted;Zero+Downloads.+Zero+Friction." alt="XY Combinator" />
   </a>
 </div>
 
 <!-- Badges Row -->
 <div align="center">
-  <img src="https://img.shields.io/github/license/professyzenith/XY-Combinator?style=for-the-badge&color=3ECF8E" alt="License">
+  <img src="https://img.shields.io/github/license/professyzenith/XY-Combinator?style=for-the-badge&color=111111" alt="License">
   <img src="https://img.shields.io/github/stars/professyzenith/XY-Combinator?style=for-the-badge&color=FFD700" alt="Stars">
   <img src="https://img.shields.io/github/forks/professyzenith/XY-Combinator?style=for-the-badge&color=0055FF" alt="Forks">
   <img src="https://img.shields.io/github/issues/professyzenith/XY-Combinator?style=for-the-badge&color=FF6B6B" alt="Issues">
@@ -20,7 +15,7 @@
 
 <!-- Animated Divider -->
 <div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%">
+  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" alt="Divider">
 </div>
 
 ## 📑 Table of Contents
@@ -34,7 +29,7 @@
 
 <!-- Animated Divider -->
 <div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%">
+  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" alt="Divider">
 </div>
 
 ## ✨ Features
@@ -46,16 +41,12 @@
       <p>Drop a link and join immediately. No native apps, no endless setup wizards. Built for modern browsers using raw WebRTC power.</p>
     </td>
     <td width="50%" align="center">
-      <!-- Placeholder GIF -->
-      <img src="https://i.pinimg.com/originals/c7/2b/30/c72b304c44243bdf4c32b55da6decfdc.gif" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" alt="Instant Rooms UI" />
-      <br/><i>*(Replace with your screen recording GIF!)*</i>
+      <img src="https://img.shields.io/badge/Feature_Showcase-Coming_Soon-111111?style=for-the-badge&logo=youtube&logoColor=3ECF8E" alt="Demo Coming Soon" />
     </td>
   </tr>
   <tr>
     <td width="50%" align="center">
-      <!-- Placeholder GIF -->
-      <img src="https://i.pinimg.com/originals/a4/96/c2/a496c2b6bc5d7cfe0e0674f6598c38ad.jpg" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" alt="Glassmorphic Auth" />
-      <br/><i>*(Replace with your screen recording GIF!)*</i>
+      <img src="https://img.shields.io/badge/Authentication_Demo-Coming_Soon-111111?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Auth Coming Soon" />
     </td>
     <td width="50%" valign="top">
       <h3>🔐 Glassmorphic Auth</h3>
@@ -68,12 +59,12 @@
 
 ```mermaid
 graph TD;
-    Client1[Client Browser] <-->|WebRTC P2P Video/Audio| Client2[Client Browser];
-    Client1 -->|Signaling (Offer/Answer)| SupabaseRealtime;
-    Client2 -->|Signaling (Offer/Answer)| SupabaseRealtime;
-    SupabaseRealtime((Supabase Realtime Channels)) --> DB[(PostgreSQL DB)];
-    Client1 -.->|OAuth / Auth| SupabaseAuth;
-    Client2 -.->|OAuth / Auth| SupabaseAuth;
+    Client1["Client Browser"] <-->|"WebRTC P2P Video/Audio"| Client2["Client Browser"];
+    Client1 -->|"Signaling (Offer/Answer)"| SupabaseRealtime;
+    Client2 -->|"Signaling (Offer/Answer)"| SupabaseRealtime;
+    SupabaseRealtime(("Supabase Realtime Channels")) --> DB[("PostgreSQL DB")];
+    Client1 -.->|"OAuth / Auth"| SupabaseAuth;
+    Client2 -.->|"OAuth / Auth"| SupabaseAuth;
     
     style Client1 fill:#242528,stroke:#3ECF8E,stroke-width:2px,color:#fff
     style Client2 fill:#242528,stroke:#3ECF8E,stroke-width:2px,color:#fff
@@ -86,17 +77,17 @@ graph TD;
 
 <div align="center">
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,supabase,vercel,html,css,git,github,vscode,figma&theme=dark&perline=6" />
+    <img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,supabase,vercel,html,css,git,github,vscode,figma&theme=dark&perline=6" alt="Tech Stack Icons" />
   </a>
 </div>
 
 <br/>
 
 **Feature Completion Status:**
-- Base Architecture & Routing <br/> <img src="https://progress-bar.dev/100/?scale=100&title=Complete&width=400&color=3ECF8E&suffix=%25"/>
-- WebRTC P2P Video Engine <br/> <img src="https://progress-bar.dev/100/?scale=100&title=Complete&width=400&color=3ECF8E&suffix=%25"/>
-- Google OAuth Integration <br/> <img src="https://progress-bar.dev/100/?scale=100&title=Complete&width=400&color=3ECF8E&suffix=%25"/>
-- Live Chat & Screen Share <br/> <img src="https://progress-bar.dev/15/?scale=100&title=In-Progress&width=400&color=FFD700&suffix=%25"/>
+- Base Architecture & Routing <br/> <img src="https://img.shields.io/badge/Progress-100%25-3ECF8E?style=for-the-badge" alt="100% Complete" />
+- WebRTC P2P Video Engine <br/> <img src="https://img.shields.io/badge/Progress-100%25-3ECF8E?style=for-the-badge" alt="100% Complete" />
+- Google OAuth Integration <br/> <img src="https://img.shields.io/badge/Progress-100%25-3ECF8E?style=for-the-badge" alt="100% Complete" />
+- Live Chat & Screen Share <br/> <img src="https://img.shields.io/badge/Progress-15%25-FFD700?style=for-the-badge" alt="15% Complete" />
 
 ## 🚀 Setup & Installation
 
@@ -160,27 +151,10 @@ We welcome contributions! Please open an issue first to discuss what you would l
 
 <!-- Animated Divider -->
 <div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%">
+  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" alt="Divider">
 </div>
 
-## ⭐ Star History
-
 <div align="center">
-  <a href="https://star-history.com/#professyzenith/XY-Combinator&Date">
-    <img src="https://api.star-history.com/svg?repos=professyzenith/XY-Combinator&type=Date" alt="Star History Chart">
-  </a>
-</div>
-
-<br/>
-
-<div align="center">
-  <!-- Requires GitHub Action setup -->
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/professyzenith/XY-Combinator/output/github-contribution-grid-snake-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/professyzenith/XY-Combinator/output/github-contribution-grid-snake.svg">
-    <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/professyzenith/XY-Combinator/output/github-contribution-grid-snake.svg">
-  </picture>
-  <br/><br/>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Waving%20Hand%20Medium-Light%20Skin%20Tone.png" width="35" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Waving%20Hand%20Medium-Light%20Skin%20Tone.png" width="45" alt="Waving Hand Emoji" />
   <p><b>Built with passion.</b></p>
 </div>

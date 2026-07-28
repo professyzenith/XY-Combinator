@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Video } from "lucide-react";
 
+import ThreeCanvas from "@/components/ThreeCanvas";
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,50 +23,54 @@ export default function LoginPage() {
       style={{
         minHeight: "100vh",
         display: "flex",
-        flexDirection: "row",
-        background: "var(--bg-base)",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
         position: "relative",
+        background: "var(--bg-base)",
+        overflow: "hidden",
       }}
     >
-      {/* Left Column: Form */}
-      <div style={{
-        flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", position: "relative"
-      }}>
-        {/* Background orb */}
-        <div
-          style={{
-            position: "absolute",
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            filter: "blur(60px)",
-          }}
-        />
+      {/* 3D Background */}
+      <ThreeCanvas />
 
-        {/* Grid background */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            pointerEvents: "none",
-            maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
-          }}
-        />
+      {/* Background orb */}
+      <div
+        style={{
+          position: "fixed",
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          pointerEvents: "none",
+          filter: "blur(60px)",
+          zIndex: 0,
+        }}
+      />
+
+      {/* Grid background */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+          pointerEvents: "none",
+          maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, black 30%, transparent 100%)",
+          zIndex: 0,
+        }}
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 1 }}
+        style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 10 }}
       >
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
@@ -102,6 +108,8 @@ export default function LoginPage() {
             borderRadius: 24,
             padding: "40px 36px",
             boxShadow: "0 32px 64px rgba(0,0,0,0.4)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
           }}
         >
           <div style={{ marginBottom: 32 }}>
@@ -217,71 +225,6 @@ export default function LoginPage() {
           </p>
         </div>
       </motion.div>
-      </div>
-
-      {/* Right Column: Premium feature showcase */}
-      <div
-        style={{
-          flex: 1,
-          background: "linear-gradient(135deg, #0f1311 0%, #050a07 100%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-          overflow: "hidden",
-          color: "#fff",
-        }}
-      >
-        {/* Glows */}
-        <div style={{ position: "absolute", width: "100%", height: "100%", background: "radial-gradient(circle at top right, rgba(74,144,112,0.15) 0%, transparent 60%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", width: "100%", height: "100%", background: "radial-gradient(circle at bottom left, rgba(74,144,112,0.1) 0%, transparent 50%)", pointerEvents: "none" }} />
-        
-        {/* Grid pattern */}
-        <div
-          style={{
-            position: "absolute", inset: 0, opacity: 0.1,
-            backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            maskImage: "radial-gradient(circle at center, black 0%, transparent 70%)",
-            WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 70%)"
-          }}
-        />
-
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          style={{ maxWidth: 440, padding: 40, position: "relative", zIndex: 10 }}
-        >
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 99, 
-            background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", marginBottom: 32
-          }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 10px #4ade80" }} />
-            <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "rgba(255,255,255,0.8)" }}>Enterprise Ready</span>
-          </div>
-          
-          <h2 className="font-display" style={{ fontSize: "2.5rem", fontWeight: 700, lineHeight: 1.1, marginBottom: 24, letterSpacing: "-0.03em" }}>
-            The new standard for <span style={{ color: "#4ade80" }}>global teams.</span>
-          </h2>
-          
-          <p style={{ fontSize: "1.1rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, marginBottom: 40 }}>
-            Join 10,000+ forward-thinking teams who have switched to XY Combinator for zero-latency, end-to-end encrypted video calls.
-          </p>
-          
-          <div style={{ display: "flex", gap: 32 }}>
-            <div>
-              <div style={{ fontSize: "2rem", fontWeight: 800, color: "#fff", marginBottom: 4 }}>99.9%</div>
-              <div style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>UPTIME SLA</div>
-            </div>
-            <div>
-              <div style={{ fontSize: "2rem", fontWeight: 800, color: "#fff", marginBottom: 4 }}>&lt;10ms</div>
-              <div style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>GLOBAL LATENCY</div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
     </div>
   );
 }

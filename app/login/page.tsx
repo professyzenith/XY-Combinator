@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Video } from "lucide-react";
 
-import ThreeCanvas from "@/components/ThreeCanvas";
+// Removed ThreeCanvas import
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,8 +31,7 @@ export default function LoginPage() {
         overflow: "hidden",
       }}
     >
-      {/* 3D Background */}
-      <ThreeCanvas />
+      {/* Removed ThreeCanvas background */}
 
       {/* Background orb */}
       <div

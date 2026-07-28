@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Check } from "lucide-react";
 
-import ThreeCanvas from "@/components/ThreeCanvas";
+// Removed ThreeCanvas import
 
 const PASSWORD_RULES = [
   { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
@@ -40,8 +40,7 @@ export default function RegisterPage() {
         overflow: "hidden",
       }}
     >
-      {/* 3D Background to fill the empty space with floating premium shapes */}
-      <ThreeCanvas />
+      {/* Removed ThreeCanvas background */}
 
       <div
         style={{

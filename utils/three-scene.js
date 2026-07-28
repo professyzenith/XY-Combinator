@@ -36,6 +36,9 @@ export function initThreeScene(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // cap at 2x for perf
 
   // Abstract Geometric Shapes (Glass/Metallic aesthetic)
+  const group = new THREE.Group();
+  scene.add(group);
+
   // Premium, Professional Material Properties (Dark Glass / Brushed Metal)
   const baseMaterialProps = {
     metalness: 0.7,

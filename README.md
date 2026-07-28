@@ -1,7 +1,12 @@
-<!-- Animated Typing Banner -->
+<!-- Animated Banner -->
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=250&section=header&text=XY%20Combinator&fontSize=80&fontAlignY=35&desc=The%20Future%20of%20Video%20Conferencing&descAlignY=55&descAlign=62&fontColor=ffffff&animation=twinkling" alt="XY Combinator Banner" width="100%" />
+</div>
+
+<!-- Typing Tagline -->
 <div align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Outfit&weight=900&size=45&duration=4000&pause=1000&color=3ECF8E&center=true&vCenter=true&width=800&height=120&lines=XY+Combinator;The+Future+of+Video+Conferencing;Instant+Peer-to-Peer+Rooms;End-to-End+Encrypted;Zero+Downloads.+Zero+Friction." alt="XY Combinator" />
+    <img src="https://readme-typing-svg.herokuapp.com?font=Outfit&weight=800&size=26&duration=4000&pause=1000&color=3ECF8E&center=true&vCenter=true&width=800&lines=Seamless+Peer-to-Peer+Video.;End-to-End+Encrypted+Connections.;Zero+Downloads.+Zero+Friction.;The+World's+Best+Teams+Meet+On+XY." alt="Typing SVG" />
   </a>
 </div>
 
@@ -18,21 +23,20 @@
   <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" alt="Divider">
 </div>
 
-## 📑 Table of Contents
-- [✨ Features](#-features)
-- [🏗 Architecture](#-architecture)
-- [💻 Tech Stack](#-tech-stack)
-- [🚀 Setup & Installation](#-setup--installation)
-- [🗺 Roadmap](#-roadmap)
-- [🤝 Contributing](#-contributing)
-- [📬 Contact](#-contact)
+## Table of Contents
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Setup & Installation](#setup--installation)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
 
 <!-- Animated Divider -->
 <div align="center">
   <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" alt="Divider">
 </div>
 
-## ✨ Features
+## Features
 
 <table align="center">
   <tr>
@@ -55,7 +59,7 @@
   </tr>
 </table>
 
-## 🏗 Architecture
+## Architecture
 
 ```mermaid
 graph TD;
@@ -73,7 +77,7 @@ graph TD;
     style SupabaseAuth fill:#000,stroke:#3ECF8E,stroke-width:2px,color:#fff
 ```
 
-## 💻 Tech Stack
+## Tech Stack
 
 <div align="center">
   <a href="https://skillicons.dev">
@@ -89,7 +93,7 @@ graph TD;
 - Google OAuth Integration <br/> <img src="https://img.shields.io/badge/Progress-100%25-3ECF8E?style=for-the-badge" alt="100% Complete" />
 - Live Chat & Screen Share <br/> <img src="https://img.shields.io/badge/Progress-15%25-FFD700?style=for-the-badge" alt="15% Complete" />
 
-## 🚀 Setup & Installation
+## Setup & Installation
 
 <details>
 <summary><b>Click to expand setup instructions 🛠️</b></summary>
@@ -119,7 +123,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) to enter the dashboard.
 </details>
 
-## 🗺 Roadmap
+## Roadmap
 
 - [x] **P2P Video Core:** Core engine setup.
 - [x] **Supabase Auth:** Google Sign-in integration.
@@ -127,7 +131,7 @@ Open [http://localhost:3000](http://localhost:3000) to enter the dashboard.
 - [ ] **Live Text Chat:** Realtime WebSocket messaging inside rooms.
 - [ ] **Cloud Recording:** Instantly record and save to Supabase Storage.
 
-## 🤝 Contributing
+## Contributing
 
 <details>
 <summary><b>Want to contribute? Click here!</b></summary>
@@ -139,14 +143,6 @@ We welcome contributions! Please open an issue first to discuss what you would l
 5. Open a Pull Request
 </details>
 
-## 📬 Contact
-
-<div align="center">
-  <a href="https://twitter.com/professyzenith"><img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter"></a>
-  <a href="https://linkedin.com/in/professyzenith"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
-  <a href="mailto:hello@example.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"></a>
-</div>
-
 <br/>
 
 <!-- Animated Divider -->
@@ -155,6 +151,5 @@ We welcome contributions! Please open an issue first to discuss what you would l
 </div>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Waving%20Hand%20Medium-Light%20Skin%20Tone.png" width="45" alt="Waving Hand Emoji" />
   <p><b>Built with passion.</b></p>
 </div>

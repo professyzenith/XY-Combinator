@@ -4,77 +4,95 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Mic, MicOff, Video, VideoOff, Share2, MessageSquare,
-  Users, PhoneOff, Smile, MoreHorizontal, Shield,
-  Hand, Maximize2,
+  Users, PhoneOff, Smile, Shield
 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
-const MOCK_PARTICIPANTS = [
-  { id: 1, name: "Zenith", initials: "Z", color: "#22c55e", speaking: true, muted: false, videoOff: false },
-  { id: 2, name: "Alex", initials: "A", color: "#3b82f6", speaking: false, muted: true, videoOff: false },
-  { id: 3, name: "Maria", initials: "M", color: "#a855f7", speaking: false, muted: false, videoOff: true },
-  { id: 4, name: "Sam", initials: "S", color: "#f59e0b", speaking: false, muted: false, videoOff: false },
-];
-
-const CHAT_MESSAGES = [
-  { id: 1, sender: "Alex", text: "Can everyone hear me?", time: "10:01 AM", self: false },
-  { id: 2, sender: "You", text: "Yes, loud and clear!", time: "10:01 AM", self: true },
-  { id: 3, sender: "Maria", text: "Let's start the demo 🚀", time: "10:02 AM", self: false },
-];
-
-const REACTIONS = ["👍", "❤️", "😂", "😮", "👏", "🎉"];
-
+// Helper component to render video streams
 function VideoTile({
-  participant,
+  stream,
+  name,
+  isLocal,
+  isSpeaking = false,
+  muted = false,
   large = false,
 }: {
-  participant: (typeof MOCK_PARTICIPANTS)[0];
+  stream: MediaStream | null;
+  name: string;
+  isLocal: boolean;
+  isSpeaking?: boolean;
+  muted?: boolean;
   large?: boolean;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
+
+  // Derive initial from name
+  const initial = name ? name.charAt(0).toUpperCase() : "?";
+
   return (
     <div
       style={{
-        borderRadius: large ? 20 : 14,
+        borderRadius: large ? 0 : 14,
         overflow: "hidden",
         position: "relative",
-        background: `linear-gradient(135deg, ${participant.color}18, ${participant.color}08)`,
-        border: participant.speaking
-          ? `2px solid ${participant.color}`
-          : "2px solid rgba(255,255,255,0.06)",
-        boxShadow: participant.speaking ? `0 0 30px ${participant.color}30` : "none",
+        background: large ? "transparent" : "#1c1c1e",
+        border: (isSpeaking && !large)
+          ? `2px solid #7FE8C9`
+          : large ? "none" : "2px solid rgba(255,255,255,0.06)",
+        boxShadow: (isSpeaking && !large) ? `0 0 30px rgba(127, 232, 201, 0.3)` : "none",
         transition: "all 0.3s ease",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: large ? "100%" : 140,
-        aspectRatio: "16/9",
+        height: large ? "100%" : 140,
+        width: large ? "100%" : undefined,
+        aspectRatio: large ? undefined : "16/9",
       }}
     >
-      {/* Avatar */}
-      <div style={{ textAlign: "center" }}>
-        <div
-          style={{
-            width: large ? 80 : 48,
-            height: large ? 80 : 48,
-            borderRadius: "50%",
-            background: `linear-gradient(135deg, ${participant.color}, ${participant.color}cc)`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 800,
-            fontSize: large ? "2rem" : "1.2rem",
-            color: "#fff",
-            margin: "0 auto 8px",
-            boxShadow: `0 4px 20px ${participant.color}40`,
-          }}
-        >
-          {participant.initials}
-        </div>
-        {large && (
-          <div style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", fontWeight: 500 }}>
-            {participant.name}
+      {/* Video Element */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted={isLocal} // Always mute local video to prevent echo
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: large ? "contain" : "cover", 
+          transform: isLocal ? "scaleX(-1)" : "none", // Mirror local video
+          display: stream?.getVideoTracks()[0]?.enabled ? "block" : "none"
+        }}
+      />
+
+      {/* Avatar Fallback if video is off */}
+      {(!stream || !stream.getVideoTracks()[0]?.enabled) && (
+        <div style={{ textAlign: "center", position: "absolute" }}>
+          <div
+            style={{
+              width: large ? 80 : 48,
+              height: large ? 80 : 48,
+              borderRadius: "50%",
+              background: `linear-gradient(135deg, #4b5563, #374151)`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 800,
+              fontSize: large ? "2rem" : "1.2rem",
+              color: "#fff",
+              margin: "0 auto 8px",
+            }}
+          >
+            {initial}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Name tag */}
       <div
@@ -91,21 +109,10 @@ function VideoTile({
           backdropFilter: "blur(8px)",
         }}
       >
-        {participant.muted && <MicOff size={10} color="#ef4444" />}
+        {muted && <MicOff size={10} color="#ef4444" />}
         <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#fff" }}>
-          {participant.name}
+          {name} {isLocal ? "(You)" : ""}
         </span>
-        {participant.speaking && (
-          <div
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "#22c55e",
-              animation: "pulse-green 1s ease-in-out infinite",
-            }}
-          />
-        )}
       </div>
     </div>
   );
@@ -126,17 +133,11 @@ function ControlButton({
   danger?: boolean;
   onClick?: () => void;
 }) {
-  const [pressed, setPressed] = useState(false);
-
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
       <button
         title={label}
-        onClick={() => {
-          setPressed(true);
-          setTimeout(() => setPressed(false), 200);
-          onClick?.();
-        }}
+        onClick={onClick}
         style={{
           width: 52,
           height: 52,
@@ -148,28 +149,15 @@ function ControlButton({
           background: danger
             ? "rgba(239,68,68,0.15)"
             : active
-            ? "rgba(34,197,94,0.12)"
+            ? "rgba(127, 232, 201, 0.12)"
             : "rgba(255,255,255,0.07)",
-          color: danger ? "#ef4444" : active ? "#22c55e" : "rgba(255,255,255,0.7)",
+          color: danger ? "#ef4444" : active ? "#7FE8C9" : "rgba(255,255,255,0.7)",
           border: danger
             ? "1px solid rgba(239,68,68,0.25)"
             : active
-            ? "1px solid rgba(34,197,94,0.25)"
+            ? "1px solid rgba(127, 232, 201, 0.25)"
             : "1px solid rgba(255,255,255,0.08)",
-          transform: pressed ? "scale(0.88)" : "scale(1)",
-          transition: "all 0.15s cubic-bezier(0.34,1.56,0.64,1)",
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.1)";
-          if (!danger && !active) {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.12)";
-          }
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
-          if (!danger && !active) {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.07)";
-          }
+          transition: "all 0.15s",
         }}
       >
         {active && activeIcon ? activeIcon : icon}
@@ -181,27 +169,210 @@ function ControlButton({
   );
 }
 
+// WebRTC Configuration
+const ICE_SERVERS = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" }
+  ],
+};
+
 export default function RoomPage() {
   const params = useParams();
   const router = useRouter();
   const roomId = params.roomId as string;
+  const supabase = createClient();
 
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [remoteStreams, setRemoteStreams] = useState<Record<string, MediaStream>>({});
+  
   const [micOn, setMicOn] = useState(true);
   const [camOn, setCamOn] = useState(true);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [participantsOpen, setParticipantsOpen] = useState(false);
-  const [showReactions, setShowReactions] = useState(false);
-  const [floatingReaction, setFloatingReaction] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState(CHAT_MESSAGES);
   const [elapsed, setElapsed] = useState(0);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const [userId, setUserId] = useState<string>("");
 
-  // Meeting timer
+  const peersRef = useRef<Record<string, RTCPeerConnection>>({});
+  const channelRef = useRef<RealtimeChannel | null>(null);
+
+  // Initialize Media and Signaling
   useEffect(() => {
+    let currentStream: MediaStream | null = null;
+    const uid = Math.random().toString(36).substring(2, 10);
+    setUserId(uid);
+
+    async function init() {
+      try {
+        // 1. Get Local Media in HD
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          video: {
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          }, 
+          audio: true 
+        });
+        currentStream = stream;
+        setLocalStream(stream);
+
+        // 2. Setup Supabase Realtime Channel
+        const channel = supabase.channel(`room-${roomId}`);
+        channelRef.current = channel;
+
+        channel.on("broadcast", { event: "webrtc" }, async ({ payload }) => {
+          const { sender, type, data } = payload;
+          if (sender === uid) return; // Ignore own messages
+
+          // Join: Create offer
+          if (type === "join") {
+            const pc = createPeerConnection(sender, stream);
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            channel.send({
+              type: "broadcast",
+              event: "webrtc",
+              payload: { sender: uid, target: sender, type: "offer", data: offer }
+            });
+          }
+
+          // Offer: Create answer
+          if (type === "offer" && payload.target === uid) {
+            const pc = createPeerConnection(sender, stream);
+            await pc.setRemoteDescription(new RTCSessionDescription(data));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            channel.send({
+              type: "broadcast",
+              event: "webrtc",
+              payload: { sender: uid, target: sender, type: "answer", data: answer }
+            });
+          }
+
+          // Answer: Set remote description
+          if (type === "answer" && payload.target === uid) {
+            const pc = peersRef.current[sender];
+            if (pc) {
+              await pc.setRemoteDescription(new RTCSessionDescription(data));
+            }
+          }
+
+          // ICE Candidate: Add candidate
+          if (type === "ice-candidate" && payload.target === uid) {
+            const pc = peersRef.current[sender];
+            if (pc && data) {
+              await pc.addIceCandidate(new RTCIceCandidate(data));
+            }
+          }
+
+          // Leave: Remove peer
+          if (type === "leave") {
+            const pc = peersRef.current[sender];
+            if (pc) {
+              pc.close();
+              delete peersRef.current[sender];
+            }
+            setRemoteStreams((prev) => {
+              const newStreams = { ...prev };
+              delete newStreams[sender];
+              return newStreams;
+            });
+          }
+        });
+
+        // 3. Subscribe and announce join
+        channel.subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            channel.send({
+              type: "broadcast",
+              event: "webrtc",
+              payload: { sender: uid, type: "join" }
+            });
+          }
+        });
+
+      } catch (err) {
+        console.error("Error accessing media devices.", err);
+      }
+    }
+
+    init();
+
+    // Timer
     const timer = setInterval(() => setElapsed((s) => s + 1), 1000);
-    return () => clearInterval(timer);
-  }, []);
+
+    return () => {
+      clearInterval(timer);
+      currentStream?.getTracks().forEach((track) => track.stop());
+      channelRef.current?.send({
+        type: "broadcast",
+        event: "webrtc",
+        payload: { sender: uid, type: "leave" }
+      });
+      supabase.removeChannel(channelRef.current!);
+      Object.values(peersRef.current).forEach((pc) => pc.close());
+    };
+  }, [roomId, supabase]);
+
+  // Create RTCPeerConnection helper
+  const createPeerConnection = (peerId: string, stream: MediaStream) => {
+    const pc = new RTCPeerConnection(ICE_SERVERS);
+    peersRef.current[peerId] = pc;
+
+    // Add local tracks to connection
+    stream.getTracks().forEach((track) => {
+      pc.addTrack(track, stream);
+    });
+
+    // Listen for remote tracks
+    pc.ontrack = (event) => {
+      setRemoteStreams((prev) => ({
+        ...prev,
+        [peerId]: event.streams[0]
+      }));
+    };
+
+    // Send ICE candidates
+    pc.onicecandidate = (event) => {
+      if (event.candidate && channelRef.current) {
+        channelRef.current.send({
+          type: "broadcast",
+          event: "webrtc",
+          payload: { sender: userId, target: peerId, type: "ice-candidate", data: event.candidate }
+        });
+      }
+    };
+
+    // Clean up disconnected peers (ghosts)
+    pc.oniceconnectionstatechange = () => {
+      if (pc.iceConnectionState === "disconnected" || pc.iceConnectionState === "failed" || pc.iceConnectionState === "closed") {
+        setRemoteStreams((prev) => {
+          const newStreams = { ...prev };
+          delete newStreams[peerId];
+          return newStreams;
+        });
+        pc.close();
+        delete peersRef.current[peerId];
+      }
+    };
+
+    return pc;
+  };
+
+  const toggleMic = () => {
+    if (localStream) {
+      localStream.getAudioTracks().forEach(t => t.enabled = !micOn);
+      setMicOn(!micOn);
+    }
+  };
+
+  const toggleCam = () => {
+    if (localStream) {
+      localStream.getVideoTracks().forEach(t => t.enabled = !camOn);
+      setCamOn(!camOn);
+    }
+  };
+
+  const leaveRoom = () => {
+    router.push("/dashboard");
+  };
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60).toString().padStart(2, "0");
@@ -209,54 +380,17 @@ export default function RoomPage() {
     return `${m}:${sec}`;
   };
 
-  const sendReaction = (emoji: string) => {
-    setFloatingReaction(emoji);
-    setShowReactions(false);
-    setTimeout(() => setFloatingReaction(null), 2500);
-  };
-
-  const sendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    setMessages((prev) => [
-      ...prev,
-      { id: Date.now(), sender: "You", text: message.trim(), time: "Now", self: true },
-    ]);
-    setMessage("");
-    setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
-  };
-
-  const leaveRoom = () => router.push("/dashboard");
-
   return (
     <div
       style={{
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "#080808",
+        background: "#0A0A0A", // Match the dark aesthetic
         overflow: "hidden",
         position: "relative",
       }}
     >
-      {/* Floating reaction */}
-      {floatingReaction && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: 160,
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: "4rem",
-            zIndex: 9999,
-            animation: "fadeUp 0.4s ease forwards",
-            pointerEvents: "none",
-          }}
-        >
-          {floatingReaction}
-        </div>
-      )}
-
       {/* Top bar */}
       <div
         style={{
@@ -271,23 +405,23 @@ export default function RoomPage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg, #22c55e, #16a34a)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "0.7rem", color: "#fff" }}>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: "#7FE8C9", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.7rem", color: "#0A0A0A" }}>
             XY
           </div>
           <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "#fff" }}>
-            Room: <span style={{ color: "#22c55e", fontFamily: "monospace" }}>{roomId}</span>
+            Room: <span style={{ color: "#7FE8C9", fontFamily: "monospace" }}>{roomId}</span>
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#22c55e", fontSize: "0.85rem", fontWeight: 600 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", animation: "pulse-green 1.5s ease-in-out infinite" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#7FE8C9", fontSize: "0.85rem", fontWeight: 600 }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#7FE8C9", animation: "pulse-green 1.5s ease-in-out infinite" }} />
             {formatTime(elapsed)}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "var(--text-muted)", fontSize: "0.82rem" }}>
-            <Shield size={13} color="#22c55e" /> Encrypted
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.5)", fontSize: "0.82rem" }}>
+            <Shield size={13} color="#7FE8C9" /> Encrypted
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "var(--text-muted)", fontSize: "0.82rem" }}>
-            <Users size={13} /> {MOCK_PARTICIPANTS.length}
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.5)", fontSize: "0.82rem" }}>
+            <Users size={13} /> {Object.keys(remoteStreams).length + 1}
           </div>
         </div>
       </div>
@@ -296,115 +430,33 @@ export default function RoomPage() {
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {/* Video area */}
         <div style={{ flex: 1, padding: 16, display: "flex", flexDirection: "column", gap: 12, overflow: "hidden" }}>
-          {/* Main speaker */}
+          
+          {/* Main speaker (Local stream for now, or first remote) */}
           <div style={{ flex: 1, minHeight: 0 }}>
-            <VideoTile participant={MOCK_PARTICIPANTS[0]} large />
+            {Object.keys(remoteStreams).length > 0 ? (
+               <VideoTile stream={Object.values(remoteStreams)[0]} name="Remote User" isLocal={false} large />
+            ) : (
+               <VideoTile stream={localStream} name="Me" isLocal={true} muted={!micOn} large />
+            )}
           </div>
 
           {/* Filmstrip */}
           <div style={{ display: "flex", gap: 10, height: 140, flexShrink: 0, overflowX: "auto" }}>
-            {MOCK_PARTICIPANTS.slice(1).map((p) => (
-              <div key={p.id} style={{ minWidth: 200, flex: "0 0 200px" }}>
-                <VideoTile participant={p} />
+            {/* Always show local in filmstrip if we have remote users in main */}
+            {Object.keys(remoteStreams).length > 0 && (
+              <div style={{ minWidth: 200, flex: "0 0 200px" }}>
+                <VideoTile stream={localStream} name="Me" isLocal={true} muted={!micOn} />
+              </div>
+            )}
+            
+            {/* Other remote streams */}
+            {Object.entries(remoteStreams).slice(1).map(([id, stream]) => (
+              <div key={id} style={{ minWidth: 200, flex: "0 0 200px" }}>
+                <VideoTile stream={stream} name="Participant" isLocal={false} />
               </div>
             ))}
           </div>
         </div>
-
-        {/* Side panel */}
-        {(chatOpen || participantsOpen) && (
-          <div
-            style={{
-              width: 320,
-              background: "var(--bg-surface)",
-              borderLeft: "1px solid rgba(255,255,255,0.05)",
-              display: "flex",
-              flexDirection: "column",
-              animation: "scaleIn 0.2s ease forwards",
-            }}
-          >
-            {/* Panel header */}
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 8 }}>
-              <button
-                onClick={() => { setChatOpen(true); setParticipantsOpen(false); }}
-                style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600, background: chatOpen ? "rgba(34,197,94,0.1)" : "transparent", color: chatOpen ? "#22c55e" : "var(--text-muted)", transition: "all 0.2s ease" }}
-              >
-                Chat
-              </button>
-              <button
-                onClick={() => { setParticipantsOpen(true); setChatOpen(false); }}
-                style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600, background: participantsOpen ? "rgba(34,197,94,0.1)" : "transparent", color: participantsOpen ? "#22c55e" : "var(--text-muted)", transition: "all 0.2s ease" }}
-              >
-                People ({MOCK_PARTICIPANTS.length})
-              </button>
-            </div>
-
-            {/* Chat */}
-            {chatOpen && (
-              <>
-                <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 }}>
-                  {messages.map((msg) => (
-                    <div key={msg.id} style={{ display: "flex", flexDirection: "column", alignItems: msg.self ? "flex-end" : "flex-start" }}>
-                      {!msg.self && (
-                        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginBottom: 4 }}>{msg.sender}</span>
-                      )}
-                      <div
-                        style={{
-                          padding: "10px 14px",
-                          borderRadius: 12,
-                          background: msg.self ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)",
-                          border: msg.self ? "1px solid rgba(34,197,94,0.25)" : "1px solid rgba(255,255,255,0.06)",
-                          maxWidth: "80%",
-                          fontSize: "0.875rem",
-                          color: "#fff",
-                          lineHeight: 1.5,
-                        }}
-                      >
-                        {msg.text}
-                      </div>
-                      <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 4 }}>{msg.time}</span>
-                    </div>
-                  ))}
-                  <div ref={chatEndRef} />
-                </div>
-                <form onSubmit={sendMessage} style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 8 }}>
-                  <input
-                    className="input"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    style={{ background: "rgba(255,255,255,0.04)", fontSize: "0.85rem" }}
-                  />
-                  <button type="submit" className="btn btn-primary btn-sm" style={{ flexShrink: 0 }}>
-                    Send
-                  </button>
-                </form>
-              </>
-            )}
-
-            {/* Participants */}
-            {participantsOpen && (
-              <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 8 }}>
-                {MOCK_PARTICIPANTS.map((p) => (
-                  <div
-                    key={p.id}
-                    style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 10, background: "rgba(255,255,255,0.03)" }}
-                  >
-                    <div style={{ width: 34, height: 34, borderRadius: "50%", background: `linear-gradient(135deg, ${p.color}, ${p.color}cc)`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.85rem", color: "#fff", flexShrink: 0 }}>
-                      {p.initials}
-                    </div>
-                    <span style={{ flex: 1, fontSize: "0.875rem", fontWeight: 500, color: "#fff" }}>{p.name}</span>
-                    <div style={{ display: "flex", gap: 6 }}>
-                      {p.muted && <MicOff size={13} color="#ef4444" />}
-                      {p.videoOff && <VideoOff size={13} color="var(--text-muted)" />}
-                      {p.speaking && <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", marginTop: 2, animation: "pulse-green 1s infinite" }} />}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Controls bar */}
@@ -423,47 +475,12 @@ export default function RoomPage() {
           zIndex: 10,
         }}
       >
-        {/* Reactions popup */}
-        {showReactions && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: "100%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              background: "var(--bg-elevated)",
-              border: "1px solid var(--border-default)",
-              borderRadius: 16,
-              padding: "12px 16px",
-              display: "flex",
-              gap: 8,
-              marginBottom: 8,
-              animation: "scaleIn 0.2s ease forwards",
-            }}
-          >
-            {REACTIONS.map((emoji) => (
-              <button
-                key={emoji}
-                onClick={() => sendReaction(emoji)}
-                style={{ fontSize: "1.5rem", background: "none", border: "none", cursor: "pointer", borderRadius: 8, padding: "4px 8px", transition: "transform 0.15s cubic-bezier(0.34,1.56,0.64,1)" }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.3)"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"; }}
-              >
-                {emoji}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <ControlButton icon={<MicOff size={20} />} activeIcon={<Mic size={20} />} label={micOn ? "Mute" : "Unmute"} active={micOn} onClick={() => setMicOn(!micOn)} />
-        <ControlButton icon={<VideoOff size={20} />} activeIcon={<Video size={20} />} label={camOn ? "Stop" : "Start"} active={camOn} onClick={() => setCamOn(!camOn)} />
+        <ControlButton icon={<MicOff size={20} />} activeIcon={<Mic size={20} />} label={micOn ? "Mute" : "Unmute"} active={micOn} onClick={toggleMic} />
+        <ControlButton icon={<VideoOff size={20} />} activeIcon={<Video size={20} />} label={camOn ? "Stop" : "Start"} active={camOn} onClick={toggleCam} />
         <ControlButton icon={<Share2 size={20} />} label="Share" active={false} />
-        <ControlButton icon={<Hand size={20} />} label="Raise hand" active={false} />
-        <ControlButton icon={<Smile size={20} />} label="React" active={showReactions} onClick={() => setShowReactions(!showReactions)} />
-        <ControlButton icon={<MessageSquare size={20} />} label="Chat" active={chatOpen} onClick={() => { setChatOpen(!chatOpen); setParticipantsOpen(false); }} />
-        <ControlButton icon={<Users size={20} />} label="People" active={participantsOpen} onClick={() => { setParticipantsOpen(!participantsOpen); setChatOpen(false); }} />
-        <ControlButton icon={<Maximize2 size={20} />} label="Fullscreen" active={false} />
-        <ControlButton icon={<MoreHorizontal size={20} />} label="More" active={false} />
+        <ControlButton icon={<Smile size={20} />} label="React" active={false} />
+        <ControlButton icon={<MessageSquare size={20} />} label="Chat" active={false} />
+        <ControlButton icon={<Users size={20} />} label="People" active={false} />
 
         {/* Leave button */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
@@ -473,16 +490,8 @@ export default function RoomPage() {
               width: 52, height: 52, borderRadius: 16, border: "none", cursor: "pointer",
               background: "rgba(239,68,68,0.9)", color: "#fff",
               display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
+              transition: "all 0.2s",
               boxShadow: "0 0 20px rgba(239,68,68,0.3)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.1)";
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 30px rgba(239,68,68,0.5)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 20px rgba(239,68,68,0.3)";
             }}
           >
             <PhoneOff size={20} />
@@ -490,6 +499,14 @@ export default function RoomPage() {
           <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>Leave</span>
         </div>
       </div>
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes pulse-green {
+          0% { box-shadow: 0 0 0 0 rgba(127, 232, 201, 0.7); }
+          70% { box-shadow: 0 0 0 6px rgba(127, 232, 201, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(127, 232, 201, 0); }
+        }
+      `}} />
     </div>
   );
 }

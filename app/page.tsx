@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import IntroAnimation from "@/components/IntroAnimation";
 import Navbar from "@/components/Navbar";
@@ -97,7 +97,22 @@ function AmbientBackground() {
    ───────────────────────────────────────────────────────────────────────────── */
 export default function Home() {
   const [introComplete, setIntroComplete] = useState(false);
-  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    const hasSeenIntro = sessionStorage.getItem("xy_intro_seen");
+    if (hasSeenIntro) {
+      setIntroComplete(true);
+    }
+    setHasMounted(true);
+  }, []);
+
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true);
+    sessionStorage.setItem("xy_intro_seen", "true");
+  }, []);
+
+  if (!hasMounted) return null;
 
   return (
     <>

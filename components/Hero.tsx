@@ -455,8 +455,13 @@ export default function Hero({ visible }: { visible: boolean }) {
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                className="magnetic"
               >
-                <Link href="/register" className="btn btn-primary" style={{ padding: "14px 36px", fontSize: "0.9rem" }}>
+                <Link
+                  href="/register"
+                  className="btn btn-primary ripple-host anim-pulse-soft"
+                  style={{ padding: "14px 36px", fontSize: "0.9rem" }}
+                >
                   Get started
                 </Link>
               </motion.div>

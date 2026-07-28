@@ -197,7 +197,8 @@ function Card({
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ delay, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -5 }}
-      className="shimmer-card card-3d"
+      className="shimmer-card card-3d glow-hover"
+      data-tilt
       style={{
         gridColumn: span === 2 ? "span 2" : "span 1",
         background: "var(--surface-1)",

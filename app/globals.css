@@ -217,12 +217,181 @@ body {
   animation: fade-up 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
 }
 
-/* ─── Responsive helpers ─────────────────────────────────────────────────── */
+/* ─── Ripple click effect ────────────────────────────────────────────────── */
+@keyframes ripple-out {
+  0%   { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+.ripple-host { position: relative; overflow: hidden; }
+.ripple-host .ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(74,144,112,0.25);
+  width: 40px; height: 40px;
+  pointer-events: none;
+  animation: ripple-out 0.6s ease-out forwards;
+}
+
+/* ─── Text focus-in (blur to sharp) ──────────────────────────────────────── */
+@keyframes text-focus-in {
+  0%   { filter: blur(6px); opacity: 0; transform: scale(1.04); }
+  100% { filter: blur(0);   opacity: 1; transform: scale(1); }
+}
+.anim-text-focus { animation: text-focus-in 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* ─── Letter-spacing tracking expand ─────────────────────────────────────── */
+@keyframes tracking-expand {
+  0%   { letter-spacing: -0.5em; opacity: 0; }
+  60%  { opacity: 0.6; }
+  100% { letter-spacing: normal; opacity: 1; }
+}
+.anim-tracking { animation: tracking-expand 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* ─── Soft pulse for buttons ─────────────────────────────────────────────── */
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(74,144,112,0.3); }
+  50%       { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(74,144,112,0); }
+}
+.anim-pulse-soft { animation: pulse-soft 2.5s ease-in-out infinite; }
+
+/* ─── Orbit (circular motion for decorative dots) ────────────────────────── */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(20px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
+}
+.anim-orbit { animation: orbit 8s linear infinite; }
+
+/* ─── Micro wiggle (attention) ───────────────────────────────────────────── */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-2deg); }
+  40%      { transform: rotate(2deg); }
+  60%      { transform: rotate(-1deg); }
+  80%      { transform: rotate(1deg); }
+}
+.anim-wiggle { animation: wiggle 0.5s ease-in-out; }
+
+/* ─── Link underline grow ────────────────────────────────────────────────── */
+.underline-grow {
+  position: relative; text-decoration: none;
+}
+.underline-grow::after {
+  content: ''; position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1.5px;
+  background: var(--accent);
+  transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.underline-grow:hover::after { width: 100%; }
+
+/* ─── Animated border trace ──────────────────────────────────────────────── */
+@keyframes border-trace {
+  0%   { clip-path: inset(0 100% 0 0); }
+  25%  { clip-path: inset(0 0 100% 0); }
+  50%  { clip-path: inset(0 0 0 100%); }
+  75%  { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0 100% 0 0); }
+}
+
+/* ─── Animated border card ───────────────────────────────────────────────── */
+.animated-border {
+  position: relative;
+}
+.animated-border::before {
+  content: '';
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    rgba(74,144,112,0.5),
+    rgba(74,120,168,0.3),
+    rgba(122,94,168,0.2),
+    transparent 60%
+  );
+  animation: border-spin 4s linear infinite;
+  z-index: -1;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1.5px;
+}
+
+/* ─── 3D flip entrance ───────────────────────────────────────────────────── */
+@keyframes flip-in-x {
+  0%   { transform: perspective(400px) rotateX(80deg); opacity: 0; }
+  40%  { transform: perspective(400px) rotateX(-15deg); }
+  70%  { transform: perspective(400px) rotateX(10deg); }
+  100% { transform: perspective(400px) rotateX(0); opacity: 1; }
+}
+.anim-flip-x { animation: flip-in-x 0.8s ease both; }
+
+/* ─── Rotate entrance ────────────────────────────────────────────────────── */
+@keyframes rotate-in {
+  0%   { transform: rotate(-15deg) scale(0.8); opacity: 0; }
+  100% { transform: rotate(0) scale(1); opacity: 1; }
+}
+.anim-rotate-in { animation: rotate-in 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* ─── Typewriter cursor ──────────────────────────────────────────────────── */
+.typing-cursor::after {
+  content: '|';
+  animation: typing-cursor 0.8s step-end infinite;
+  color: var(--accent);
+  font-weight: 300;
+  margin-left: 2px;
+}
+
+/* ─── Glow on hover ──────────────────────────────────────────────────────── */
+.glow-hover {
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+.glow-hover:hover {
+  box-shadow:
+    0 0 20px rgba(74,144,112,0.15),
+    0 0 60px rgba(74,144,112,0.08),
+    0 8px 32px rgba(0,0,0,0.12);
+  transform: translateY(-3px);
+}
+
+/* ─── Stagger more delays ────────────────────────────────────────────────── */
+.delay-7 { animation-delay: 0.7s; }
+.delay-8 { animation-delay: 0.8s; }
+.delay-9 { animation-delay: 0.9s; }
+.delay-10 { animation-delay: 1.0s; }
+
+/* ─── Scroll-driven progress bar ─────────────────────────────────────────── */
+@keyframes scroll-progress-fill {
+  to { transform: scaleX(1); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY — Reduce motion for users who prefer it
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .shimmer-card::after { display: none; }
+  .animated-border::before { animation: none; }
+  .anim-float, .anim-float-slow, .anim-breathe,
+  .anim-card-float, .anim-orbit { animation: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE — Lighter animations for phones & tablets
+   ═══════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   :root {
     --container-pad: 20px;
     --section-gap: var(--space-20);
   }
+  /* Disable heavy effects on mobile */
+  .shimmer-card::after { display: none; }
+  .card-3d:hover { transform: translateY(-3px); }
+  .animated-border::before { animation-duration: 8s; }
+  .anim-float { animation-duration: 6s; }
+  .anim-float-slow { animation-duration: 10s; }
 }
 
 @media (max-width: 480px) {
@@ -230,4 +399,6 @@ body {
     --container-pad: 16px;
     --section-gap: var(--space-16);
   }
+  .card-3d { transform-style: flat; }
+  .card-3d:hover { transform: translateY(-2px); }
 }

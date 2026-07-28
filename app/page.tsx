@@ -14,6 +14,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 const CustomCursor   = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
 const ScrollProgress = dynamic(() => import("@/components/ScrollProgressBar"), { ssr: false });
 const ParticleCanvas = dynamic(() => import("@/components/ParticleCanvas"), { ssr: false });
+const ScrollFXInit   = dynamic(() => import("@/components/ScrollFXInit"), { ssr: false });
 
 /* ─────────────────────────────────────────────────────────────────────────────
    AMBIENT BACKGROUND — Light Mode
@@ -116,6 +117,7 @@ export default function Home() {
         }}
       >
         <SmoothScroll>
+          <ScrollFXInit />
           <Navbar />
           <main>
             <Hero visible={introComplete} />

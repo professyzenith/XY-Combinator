@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# XY Combinator
+
+> Premium AI-powered video conferencing platform. HD video, end-to-end encrypted, zero setup.
+
+## Overview
+
+XY Combinator is a modern video meetings platform built for teams who care about quality and security. Join in under 2 seconds — no plugins, no downloads required.
+
+**Core features:**
+- 1080p HD video with adaptive bitrate
+- 256-bit AES end-to-end encryption
+- Zero-knowledge architecture
+- Real-time AI noise removal
+- Persistent meeting chat
+- Screen sharing & file sharing
+- Works in all modern browsers
+
+## Tech Stack
+
+- **Framework** — Next.js 16 (App Router)
+- **Language** — TypeScript
+- **Animation** — Framer Motion + GSAP
+- **Styling** — Vanilla CSS with design tokens
+- **Fonts** — Outfit, Inter (Google Fonts)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+├── app/              # Next.js app router pages
+├── components/       # React components
+├── styles/           # Global CSS & design system tokens
+├── utils/            # Animation utilities (GSAP, canvas particles)
+└── public/           # Static assets
+```
 
-## Learn More
+## Pages
 
-To learn more about Next.js, take a look at the following resources:
+| Route | Description |
+|---|---|
+| `/` | Landing page |
+| `/register` | Sign up |
+| `/login` | Sign in |
+| `/join` | Join a meeting by code |
+| `/dashboard` | User dashboard |
+| `/room/[roomId]` | Active meeting room |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev      # Development server (localhost:3000)
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # ESLint check
+```
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

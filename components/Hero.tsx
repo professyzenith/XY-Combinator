@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-const ThreeCanvas = dynamic(() => import("@/components/ThreeCanvas"), { ssr: false });
+// Removed unused dynamic import for ThreeCanvas
 
 /* ─── Palette — muted, readable on light bg (meeting room stays dark) ─── */
 const P = {
@@ -377,10 +377,7 @@ export default function Hero({ visible }: { visible: boolean }) {
         }}
       />
 
-      {/* WebGL 3D Background */}
-      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        {visible && <ThreeCanvas />}
-      </div>
+      {/* Removed WebGL background for cleaner text readability */}
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <div style={{

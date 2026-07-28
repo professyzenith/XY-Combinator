@@ -45,10 +45,57 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
               background: "radial-gradient(circle, rgba(74,144,112,0.06) 0%, transparent 70%)",
               filter: "blur(40px)",
               pointerEvents: "none",
+              zIndex: 0,
             }}
           />
 
-          <div style={{ textAlign: "center", position: "relative" }}>
+          {/* Background Images */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, rotate: -4 }}
+            animate={{ opacity: phase === "reveal" ? 0.3 : 0, y: phase === "reveal" ? 0 : 40, rotate: -4 }}
+            transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "absolute", left: "15%", top: "20%", width: 280, height: 380,
+              backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600')",
+              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
+              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
+            }}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: -40, rotate: 6 }}
+            animate={{ opacity: phase === "reveal" ? 0.4 : 0, y: phase === "reveal" ? 0 : -40, rotate: 6 }}
+            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "absolute", right: "12%", top: "15%", width: 240, height: 320,
+              backgroundImage: "url('https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=600')",
+              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
+              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
+            }}
+          />
+          <motion.div
+            initial={{ opacity: 0, x: -40, rotate: -2 }}
+            animate={{ opacity: phase === "reveal" ? 0.25 : 0, x: phase === "reveal" ? 0 : -40, rotate: -2 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "absolute", left: "25%", bottom: "10%", width: 300, height: 200,
+              backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600')",
+              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
+              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
+            }}
+          />
+          <motion.div
+            initial={{ opacity: 0, x: 40, rotate: 3 }}
+            animate={{ opacity: phase === "reveal" ? 0.3 : 0, x: phase === "reveal" ? 0 : 40, rotate: 3 }}
+            transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "absolute", right: "20%", bottom: "15%", width: 260, height: 260,
+              backgroundImage: "url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600')",
+              backgroundSize: "cover", backgroundPosition: "center", borderRadius: 16,
+              boxShadow: "0 20px 40px rgba(0,0,0,0.08)", zIndex: 0, mixBlendMode: "multiply", filter: "grayscale(20%)"
+            }}
+          />
+
+          <div style={{ textAlign: "center", position: "relative", zIndex: 10 }}>
             {/* XY mark */}
             <motion.div
               initial={{ opacity: 0, scale: 0.7 }}

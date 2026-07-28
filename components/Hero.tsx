@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 // Removed unused dynamic import for ThreeCanvas

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, Check } from "lucide-react";
@@ -121,16 +121,18 @@ function AuroraBackground() {
 }
 
 // Floating particles
+const INITIAL_DOTS = Array.from({ length: 28 }, (_, i) => ({
+  id: i,
+  x: Math.random() * 100,
+  y: Math.random() * 100,
+  size: 1 + Math.random() * 2,
+  delay: Math.random() * 8,
+  duration: 8 + Math.random() * 12,
+  color: i % 4 === 0 ? "rgba(34,197,94,0.6)" : i % 4 === 1 ? "rgba(99,102,241,0.4)" : i % 4 === 2 ? "rgba(59,130,246,0.35)" : "rgba(255,255,255,0.2)",
+}));
+
 function Particles() {
-  const dots = Array.from({ length: 28 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: 1 + Math.random() * 2,
-    delay: Math.random() * 8,
-    duration: 8 + Math.random() * 12,
-    color: i % 4 === 0 ? "rgba(34,197,94,0.6)" : i % 4 === 1 ? "rgba(99,102,241,0.4)" : i % 4 === 2 ? "rgba(59,130,246,0.35)" : "rgba(255,255,255,0.2)",
-  }));
+  const [dots] = useState(INITIAL_DOTS);
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none" }}>

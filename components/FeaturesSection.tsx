@@ -308,7 +308,7 @@ export default function FeaturesSection() {
                   Crystal clear<br />HD video
                 </h3>
                 <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", lineHeight: "var(--leading-relaxed)", maxWidth: 240 }}>
-                  Adaptive bitrate keeps every call smooth — whether you're on fibre or a coffee shop Wi-Fi.
+                  Adaptive bitrate keeps every call smooth — whether you&apos;re on fibre or a coffee shop Wi-Fi.
                 </p>
               </div>
               <div style={{ width: 200, flexShrink: 0, marginTop: 4 }}>
@@ -339,7 +339,7 @@ export default function FeaturesSection() {
               End-to-end encrypted
             </h3>
             <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", lineHeight: "var(--leading-relaxed)" }}>
-              256-bit AES on every call. Zero-knowledge architecture. Even we can't see your meetings.
+              256-bit AES on every call. Zero-knowledge architecture. Even we can&apos;t see your meetings.
             </p>
             <div style={{
               marginTop: 20,

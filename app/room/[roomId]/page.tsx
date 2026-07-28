@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Mic, MicOff, Video, VideoOff, Share2, MessageSquare,
   Users, PhoneOff, Smile, MoreHorizontal, Shield,
-  Hand, Maximize2, ChevronUp,
+  Hand, Maximize2,
 } from "lucide-react";
 
 const MOCK_PARTICIPANTS = [

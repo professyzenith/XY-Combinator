@@ -126,7 +126,7 @@ export function initParallax() {
   let ticking = false;
 
   function update() {
-    const scrollY = window.scrollY;
+
     elements.forEach((el) => {
       const speed = parseFloat(el.dataset.parallax) || 0.15;
       const rect = el.getBoundingClientRect();

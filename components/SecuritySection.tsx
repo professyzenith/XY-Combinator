@@ -63,8 +63,8 @@ function EncryptionStream() {
   );
 }
 
-function StatChip({ value, label, delay = 0, isText = false }: {
-  value: string; label: string; delay?: number; isText?: boolean;
+function StatChip({ value, label, delay = 0 }: {
+  value: string; label: string; delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
 
 /* ─── Muted Apple-calibrated palette ─── */
 const P = {
@@ -63,7 +63,7 @@ function ActNav({ activeIndex }: { activeIndex: number }) {
 }
 
 /* ─── Screen share panel ─── */
-function ScreenSharePanel({ opacity, x }: { opacity: any; x: any }) {
+function ScreenSharePanel({ opacity, x }: { opacity: MotionValue<number>; x: MotionValue<string> }) {
   return (
     <motion.div style={{ opacity, x }}>
       <div style={{
@@ -111,7 +111,7 @@ function ScreenSharePanel({ opacity, x }: { opacity: any; x: any }) {
 }
 
 /* ─── Chat panel ─── */
-function ChatPanel({ opacity, x }: { opacity: any; x: any }) {
+function ChatPanel({ opacity, x }: { opacity: MotionValue<number>; x: MotionValue<string> }) {
   const msgs = [
     { from: "Alex",   color: P.steel,  text: "Shipping at 3pm today." },
     { from: "Maria",  color: P.violet, text: "PR is up and reviewed." },
@@ -168,7 +168,7 @@ function ChatPanel({ opacity, x }: { opacity: any; x: any }) {
 }
 
 /* ─── AI Notes panel ─── */
-function AINotesPanel({ opacity }: { opacity: any }) {
+function AINotesPanel({ opacity }: { opacity: MotionValue<number> }) {
   return (
     <motion.div style={{ opacity }}>
       <div style={{

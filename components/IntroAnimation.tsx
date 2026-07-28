@@ -25,81 +25,45 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
             position: "fixed",
             inset: 0,
             zIndex: 9999,
-            background: "#e4e4e9",   /* silver — matches page bg */
+            /* Extremely cool, deep rich dark gradient */
+            background: "linear-gradient(135deg, #050505 0%, #0a0f12 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            overflow: "hidden",
           }}
         >
-          {/* Radial ambient light */}
+          {/* Subtle slow-moving dark grid pattern */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: phase === "reveal" ? 0.3 : 0 }}
+            transition={{ duration: 1.5 }}
+            style={{
+              position: "absolute", inset: -100, pointerEvents: "none", zIndex: 0,
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), " +
+                "linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
+              backgroundSize: "60px 60px",
+              transform: "perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px)",
+            }}
+          />
+
+          {/* Deep ambient glow in the center */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: phase === "reveal" ? 1 : 0, scale: phase === "reveal" ? 1 : 0.5 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: "absolute",
-              width: 600,
-              height: 600,
+              width: 800,
+              height: 800,
               borderRadius: "50%",
-              /* Subtle sage bloom — very light */
-              background: "radial-gradient(circle, rgba(74,144,112,0.06) 0%, transparent 70%)",
-              filter: "blur(40px)",
+              background: "radial-gradient(circle, rgba(74,144,112,0.08) 0%, transparent 60%)",
+              filter: "blur(60px)",
               pointerEvents: "none",
               zIndex: 0,
             }}
           />
-
-          {/* Premium Mesh Gradient / Aurora Background */}
-          <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0, pointerEvents: "none" }}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, x: "-30%", y: "-20%" }}
-              animate={{
-                opacity: phase === "reveal" ? 0.6 : 0,
-                scale: phase === "reveal" ? 1.5 : 0.8,
-                x: phase === "reveal" ? "10%" : "-30%",
-                y: phase === "reveal" ? "10%" : "-20%"
-              }}
-              transition={{ duration: 2.5, ease: "easeOut" }}
-              style={{
-                position: "absolute", width: "80vw", height: "80vw", borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(74,144,112,0.15) 0%, transparent 60%)",
-                filter: "blur(80px)",
-                mixBlendMode: "multiply"
-              }}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, x: "30%", y: "20%" }}
-              animate={{
-                opacity: phase === "reveal" ? 0.5 : 0,
-                scale: phase === "reveal" ? 1.8 : 0.8,
-                x: phase === "reveal" ? "-10%" : "30%",
-                y: phase === "reveal" ? "-10%" : "20%"
-              }}
-              transition={{ duration: 2.5, ease: "easeOut", delay: 0.2 }}
-              style={{
-                position: "absolute", width: "70vw", height: "70vw", borderRadius: "50%", right: 0, bottom: 0,
-                background: "radial-gradient(circle, rgba(122,94,168,0.1) 0%, transparent 60%)",
-                filter: "blur(80px)",
-                mixBlendMode: "multiply"
-              }}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: "40%" }}
-              animate={{
-                opacity: phase === "reveal" ? 0.7 : 0,
-                scale: phase === "reveal" ? 2 : 0.8,
-                y: phase === "reveal" ? "-10%" : "40%"
-              }}
-              transition={{ duration: 2.5, ease: "easeOut", delay: 0.1 }}
-              style={{
-                position: "absolute", width: "100vw", height: "50vw", borderRadius: "50%", left: "50%", bottom: "-20%",
-                transform: "translateX(-50%)",
-                background: "radial-gradient(ellipse, rgba(74,120,168,0.12) 0%, transparent 60%)",
-                filter: "blur(80px)",
-                mixBlendMode: "multiply"
-              }}
-            />
-          </div>
 
           <div style={{ textAlign: "center", position: "relative", zIndex: 10 }}>
             {/* XY mark */}
@@ -108,18 +72,22 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
               animate={{ opacity: phase === "reveal" ? 1 : 0, scale: phase === "reveal" ? 1 : 0.7 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                width: 56,
-                height: 56,
-                borderRadius: 14,
-                background: "#4a9070",   /* deeper sage — readable */
+                width: 64,
+                height: 64,
+                borderRadius: 16,
+                /* Dark frosted glass look for the logo box */
+                background: "rgba(255,255,255,0.03)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                margin: "0 auto 20px",
-                boxShadow: "0 0 0 1px rgba(74,144,112,0.2), 0 8px 24px rgba(0,0,0,0.14)",
+                margin: "0 auto 24px",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(74,144,112,0.2) inset",
                 fontFamily: "'Outfit', sans-serif",
                 fontWeight: 900,
-                fontSize: "1.2rem",
+                fontSize: "1.4rem",
                 color: "#ffffff",
                 letterSpacing: "-0.04em",
               }}
@@ -134,22 +102,28 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
               transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 fontFamily: "'Outfit', sans-serif",
-                fontWeight: 700,
-                fontSize: "1rem",
-                color: "rgba(29,29,31,0.5)",   /* dark on light */
-                letterSpacing: "-0.02em",
+                fontWeight: 600,
+                fontSize: "1.1rem",
+                color: "rgba(255,255,255,0.6)",
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
               }}
             >
               Combinator
             </motion.div>
 
-            {/* Thin progress line */}
-            <div style={{ marginTop: 32, width: 120, height: 1, background: "rgba(0,0,0,0.1)", borderRadius: 99, overflow: "hidden", margin: "32px auto 0" }}>
+            {/* Glowing progress line */}
+            <div style={{ marginTop: 40, width: 140, height: 2, background: "rgba(255,255,255,0.05)", borderRadius: 99, overflow: "hidden", margin: "40px auto 0", position: "relative" }}>
               <motion.div
                 initial={{ width: "0%" }}
                 animate={{ width: phase === "reveal" ? "100%" : "0%" }}
                 transition={{ duration: 1.4, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                style={{ height: "100%", background: "#4a9070", borderRadius: 99 }}
+                style={{ 
+                  height: "100%", 
+                  background: "#4a9070", 
+                  borderRadius: 99,
+                  boxShadow: "0 0 10px rgba(74,144,112,0.8)"
+                }}
               />
             </div>
           </div>

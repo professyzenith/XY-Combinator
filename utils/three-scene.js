@@ -39,18 +39,26 @@ export function initThreeScene(canvas) {
   const group = new THREE.Group();
   scene.add(group);
 
-  // Material: Custom Physical Material for a "frosted glass / soft metal" look
-  const material = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    metalness: 0.2,
-    roughness: 0.1,
-    transmission: 0.9, // glass-like
+  // Base Material Properties for a "frosted colored glass" look
+  const baseMaterialProps = {
+    metalness: 0.1,
+    roughness: 0.15,
+    transmission: 0.9, 
     ior: 1.5,
     thickness: 0.5,
     envMapIntensity: 1.0,
     clearcoat: 1.0,
     clearcoatRoughness: 0.1,
-  });
+  };
+
+  const materials = [
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x4ade80 }), // Vibrant Green
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0xa855f7 }), // Purple
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x3b82f6 }), // Blue
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0xec4899 }), // Pink
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0xf59e0b }), // Amber/Orange
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x06b6d4 }), // Cyan
+  ];
 
   // Create multiple abstract shapes
   const geometries = [
@@ -58,29 +66,32 @@ export function initThreeScene(canvas) {
     new THREE.IcosahedronGeometry(2.5, 0),
     new THREE.OctahedronGeometry(2, 0),
     new THREE.TorusKnotGeometry(2, 0.6, 100, 16),
+    new THREE.SphereGeometry(2, 32, 32),
   ];
 
-  const numShapes = isMobile ? 3 : 5;
+  // Increased number of objects
+  const numShapes = isMobile ? 8 : 18;
   const meshes = [];
 
   for (let i = 0; i < numShapes; i++) {
     const geo = geometries[i % geometries.length];
-    const mesh = new THREE.Mesh(geo, material);
+    const mat = materials[i % materials.length];
+    const mesh = new THREE.Mesh(geo, mat);
     
-    // Random spread
-    mesh.position.x = (Math.random() - 0.5) * 20;
-    mesh.position.y = (Math.random() - 0.5) * 15;
-    mesh.position.z = (Math.random() - 0.5) * 10 - 5;
+    // Wider spread to fill the screen
+    mesh.position.x = (Math.random() - 0.5) * 35;
+    mesh.position.y = (Math.random() - 0.5) * 25;
+    mesh.position.z = (Math.random() - 0.5) * 20 - 10;
     
     // Random initial rotation
     mesh.rotation.x = Math.random() * Math.PI;
     mesh.rotation.y = Math.random() * Math.PI;
 
-    // Custom animation speeds
+    // Faster custom animation speeds
     mesh.userData = {
-      rx: (Math.random() - 0.5) * 0.01,
-      ry: (Math.random() - 0.5) * 0.01,
-      floatSpeed: 0.001 + Math.random() * 0.002,
+      rx: (Math.random() - 0.5) * 0.02,
+      ry: (Math.random() - 0.5) * 0.02,
+      floatSpeed: 0.002 + Math.random() * 0.003,
       floatOffset: Math.random() * Math.PI * 2,
       initialY: mesh.position.y
     };

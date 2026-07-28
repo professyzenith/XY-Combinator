@@ -62,9 +62,7 @@ function ParticleUniverse() {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       {/* Intense neon emerald glow utilizing additive blending to pop against dark background */}

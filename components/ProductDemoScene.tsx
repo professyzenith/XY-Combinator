@@ -63,7 +63,7 @@ function ActNav({ activeIndex }: { activeIndex: number }) {
 }
 
 /* ─── Screen share panel ─── */
-function ScreenSharePanel({ opacity, x }: { opacity: MotionValue<number>; x: MotionValue<string> }) {
+function ScreenSharePanel({ opacity, x }: { opacity: MotionValue<number>; x: MotionValue<number> }) {
   return (
     <motion.div style={{ opacity, x }}>
       <div style={{
@@ -111,7 +111,7 @@ function ScreenSharePanel({ opacity, x }: { opacity: MotionValue<number>; x: Mot
 }
 
 /* ─── Chat panel ─── */
-function ChatPanel({ opacity, x }: { opacity: MotionValue<number>; x: MotionValue<string> }) {
+function ChatPanel({ opacity, x }: { opacity: MotionValue<number>; x: MotionValue<number> }) {
   const msgs = [
     { from: "Alex",   color: P.steel,  text: "Shipping at 3pm today." },
     { from: "Maria",  color: P.violet, text: "PR is up and reviewed." },

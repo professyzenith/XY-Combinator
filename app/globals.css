@@ -211,6 +211,64 @@ body {
   pointer-events: none;
 }
 
+/* ─── Advanced Text Mask Reveal ──────────────────────────────────────────── */
+.text-mask-reveal {
+  background: linear-gradient(
+    90deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 40%,
+    var(--accent) 50%,
+    var(--text-primary) 60%,
+    var(--text-primary) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: bg-pan-right 4s linear infinite;
+}
+@keyframes bg-pan-right {
+  0% { background-position: 100% 0; }
+  100% { background-position: -50% 0; }
+}
+
+/* ─── 3D Hologram Card ───────────────────────────────────────────────────── */
+.hologram-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+}
+.hologram-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(74,144,112,0.1), transparent);
+  height: 200%;
+  transform: translateY(-100%);
+  animation: hologram-scan 3s linear infinite;
+  pointer-events: none;
+}
+@keyframes hologram-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(50%); }
+}
+.hologram-card:hover {
+  transform: translateY(-10px) rotateX(10deg) rotateY(5deg);
+  box-shadow: 
+    -20px 20px 30px rgba(74, 144, 112, 0.1),
+    20px -20px 30px rgba(122, 94, 168, 0.1),
+    0 0 0 1px rgba(255,255,255,0.2) inset;
+}
+
+/* ─── Premium Glass Panel ────────────────────────────────────────────────── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
 /* ─── Section reveal (JS-driven, CSS fallback) ───────────────────────────── */
 .reveal { opacity: 0; transform: translateY(30px); }
 .reveal.is-visible {

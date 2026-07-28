@@ -2,7 +2,10 @@
 
 import { useRef } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+
+const ThreeCanvas = dynamic(() => import("@/components/ThreeCanvas"), { ssr: false });
 
 /* ─── Palette — muted, readable on light bg (meeting room stays dark) ─── */
 const P = {
@@ -364,7 +367,7 @@ export default function Hero({ visible }: { visible: boolean }) {
       <div
         aria-hidden="true"
         style={{
-          position: "absolute", inset: 0, pointerEvents: "none",
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1,
           backgroundImage:
             "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), " +
             "linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)",
@@ -374,7 +377,12 @@ export default function Hero({ visible }: { visible: boolean }) {
         }}
       />
 
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+      {/* WebGL 3D Background */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        {visible && <ThreeCanvas />}
+      </div>
+
+      <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <div style={{
           display: "grid",
           gridTemplateColumns: "0.9fr 1.1fr",
@@ -396,34 +404,21 @@ export default function Hero({ visible }: { visible: boolean }) {
               <div style={{ width: 32, height: 1, background: "var(--border-default)" }} />
             </motion.div>
 
-            {/* Headline — pure white, no color gradient */}
+            {/* Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 28 }}
-              transition={{ delay: 0.16, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="text-mask-reveal"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 12 }}
+              transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "var(--text-display)",
+                fontSize: "clamp(3rem, 7vw, 5.5rem)",
                 fontWeight: "var(--weight-black)",
-                letterSpacing: "var(--tracking-display)",
-                lineHeight: "var(--leading-tight)",
-                color: "var(--text-primary)",
-                marginBottom: "var(--space-5)",
+                lineHeight: "0.95",
+                letterSpacing: "-0.05em",
+                marginBottom: "var(--space-6)",
               }}
             >
-              The standard
-              <br />
-              for team
-              <br />
-              <span style={{
-                /* Dark graphite fade on light bg — elegant, subtle */
-                background: "linear-gradient(135deg, rgba(29,29,31,0.85) 0%, rgba(29,29,31,0.38) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>
-                communication.
-              </span>
+              The world&apos;s best teams<br />meet on XY.
             </motion.h1>
 
             {/* Body */}

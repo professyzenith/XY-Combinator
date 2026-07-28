@@ -238,12 +238,9 @@ export default function SecuritySection() {
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
             animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="card-3d animated-border glow-hover"
+            className="hologram-card glass-panel"
             style={{
               borderRadius: 20,
-              background: "var(--surface-1)",
-              border: "1px solid rgba(0,0,0,0.08)",
-              boxShadow: "0 0 0 1px rgba(0,0,0,0.04), 0 8px 28px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.9) inset",
               padding: 24,
               position: "relative",
             }}

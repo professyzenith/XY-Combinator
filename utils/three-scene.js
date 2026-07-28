@@ -176,7 +176,7 @@ export function initThreeScene(canvas) {
     
     // Dispose Three.js resources to prevent memory leaks
     geometries.forEach(g => g.dispose());
-    material.dispose();
+    materials.forEach(m => m.dispose());
     renderer.dispose();
   };
 }

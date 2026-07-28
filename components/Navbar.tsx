@@ -212,12 +212,16 @@ export default function Navbar() {
               </a>
             ))}
             <div style={{ paddingTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
-              <Link href="/login" className="btn btn-ghost" style={{ width: "100%", justifyContent: "center" }}>
-                Sign in
-              </Link>
-              <Link href="/register" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                Get started free
-              </Link>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link href="/login" className="btn btn-ghost" style={{ width: "100%", justifyContent: "center" }}>
+                  Sign in
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link href="/register" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                  Get started free
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         )}

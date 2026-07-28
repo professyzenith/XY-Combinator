@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -191,6 +191,20 @@ const ShareIcon = () => (
 
 /* ─── Meeting Room UI ─── */
 function MeetingRoomUI() {
+  const [activeSpeaker, setActiveSpeaker] = useState(0);
+
+  useEffect(() => {
+    // Randomly switch speaker every 3-5 seconds to simulate a live meeting
+    const interval = setInterval(() => {
+      setActiveSpeaker(prev => {
+        let next;
+        do { next = Math.floor(Math.random() * 4); } while (next === prev);
+        return next;
+      });
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div
       role="img"
@@ -271,10 +285,10 @@ function MeetingRoomUI() {
         background: "rgba(10,10,12,0.8)",
         padding: "5px 5px 0",
       }}>
-        <CameraFeed name="Zenith"  initials="Z" color={P.sage}   speaking={true}  delay={0.1}  />
-        <CameraFeed name="Alex"    initials="A" color={P.steel}  speaking={false} delay={0.22} />
-        <CameraFeed name="Maria"   initials="M" color={P.violet} speaking={false} muted={true} delay={0.35} />
-        <CameraFeed name="Sam"     initials="S" color={P.amber}  speaking={false} delay={0.48} />
+        <CameraFeed name="Zenith"  initials="Z" color={P.sage}   speaking={activeSpeaker === 0} muted={activeSpeaker !== 0} delay={0.1}  />
+        <CameraFeed name="Alex"    initials="A" color={P.steel}  speaking={activeSpeaker === 1} muted={activeSpeaker !== 1} delay={0.22} />
+        <CameraFeed name="Maria"   initials="M" color={P.violet} speaking={activeSpeaker === 2} muted={activeSpeaker !== 2} delay={0.35} />
+        <CameraFeed name="Sam"     initials="S" color={P.amber}  speaking={activeSpeaker === 3} muted={activeSpeaker !== 3} delay={0.48} />
       </div>
 
       {/* Controls — glass tray */}

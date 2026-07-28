@@ -36,41 +36,37 @@ export function initThreeScene(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // cap at 2x for perf
 
   // Abstract Geometric Shapes (Glass/Metallic aesthetic)
-  const group = new THREE.Group();
-  scene.add(group);
-
-  // Base Material Properties for a "frosted colored glass" look
+  // Premium, Professional Material Properties (Dark Glass / Brushed Metal)
   const baseMaterialProps = {
-    metalness: 0.1,
-    roughness: 0.15,
-    transmission: 0.9, 
-    ior: 1.5,
-    thickness: 0.5,
-    envMapIntensity: 1.0,
+    metalness: 0.7,
+    roughness: 0.25,
+    transmission: 0.6, // Semi-transparent dark glass
+    ior: 1.6,
+    thickness: 1.5,
+    envMapIntensity: 1.5,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
+    clearcoatRoughness: 0.2,
   };
 
+  // Sophisticated, brand-aligned color palette (Graphite, Obsidian, Emerald, Sage)
   const materials = [
-    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x4ade80 }), // Vibrant Green
-    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0xa855f7 }), // Purple
-    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x3b82f6 }), // Blue
-    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0xec4899 }), // Pink
-    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0xf59e0b }), // Amber/Orange
-    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x06b6d4 }), // Cyan
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x1a1c1e }), // Obsidian / Dark Graphite
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x22c55e }), // Brand Emerald Green (accent)
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x374151 }), // Slate Gray
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x0f1311 }), // Very Dark Green/Black
+    new THREE.MeshPhysicalMaterial({ ...baseMaterialProps, color: 0x6b7280 }), // Brushed Steel
   ];
 
-  // Create multiple abstract shapes
+  // Elegant, abstract shapes
   const geometries = [
-    new THREE.TorusGeometry(3, 0.8, 16, 100),
-    new THREE.IcosahedronGeometry(2.5, 0),
-    new THREE.OctahedronGeometry(2, 0),
-    new THREE.TorusKnotGeometry(2, 0.6, 100, 16),
-    new THREE.SphereGeometry(2, 32, 32),
+    new THREE.TorusGeometry(3.5, 0.6, 32, 100),
+    new THREE.IcosahedronGeometry(2.8, 1),
+    new THREE.OctahedronGeometry(2.5, 0),
+    new THREE.TorusKnotGeometry(2.5, 0.5, 128, 32),
   ];
 
-  // Increased number of objects
-  const numShapes = isMobile ? 8 : 18;
+  // A balanced number of objects for a clean, intentional look
+  const numShapes = isMobile ? 4 : 10;
   const meshes = [];
 
   for (let i = 0; i < numShapes; i++) {
@@ -78,20 +74,20 @@ export function initThreeScene(canvas) {
     const mat = materials[i % materials.length];
     const mesh = new THREE.Mesh(geo, mat);
     
-    // Wider spread to fill the screen
-    mesh.position.x = (Math.random() - 0.5) * 35;
-    mesh.position.y = (Math.random() - 0.5) * 25;
-    mesh.position.z = (Math.random() - 0.5) * 20 - 10;
+    // Spread them out but keep them framing the center well
+    mesh.position.x = (Math.random() - 0.5) * 30;
+    mesh.position.y = (Math.random() - 0.5) * 20;
+    mesh.position.z = (Math.random() - 0.5) * 15 - 5;
     
     // Random initial rotation
     mesh.rotation.x = Math.random() * Math.PI;
     mesh.rotation.y = Math.random() * Math.PI;
 
-    // Faster custom animation speeds
+    // Slow, deliberate, weighty animations for a premium feel
     mesh.userData = {
-      rx: (Math.random() - 0.5) * 0.02,
-      ry: (Math.random() - 0.5) * 0.02,
-      floatSpeed: 0.002 + Math.random() * 0.003,
+      rx: (Math.random() - 0.5) * 0.005,
+      ry: (Math.random() - 0.5) * 0.005,
+      floatSpeed: 0.0005 + Math.random() * 0.001,
       floatOffset: Math.random() * Math.PI * 2,
       initialY: mesh.position.y
     };

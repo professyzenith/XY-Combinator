@@ -13,8 +13,10 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // Get user details. Default to email prefix if full name isn't set.
   const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "User";
+  const avatarUrl = user.user_metadata?.avatar_url || null;
+  const phone = user.user_metadata?.phone || "";
+  
   const initials = fullName
     .split(" ")
     .map((n: string) => n[0])
@@ -22,5 +24,5 @@ export default async function DashboardPage() {
     .substring(0, 2)
     .toUpperCase();
 
-  return <DashboardClient user={{ email: user.email!, fullName, initials }} />;
+  return <DashboardClient user={{ email: user.email!, fullName, initials, avatarUrl, phone }} />;
 }

@@ -8,6 +8,7 @@ import Hero from "@/components/Hero";
 import MarqueeSection from "@/components/MarqueeSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import SecuritySection from "@/components/SecuritySection";
+import PricingSection from "@/components/PricingSection";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 
@@ -138,6 +139,7 @@ export default function Home() {
             <Hero visible={introComplete} />
             <MarqueeSection />
             <FeaturesSection />
+            <PricingSection />
             <SecuritySection />
           </main>
           <Footer />

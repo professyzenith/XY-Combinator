@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Mic, MicOff, Video, VideoOff, Share2, MessageSquare,
-  Users, PhoneOff, Smile, Shield
+  Users, PhoneOff, Smile, Shield, Copy, CheckCircle2, Send
 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Helper component to render video streams
 function VideoTile({
@@ -37,23 +38,24 @@ function VideoTile({
   const initial = name ? name.charAt(0).toUpperCase() : "?";
 
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
       style={{
-        borderRadius: large ? 0 : 14,
+        borderRadius: 24,
         overflow: "hidden",
         position: "relative",
-        background: large ? "transparent" : "#1c1c1e",
-        border: (isSpeaking && !large)
-          ? `2px solid #7FE8C9`
-          : large ? "none" : "2px solid rgba(255,255,255,0.06)",
-        boxShadow: (isSpeaking && !large) ? `0 0 30px rgba(127, 232, 201, 0.3)` : "none",
-        transition: "all 0.3s ease",
+        background: stream?.getVideoTracks()[0]?.enabled ? "#111827" : "#e5e7eb", // Dark background for pillarboxing when video is on
+        border: isSpeaking ? `2px solid #0d9488` : "2px solid transparent",
+        boxShadow: isSpeaking ? `0 0 0 4px rgba(13, 148, 136, 0.1)` : "0 4px 12px rgba(0,0,0,0.05)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: large ? "100%" : 140,
-        width: large ? "100%" : undefined,
-        aspectRatio: large ? undefined : "16/9",
+        height: "100%",
+        width: "100%",
       }}
     >
       {/* Video Element */}
@@ -65,7 +67,7 @@ function VideoTile({
         style={{
           width: "100%",
           height: "100%",
-          objectFit: large ? "contain" : "cover", 
+          objectFit: "contain", 
           transform: isLocal ? "scaleX(-1)" : "none", // Mirror local video
           display: stream?.getVideoTracks()[0]?.enabled ? "block" : "none"
         }}
@@ -76,17 +78,18 @@ function VideoTile({
         <div style={{ textAlign: "center", position: "absolute" }}>
           <div
             style={{
-              width: large ? 80 : 48,
-              height: large ? 80 : 48,
+              width: large ? 120 : 60,
+              height: large ? 120 : 60,
               borderRadius: "50%",
-              background: `linear-gradient(135deg, #4b5563, #374151)`,
+              background: `linear-gradient(135deg, #0d9488, #0f766e)`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontWeight: 800,
-              fontSize: large ? "2rem" : "1.2rem",
+              fontSize: large ? "3rem" : "1.5rem",
               color: "#fff",
-              margin: "0 auto 8px",
+              margin: "0 auto",
+              boxShadow: "0 8px 16px rgba(13,148,136,0.2)"
             }}
           >
             {initial}
@@ -98,23 +101,24 @@ function VideoTile({
       <div
         style={{
           position: "absolute",
-          bottom: 10,
-          left: 10,
+          bottom: 16,
+          left: 16,
           display: "flex",
           alignItems: "center",
-          gap: 6,
-          padding: "4px 10px",
-          borderRadius: 8,
-          background: "rgba(0,0,0,0.6)",
+          gap: 8,
+          padding: "6px 12px",
+          borderRadius: 12,
+          background: "rgba(255,255,255,0.85)",
           backdropFilter: "blur(8px)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         }}
       >
-        {muted && <MicOff size={10} color="#ef4444" />}
-        <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#fff" }}>
+        {muted && <MicOff size={14} color="#ef4444" />}
+        <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#1f2937" }}>
           {name} {isLocal ? "(You)" : ""}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -135,9 +139,11 @@ function ControlButton({
 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-      <button
+      <motion.button
         title={label}
         onClick={onClick}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         style={{
           width: 52,
           height: 52,
@@ -147,22 +153,22 @@ function ControlButton({
           alignItems: "center",
           justifyContent: "center",
           background: danger
-            ? "rgba(239,68,68,0.15)"
+            ? "#fee2e2"
             : active
-            ? "rgba(127, 232, 201, 0.12)"
-            : "rgba(255,255,255,0.07)",
-          color: danger ? "#ef4444" : active ? "#7FE8C9" : "rgba(255,255,255,0.7)",
+            ? "#ffffff"
+            : "#f3f4f6",
+          color: danger ? "#ef4444" : active ? "#0d9488" : "#6b7280",
           border: danger
-            ? "1px solid rgba(239,68,68,0.25)"
+            ? "1px solid #fca5a5"
             : active
-            ? "1px solid rgba(127, 232, 201, 0.25)"
-            : "1px solid rgba(255,255,255,0.08)",
-          transition: "all 0.15s",
+            ? "1px solid #e5e7eb"
+            : "1px solid transparent",
+          boxShadow: active ? "0 4px 12px rgba(0,0,0,0.05)" : "none",
         }}
       >
         {active && activeIcon ? activeIcon : icon}
-      </button>
-      <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>
+      </motion.button>
+      <span style={{ fontSize: "0.75rem", color: "#4b5563", fontWeight: 500 }}>
         {label}
       </span>
     </div>
@@ -177,19 +183,32 @@ const ICE_SERVERS = {
   ],
 };
 
-export default function RoomPage() {
+function RoomContent() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const roomId = params.roomId as string;
+  const initialName = searchParams.get("name") || "Guest";
+  const initialTopic = searchParams.get("topic") || "XY Meeting";
+  const initialCapacity = searchParams.get("capacity") ? parseInt(searchParams.get("capacity") as string, 10) : 50;
+  const initialCam = searchParams.get("cam") !== "false";
+  const initialMic = searchParams.get("mic") !== "false";
+  
   const supabase = createClient();
 
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStreams, setRemoteStreams] = useState<Record<string, MediaStream>>({});
   
-  const [micOn, setMicOn] = useState(true);
-  const [camOn, setCamOn] = useState(true);
+  const [micOn, setMicOn] = useState(initialMic);
+  const [camOn, setCamOn] = useState(initialCam);
   const [elapsed, setElapsed] = useState(0);
   const [userId, setUserId] = useState<string>("");
+  const [chatOpen, setChatOpen] = useState(false);
+  const [messages, setMessages] = useState<{sender: string, text: string, time: string}[]>([]);
+  const [draft, setDraft] = useState("");
+  const [copied, setCopied] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const peersRef = useRef<Record<string, RTCPeerConnection>>({});
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -205,11 +224,17 @@ export default function RoomPage() {
         // 1. Get Local Media in HD
         const stream = await navigator.mediaDevices.getUserMedia({ 
           video: {
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
+            width: { ideal: 3840, min: 1280 },
+            height: { ideal: 2160, min: 720 },
+            frameRate: { ideal: 60, min: 30 }
           }, 
           audio: true 
         });
+        
+        // Apply initial preferences from /join page
+        stream.getVideoTracks().forEach(t => t.enabled = initialCam);
+        stream.getAudioTracks().forEach(t => t.enabled = initialMic);
+        
         currentStream = stream;
         setLocalStream(stream);
 
@@ -275,6 +300,10 @@ export default function RoomPage() {
               return newStreams;
             });
           }
+
+          if (type === "chat") {
+            setMessages((prev) => [...prev, data]);
+          }
         });
 
         // 3. Subscribe and announce join
@@ -309,7 +338,7 @@ export default function RoomPage() {
       supabase.removeChannel(channelRef.current!);
       Object.values(peersRef.current).forEach((pc) => pc.close());
     };
-  }, [roomId, supabase]);
+  }, [roomId, supabase, initialCam, initialMic]);
 
   // Create RTCPeerConnection helper
   const createPeerConnection = (peerId: string, stream: MediaStream) => {
@@ -371,13 +400,55 @@ export default function RoomPage() {
   };
 
   const leaveRoom = () => {
-    router.push("/dashboard");
+    if (window.confirm("Are you sure you want to exit this meeting?")) {
+      router.replace("/dashboard");
+    }
   };
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const sendMessage = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!draft.trim() || !channelRef.current) return;
+    
+    const msg = { sender: initialName, text: draft.trim(), time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
+    
+    // Broadcast to others
+    channelRef.current.send({
+      type: "broadcast",
+      event: "webrtc",
+      payload: { sender: userId, type: "chat", data: msg }
+    });
+    
+    // Add locally
+    setMessages((prev) => [...prev, msg]);
+    setDraft("");
+  };
+
+  useEffect(() => {
+    if (chatOpen && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, chatOpen]);
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60).toString().padStart(2, "0");
     const sec = (s % 60).toString().padStart(2, "0");
     return `${m}:${sec}`;
+  };
+
+  const totalParticipants = Object.keys(remoteStreams).length + 1;
+
+  // Determine grid layout based on participants
+  const getGridStyle = () => {
+    if (totalParticipants === 1) return { gridTemplateColumns: "1fr", gridTemplateRows: "1fr" };
+    if (totalParticipants === 2) return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr" };
+    if (totalParticipants <= 4) return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" };
+    return { gridTemplateColumns: "repeat(3, 1fr)", gridTemplateRows: "repeat(auto-fit, minmax(200px, 1fr))" };
   };
 
   return (
@@ -386,9 +457,10 @@ export default function RoomPage() {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "#0A0A0A", // Match the dark aesthetic
+        background: "#f8f9fa", // Bright Gusto theme
         overflow: "hidden",
         position: "relative",
+        fontFamily: "'Inter', sans-serif"
       }}
     >
       {/* Top bar */}
@@ -397,116 +469,237 @@ export default function RoomPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "14px 24px",
-          background: "rgba(0,0,0,0.5)",
+          padding: "16px 32px",
+          background: "rgba(255,255,255,0.8)",
           backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          borderBottom: "1px solid rgba(0,0,0,0.05)",
           zIndex: 10,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: "#7FE8C9", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.7rem", color: "#0A0A0A" }}>
-            XY
-          </div>
-          <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "#fff" }}>
-            Room: <span style={{ color: "#7FE8C9", fontFamily: "monospace" }}>{roomId}</span>
-          </span>
-        </div>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#7FE8C9", fontSize: "0.85rem", fontWeight: 600 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#7FE8C9", animation: "pulse-green 1.5s ease-in-out infinite" }} />
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: "#0d9488", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 14, height: 14, border: "2px solid #fff", borderRadius: "50%" }} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span style={{ fontSize: "1rem", fontWeight: 700, color: "#111827", letterSpacing: "-0.02em" }}>
+              {initialTopic}
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: "0.8rem", color: "#6b7280", fontFamily: "var(--font-mono)" }}>
+                {roomId}
+              </span>
+              <button 
+                onClick={copyInviteLink}
+                title="Copy Invite Link"
+                style={{ background: "none", border: "none", cursor: "pointer", color: copied ? "#10b981" : "#6b7280", padding: 4, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4 }}
+              >
+                {copied ? <CheckCircle2 size={14} /> : <Copy size={14} />}
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#0d9488", fontSize: "0.9rem", fontWeight: 600, background: "rgba(13,148,136,0.1)", padding: "6px 12px", borderRadius: 20 }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#0d9488", animation: "pulse-green 1.5s ease-in-out infinite" }} />
             {formatTime(elapsed)}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.5)", fontSize: "0.82rem" }}>
-            <Shield size={13} color="#7FE8C9" /> Encrypted
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#4b5563", fontSize: "0.85rem", fontWeight: 500 }}>
+            <Shield size={16} color="#0d9488" /> Encrypted
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.5)", fontSize: "0.82rem" }}>
-            <Users size={13} /> {Object.keys(remoteStreams).length + 1}
+          <div style={{ display: "flex", alignItems: "center", gap: 6, color: "#4b5563", fontSize: "0.85rem", fontWeight: 500 }}>
+            <Users size={16} /> {totalParticipants}
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        {/* Video area */}
-        <div style={{ flex: 1, padding: 16, display: "flex", flexDirection: "column", gap: 12, overflow: "hidden" }}>
-          
-          {/* Main speaker (Local stream for now, or first remote) */}
-          <div style={{ flex: 1, minHeight: 0 }}>
-            {Object.keys(remoteStreams).length > 0 ? (
-               <VideoTile stream={Object.values(remoteStreams)[0]} name="Remote User" isLocal={false} large />
-            ) : (
-               <VideoTile stream={localStream} name="Me" isLocal={true} muted={!micOn} large />
-            )}
-          </div>
-
-          {/* Filmstrip */}
-          <div style={{ display: "flex", gap: 10, height: 140, flexShrink: 0, overflowX: "auto" }}>
-            {/* Always show local in filmstrip if we have remote users in main */}
-            {Object.keys(remoteStreams).length > 0 && (
-              <div style={{ minWidth: 200, flex: "0 0 200px" }}>
-                <VideoTile stream={localStream} name="Me" isLocal={true} muted={!micOn} />
-              </div>
-            )}
+      {/* Content Area */}
+      <div style={{ display: "flex", flex: 1, padding: 24, overflow: "hidden", gap: 24, justifyContent: "center" }}>
+        {/* Video Grid */}
+        <motion.div 
+          layout
+          style={{ 
+            display: "grid", 
+            gap: 20, 
+            width: "100%", 
+            height: "100%", 
+            maxWidth: chatOpen ? 1200 : 1600,
+            ...getGridStyle()
+          }}
+        >
+          <AnimatePresence>
+            {/* Local Stream */}
+            <motion.div layout key="local" style={{ minHeight: 0, width: "100%", height: "100%" }}>
+              <VideoTile stream={localStream} name={initialName} isLocal={true} muted={!micOn} large={totalParticipants <= 2} />
+            </motion.div>
             
-            {/* Other remote streams */}
-            {Object.entries(remoteStreams).slice(1).map(([id, stream]) => (
-              <div key={id} style={{ minWidth: 200, flex: "0 0 200px" }}>
-                <VideoTile stream={stream} name="Participant" isLocal={false} />
-              </div>
+            {/* Remote Streams */}
+            {Object.entries(remoteStreams).map(([id, stream]) => (
+              <motion.div layout key={id} style={{ minHeight: 0, width: "100%", height: "100%" }}>
+                <VideoTile stream={stream} name="Participant" isLocal={false} large={totalParticipants <= 2} />
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Chat Sidebar */}
+        <AnimatePresence>
+          {chatOpen && (
+            <motion.div
+              initial={{ opacity: 0, width: 0, x: 20 }}
+              animate={{ opacity: 1, width: 340, x: 0 }}
+              exit={{ opacity: 0, width: 0, x: 20 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                background: "#fff",
+                borderRadius: 24,
+                boxShadow: "0 12px 32px rgba(0,0,0,0.05)",
+                border: "1px solid rgba(0,0,0,0.05)",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                flexShrink: 0,
+                height: "100%"
+              }}
+            >
+              <div style={{ padding: "16px 20px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700, color: "#111827" }}>Room Chat</h3>
+                <span style={{ fontSize: "0.75rem", color: "#6b7280", background: "#f3f4f6", padding: "4px 10px", borderRadius: 12, fontWeight: 600 }}>{messages.length}</span>
+              </div>
+              
+              <div style={{ flex: 1, overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
+                {messages.length === 0 ? (
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#9ca3af", gap: 8 }}>
+                    <MessageSquare size={32} opacity={0.3} />
+                    <span style={{ fontSize: "0.9rem", fontWeight: 500 }}>No messages yet</span>
+                  </div>
+                ) : (
+                  messages.map((msg, i) => {
+                    const isMe = msg.sender === initialName;
+                    return (
+                      <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: isMe ? "flex-end" : "flex-start" }}>
+                        <span style={{ fontSize: "0.7rem", color: "#9ca3af", marginBottom: 4, fontWeight: 500 }}>{isMe ? "You" : msg.sender} • {msg.time}</span>
+                        <div style={{ 
+                          background: isMe ? "#0d9488" : "#f3f4f6", 
+                          color: isMe ? "#fff" : "#1f2937", 
+                          padding: "10px 14px", 
+                          borderRadius: 16, 
+                          borderBottomRightRadius: isMe ? 4 : 16,
+                          borderBottomLeftRadius: isMe ? 16 : 4,
+                          fontSize: "0.9rem",
+                          maxWidth: "90%",
+                          lineHeight: 1.4
+                        }}>
+                          {msg.text}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              <div style={{ padding: 16, borderTop: "1px solid #f3f4f6", background: "#fff" }}>
+                <form onSubmit={sendMessage} style={{ display: "flex", gap: 8 }}>
+                  <input 
+                    type="text" 
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    placeholder="Message..." 
+                    style={{ 
+                      flex: 1, background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 100, 
+                      padding: "10px 16px", fontSize: "0.9rem", outline: "none", color: "#111827"
+                    }} 
+                  />
+                  <button 
+                    type="submit"
+                    disabled={!draft.trim()}
+                    style={{ 
+                      width: 40, height: 40, borderRadius: "50%", border: "none", 
+                      background: draft.trim() ? "#0d9488" : "#f3f4f6", 
+                      color: draft.trim() ? "#fff" : "#9ca3af",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      cursor: draft.trim() ? "pointer" : "default",
+                      transition: "all 0.2s",
+                      flexShrink: 0
+                    }}
+                  >
+                    <Send size={16} style={{ marginLeft: -2 }} />
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Controls bar */}
       <div
         style={{
-          position: "relative",
-          padding: "16px 24px",
-          background: "rgba(5,5,5,0.9)",
-          backdropFilter: "blur(24px)",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
+          padding: "24px",
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
-          gap: 12,
-          flexWrap: "wrap",
           zIndex: 10,
         }}
       >
-        <ControlButton icon={<MicOff size={20} />} activeIcon={<Mic size={20} />} label={micOn ? "Mute" : "Unmute"} active={micOn} onClick={toggleMic} />
-        <ControlButton icon={<VideoOff size={20} />} activeIcon={<Video size={20} />} label={camOn ? "Stop" : "Start"} active={camOn} onClick={toggleCam} />
-        <ControlButton icon={<Share2 size={20} />} label="Share" active={false} />
-        <ControlButton icon={<Smile size={20} />} label="React" active={false} />
-        <ControlButton icon={<MessageSquare size={20} />} label="Chat" active={false} />
-        <ControlButton icon={<Users size={20} />} label="People" active={false} />
+        <div style={{
+          background: "rgba(255,255,255,0.9)",
+          backdropFilter: "blur(24px)",
+          border: "1px solid rgba(0,0,0,0.05)",
+          borderRadius: 24,
+          padding: "16px 32px",
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+        }}>
+          <ControlButton icon={<MicOff size={22} />} activeIcon={<Mic size={22} />} label={micOn ? "Mute" : "Unmute"} active={micOn} onClick={toggleMic} />
+          <ControlButton icon={<VideoOff size={22} />} activeIcon={<Video size={22} />} label={camOn ? "Stop" : "Start"} active={camOn} onClick={toggleCam} />
+          
+          <div style={{ width: 1, height: 40, background: "#e5e7eb", margin: "0 8px" }} />
+          
+          <ControlButton icon={<Share2 size={22} />} label="Share" active={false} />
+          <ControlButton icon={<Smile size={22} />} label="React" active={false} />
+          <ControlButton icon={<MessageSquare size={22} />} label="Chat" active={chatOpen} onClick={() => setChatOpen(!chatOpen)} />
+          <ControlButton icon={<Users size={22} />} label="People" active={false} />
 
-        {/* Leave button */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-          <button
-            onClick={leaveRoom}
-            style={{
-              width: 52, height: 52, borderRadius: 16, border: "none", cursor: "pointer",
-              background: "rgba(239,68,68,0.9)", color: "#fff",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.2s",
-              boxShadow: "0 0 20px rgba(239,68,68,0.3)",
-            }}
-          >
-            <PhoneOff size={20} />
-          </button>
-          <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>Leave</span>
+          <div style={{ width: 1, height: 40, background: "#e5e7eb", margin: "0 8px" }} />
+
+          {/* Leave button */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={leaveRoom}
+              style={{
+                width: 64, height: 52, borderRadius: 16, border: "none", cursor: "pointer",
+                background: "#ef4444", color: "#fff",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 8px 16px rgba(239,68,68,0.2)",
+              }}
+            >
+              <PhoneOff size={24} />
+            </motion.button>
+            <span style={{ fontSize: "0.75rem", color: "#4b5563", fontWeight: 500 }}>Leave</span>
+          </div>
         </div>
       </div>
       
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes pulse-green {
-          0% { box-shadow: 0 0 0 0 rgba(127, 232, 201, 0.7); }
-          70% { box-shadow: 0 0 0 6px rgba(127, 232, 201, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(127, 232, 201, 0); }
+          0% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4); }
+          70% { box-shadow: 0 0 0 6px rgba(13, 148, 136, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
         }
       `}} />
     </div>
+  );
+}
+
+export default function RoomPage() {
+  return (
+    <Suspense fallback={<div style={{ height: "100vh", background: "#f8f9fa" }} />}>
+      <RoomContent />
+    </Suspense>
   );
 }

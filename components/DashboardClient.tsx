@@ -1,3 +1,19 @@
+/*
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  ╔═╗╔═╗╔╦╗╔╦╗╦╔╗╔╔═╗╔═╗                                      │
+ * │  ╚═╗║╣  ║  ║ ║║║║║ ╦╚═╗                                      │
+ * │  ╚═╝╚═╝ ╩  ╩ ╩╝╚╝╚═╝╚═╝                                      │
+ * │                                                                 │
+ * │  📊 Dashboard Client — Command Center for XY Combinator         │
+ * │  ──────────────────────────────────────────────────────          │
+ * │  Manages: Home View, Settings, Profile, Avatar Upload           │
+ * │  Integrations: Supabase Auth, Supabase Storage, Framer Motion   │
+ * │                                                                 │
+ * │  👤 Author: Pratik Jha                                           │
+ * │  📦 Version: 1.0.0  |  📅 July 2026                             │
+ * └─────────────────────────────────────────────────────────────────┘
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";

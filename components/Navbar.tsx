@@ -1,3 +1,16 @@
+/*
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │   ╔╗╔╔═╗╦  ╦╔╗ ╔═╗╦═╗                                         │
+ * │   ║║║╠═╣╚╗╔╝╠╩╗╠═╣╠╦╝                                         │
+ * │   ╝╚╝╩ ╩ ╚╝ ╚═╝╩ ╩╩╚═                                         │
+ * │                                                                 │
+ * │   🧭 Navigation Bar — Glassmorphic, Responsive, Animated        │
+ * │   Handles auth state, scroll effects, and mobile menu           │
+ * │                                                                 │
+ * │   👤 Author: Pratik Jha  |  📅 July 2026                        │
+ * └─────────────────────────────────────────────────────────────────┘
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";

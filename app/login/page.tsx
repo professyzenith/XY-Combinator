@@ -1,3 +1,17 @@
+/*
+ * ╔═══════════════════════════════════════════════════════════════════╗
+ * ║   🔐  A U T H E N T I C A T I O N   G A T E                     ║
+ * ║   ═══════════════════════════════════════                         ║
+ * ║                                                                   ║
+ * ║   Login page with email/password & Google OAuth via Supabase.     ║
+ * ║   Features cinematic UI with particle canvas backdrop.            ║
+ * ║                                                                   ║
+ * ║   Auth Flow: Client → Supabase Auth → /auth/callback → Dashboard ║
+ * ║                                                                   ║
+ * ║   👤 Author: Pratik Jha  |  📅 July 2026                          ║
+ * ╚═══════════════════════════════════════════════════════════════════╝
+ */
+
 "use client";
 
 import { useState } from "react";

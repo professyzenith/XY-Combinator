@@ -1,3 +1,27 @@
+/*
+ * ╔═══════════════════════════════════════════════════════════════════╗
+ * ║                                                                   ║
+ * ║   🎥  V I D E O   R O O M   E N G I N E                          ║
+ * ║   ═══════════════════════════════════                              ║
+ * ║                                                                   ║
+ * ║   The core real-time communication engine of XY Combinator.       ║
+ * ║   Powers peer-to-peer video calls via WebRTC with Supabase        ║
+ * ║   Realtime as the signaling layer.                                ║
+ * ║                                                                   ║
+ * ║   ┌──────────────────────────────────────────┐                    ║
+ * ║   │  WebRTC  ←→  Supabase Realtime Channel   │                    ║
+ * ║   │  Video   ←→  MediaStream API              │                    ║
+ * ║   │  Chat    ←→  Broadcast Messages            │                    ║
+ * ║   │  Invite  ←→  Clipboard API                 │                    ║
+ * ║   └──────────────────────────────────────────┘                    ║
+ * ║                                                                   ║
+ * ║   👤 Author: Pratik Jha                                            ║
+ * ║   📦 Version: 1.0.0  |  📅 July 2026                              ║
+ * ║   ⚡ Lines: 700+  |  🏗️ Architecture: Client-Side SPA             ║
+ * ║                                                                   ║
+ * ╚═══════════════════════════════════════════════════════════════════╝
+ */
+
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";

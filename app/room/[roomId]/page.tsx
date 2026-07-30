@@ -747,6 +747,20 @@ function RoomContent() {
               </div>
 
               <div style={{ padding: 16, borderTop: "1px solid #f3f4f6", background: "#fff" }}>
+                <div style={{ display: "flex", gap: 12, marginBottom: 12, justifyContent: "center" }}>
+                  {["👍", "❤️", "😂", "👏", "🎉"].map(emoji => (
+                    <button 
+                      key={emoji}
+                      type="button"
+                      onClick={() => setDraft(prev => prev + emoji)}
+                      style={{ background: "none", border: "none", fontSize: "1.2rem", cursor: "pointer", transition: "transform 0.1s" }}
+                      onMouseOver={e => e.currentTarget.style.transform = "scale(1.2)"}
+                      onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
                 <form onSubmit={sendMessage} style={{ display: "flex", gap: 8 }}>
                   <input 
                     type="text" 
@@ -806,7 +820,6 @@ function RoomContent() {
           <div style={{ width: 1, height: 40, background: "#e5e7eb", margin: "0 8px" }} />
           
           <ControlButton icon={<MonitorUp size={22} />} label={isScreenSharing ? "Stop Sharing" : "Screen Share"} active={isScreenSharing} onClick={toggleScreenShare} />
-          <ControlButton icon={<Smile size={22} />} label="React" active={false} />
           <ControlButton icon={<MessageSquare size={22} />} label="Chat" active={chatOpen} onClick={() => { setChatOpen(!chatOpen); setPeopleOpen(false); }} />
           <ControlButton icon={<Users size={22} />} label="People" active={peopleOpen} onClick={() => { setPeopleOpen(!peopleOpen); setChatOpen(false); }} />
 

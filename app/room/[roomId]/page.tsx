@@ -34,11 +34,11 @@ import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Helper component to render video streams
 function VideoTile({
   stream,
   name,
   isLocal,
+  isScreenSharing = false,
   isSpeaking = false,
   muted = false,
   large = false,
@@ -46,6 +46,7 @@ function VideoTile({
   stream: MediaStream | null;
   name: string;
   isLocal: boolean;
+  isScreenSharing?: boolean;
   isSpeaking?: boolean;
   muted?: boolean;
   large?: boolean;
@@ -92,7 +93,7 @@ function VideoTile({
           width: "100%",
           height: "100%",
           objectFit: "contain", 
-          transform: isLocal ? "scaleX(-1)" : "none", // Mirror local video
+          transform: (isLocal && !isScreenSharing) ? "scaleX(-1)" : "none", // Mirror local video unless sharing screen
           display: stream?.getVideoTracks()[0]?.enabled ? "block" : "none"
         }}
       />
@@ -611,7 +612,7 @@ function RoomContent() {
           <AnimatePresence>
             {/* Local Stream */}
             <motion.div layout key="local" style={{ minHeight: 0, width: "100%", height: "100%" }}>
-              <VideoTile stream={localStream} name={initialName} isLocal={true} muted={!micOn} large={totalParticipants <= 2} />
+              <VideoTile stream={localStream} name={initialName} isLocal={true} isScreenSharing={isScreenSharing} muted={!micOn} large={totalParticipants <= 2} />
             </motion.div>
             
             {/* Remote Streams */}

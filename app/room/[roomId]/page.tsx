@@ -228,6 +228,7 @@ function RoomContent() {
   const [camOn, setCamOn] = useState(initialCam);
   const [elapsed, setElapsed] = useState(0);
   const [userId, setUserId] = useState<string>("");
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [messages, setMessages] = useState<{sender: string, text: string, time: string}[]>([]);
   const [draft, setDraft] = useState("");
@@ -426,6 +427,62 @@ function RoomContent() {
   const leaveRoom = () => {
     if (window.confirm("Are you sure you want to exit this meeting?")) {
       router.replace("/dashboard");
+    }
+  };
+
+  const stopScreenShare = async () => {
+    if (!localStream) return;
+    try {
+      const camStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const camTrack = camStream.getVideoTracks()[0];
+      camTrack.enabled = camOn;
+      
+      const currentVideoTrack = localStream.getVideoTracks()[0];
+      if (currentVideoTrack) {
+        currentVideoTrack.stop();
+        localStream.removeTrack(currentVideoTrack);
+      }
+      localStream.addTrack(camTrack);
+      setLocalStream(new MediaStream(localStream.getTracks()));
+
+      Object.values(peersRef.current).forEach(peer => {
+        const sender = peer.getSenders().find(s => s.track?.kind === 'video');
+        if (sender) sender.replaceTrack(camTrack);
+      });
+      setIsScreenSharing(false);
+    } catch (err) {
+      console.error("Error stopping screen share", err);
+    }
+  };
+
+  const toggleScreenShare = async () => {
+    if (!localStream) return;
+    try {
+      if (!isScreenSharing) {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const screenTrack = screenStream.getVideoTracks()[0];
+        
+        screenTrack.onended = () => {
+          stopScreenShare();
+        };
+
+        const currentVideoTrack = localStream.getVideoTracks()[0];
+        if (currentVideoTrack) {
+          localStream.removeTrack(currentVideoTrack);
+        }
+        localStream.addTrack(screenTrack);
+        setLocalStream(new MediaStream(localStream.getTracks()));
+
+        Object.values(peersRef.current).forEach(peer => {
+          const sender = peer.getSenders().find(s => s.track?.kind === 'video');
+          if (sender) sender.replaceTrack(screenTrack);
+        });
+        setIsScreenSharing(true);
+      } else {
+        stopScreenShare();
+      }
+    } catch (err) {
+      console.error("Error sharing screen", err);
     }
   };
 
@@ -682,7 +739,7 @@ function RoomContent() {
           
           <div style={{ width: 1, height: 40, background: "#e5e7eb", margin: "0 8px" }} />
           
-          <ControlButton icon={<Share2 size={22} />} label="Share" active={false} />
+          <ControlButton icon={<Share2 size={22} />} label={isScreenSharing ? "Stop" : "Share"} active={isScreenSharing} onClick={toggleScreenShare} />
           <ControlButton icon={<Smile size={22} />} label="React" active={false} />
           <ControlButton icon={<MessageSquare size={22} />} label="Chat" active={chatOpen} onClick={() => setChatOpen(!chatOpen)} />
           <ControlButton icon={<Users size={22} />} label="People" active={false} />

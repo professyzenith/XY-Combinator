@@ -24,6 +24,8 @@
 
 "use client";
 
+import EmojiPicker from "emoji-picker-react";
+
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -234,6 +236,7 @@ function RoomContent() {
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [messages, setMessages] = useState<{sender: string, text: string, time: string}[]>([]);
   const [draft, setDraft] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [copied, setCopied] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -746,22 +749,27 @@ function RoomContent() {
                 <div ref={messagesEndRef} />
               </div>
 
-              <div style={{ padding: 16, borderTop: "1px solid #f3f4f6", background: "#fff" }}>
-                <div style={{ display: "flex", gap: 12, marginBottom: 12, justifyContent: "center" }}>
-                  {["👍", "❤️", "😂", "👏", "🎉"].map(emoji => (
-                    <button 
-                      key={emoji}
-                      type="button"
-                      onClick={() => setDraft(prev => prev + emoji)}
-                      style={{ background: "none", border: "none", fontSize: "1.2rem", cursor: "pointer", transition: "transform 0.1s" }}
-                      onMouseOver={e => e.currentTarget.style.transform = "scale(1.2)"}
-                      onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
-                <form onSubmit={sendMessage} style={{ display: "flex", gap: 8 }}>
+              <div style={{ padding: 16, borderTop: "1px solid #f3f4f6", background: "#fff", position: "relative" }}>
+                {showEmojiPicker && (
+                  <div style={{ position: "absolute", bottom: "100%", right: 16, marginBottom: 8, zIndex: 50, boxShadow: "0 10px 25px rgba(0,0,0,0.1)", borderRadius: 8 }}>
+                    <EmojiPicker 
+                      onEmojiClick={(e) => {
+                        setDraft(prev => prev + e.emoji);
+                        setShowEmojiPicker(false);
+                      }} 
+                      width={300}
+                      height={400}
+                    />
+                  </div>
+                )}
+                <form onSubmit={sendMessage} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <button 
+                    type="button"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    style={{ background: "none", border: "none", cursor: "pointer", color: showEmojiPicker ? "#0d9488" : "#9ca3af", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Smile size={22} />
+                  </button>
                   <input 
                     type="text" 
                     value={draft}

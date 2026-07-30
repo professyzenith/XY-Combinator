@@ -235,7 +235,7 @@ function DemoMeetingRoom({ feedsVisible }: { feedsVisible: boolean }) {
           ))}
         </div>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.18)", flex: 1 }}>
-          XY Combinator
+          XyncRoom
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <motion.div animate={{ opacity: [1, 0.25, 1] }} transition={{ duration: 1.6, repeat: Infinity }}

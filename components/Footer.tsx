@@ -104,14 +104,14 @@ export default function Footer() {
               fontFamily: "var(--font-display)", fontWeight: 900,
               fontSize: "0.65rem", color: "#ffffff",
             }}>
-              XY
+              XR
             </div>
             <span style={{
               fontFamily: "var(--font-mono)", fontSize: "0.7rem",
               color: "var(--text-tertiary)",  /* was rgba(255,255,255,0.22) — invisible */
               letterSpacing: "0.01em",
             }}>
-              © 2025 XY Combinator, Inc.
+              © 2025 XyncRoom, Inc.
             </span>
           </div>
 

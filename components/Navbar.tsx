@@ -68,7 +68,7 @@ export default function Navbar() {
               width: 30,
               height: 30,
               borderRadius: 8,
-              /* Logo mark — sage not neon */
+              /* Logo mark — updated to blue combo */
               background: "var(--accent)",
               display: "flex",
               alignItems: "center",
@@ -80,18 +80,18 @@ export default function Navbar() {
               letterSpacing: "-0.02em",
             }}
           >
-            XY
+            XR
           </motion.div>
           <span
             style={{
               fontFamily: "'Outfit', sans-serif",
-              fontWeight: 700,
-              fontSize: "0.95rem",
+              fontWeight: 800,
+              fontSize: "1.2rem",
               color: "var(--text-100)",
               letterSpacing: "-0.03em",
             }}
           >
-            Combinator
+            XyncRoom
           </span>
         </Link>
 

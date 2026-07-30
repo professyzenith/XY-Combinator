@@ -61,7 +61,7 @@ export default function PricingPage() {
             <div style={{ width: 14, height: 14, border: "2px solid #fff", borderRadius: "50%" }} />
           </div>
           <span className="font-display" style={{ fontSize: "1.25rem", fontWeight: 800, color: "#111827", letterSpacing: "-0.03em" }}>
-            XY Combinator
+            XyncRoom
           </span>
         </Link>
         <div style={{ display: "flex", gap: 16 }}>

@@ -1,21 +1,21 @@
 <!-- Animated Banner -->
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=250&section=header&text=XY%20Combinator&fontSize=80&fontAlignY=35&desc=The%20Future%20of%20Video%20Conferencing&descAlignY=55&descAlign=62&fontColor=ffffff&animation=twinkling" alt="XY Combinator Banner" width="100%" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=250&section=header&text=XyncRoom&fontSize=80&fontAlignY=35&desc=The%20Future%20of%20Video%20Conferencing&descAlignY=55&descAlign=62&fontColor=ffffff&animation=twinkling" alt="XyncRoom Banner" width="100%" />
 </div>
 
 <!-- Typing Tagline -->
 <div align="center">
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Outfit&weight=800&size=26&duration=4000&pause=1000&color=3ECF8E&center=true&vCenter=true&width=800&lines=Seamless+Peer-to-Peer+Video.;End-to-End+Encrypted+Connections.;Zero+Downloads.+Zero+Friction.;The+World's+Best+Teams+Meet+On+XY." alt="Typing SVG" />
+    <img src="https://readme-typing-svg.herokuapp.com?font=Outfit&weight=800&size=26&duration=4000&pause=1000&color=3ECF8E&center=true&vCenter=true&width=800&lines=Seamless+Peer-to-Peer+Video.;End-to-End+Encrypted+Connections.;Zero+Downloads.+Zero+Friction.;The+World's+Best+Teams+Meet+On+XyncRoom." alt="Typing SVG" />
   </a>
 </div>
 
 <!-- Badges Row -->
 <div align="center">
-  <img src="https://img.shields.io/github/license/professyzenith/XY-Combinator?style=for-the-badge&color=111111" alt="License">
-  <img src="https://img.shields.io/github/stars/professyzenith/XY-Combinator?style=for-the-badge&color=FFD700" alt="Stars">
-  <img src="https://img.shields.io/github/forks/professyzenith/XY-Combinator?style=for-the-badge&color=0055FF" alt="Forks">
-  <img src="https://img.shields.io/github/issues/professyzenith/XY-Combinator?style=for-the-badge&color=FF6B6B" alt="Issues">
+  <img src="https://img.shields.io/github/license/professyzenith/XyncRoom?style=for-the-badge&color=111111" alt="License">
+  <img src="https://img.shields.io/github/stars/professyzenith/XyncRoom?style=for-the-badge&color=FFD700" alt="Stars">
+  <img src="https://img.shields.io/github/forks/professyzenith/XyncRoom?style=for-the-badge&color=0055FF" alt="Forks">
+  <img src="https://img.shields.io/github/issues/professyzenith/XyncRoom?style=for-the-badge&color=FF6B6B" alt="Issues">
 </div>
 
 <!-- Animated Divider -->
@@ -100,8 +100,8 @@ graph TD;
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/professyzenith/XY-Combinator.git
-cd XY-Combinator
+git clone https://github.com/professyzenith/XyncRoom.git
+cd XyncRoom
 ```
 
 ### 2. Install Dependencies

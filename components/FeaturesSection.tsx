@@ -38,7 +38,7 @@ function MiniMeetingRoom() {
           ))}
         </div>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.56rem", color: "rgba(255,255,255,0.2)", flex: 1 }}>
-          XY Combinator
+          XyncRoom
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <motion.div animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}

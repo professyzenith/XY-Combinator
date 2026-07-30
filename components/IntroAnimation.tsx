@@ -92,7 +92,7 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
                 letterSpacing: "-0.04em",
               }}
             >
-              XY
+              XR
             </motion.div>
 
             {/* Wordmark */}
@@ -102,14 +102,12 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
               transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 fontFamily: "'Outfit', sans-serif",
-                fontWeight: 600,
-                fontSize: "1.1rem",
+                fontWeight: 800,
+                fontSize: "1.4rem",
                 color: "rgba(255,255,255,0.6)",
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
               }}
             >
-              Combinator
+              XyncRoom
             </motion.div>
 
             {/* Glowing progress line */}

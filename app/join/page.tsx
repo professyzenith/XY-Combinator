@@ -107,7 +107,7 @@ function JoinPageContent() {
             <div style={{ width: 14, height: 14, border: "2px solid #fff", borderRadius: "50%" }} />
           </div>
           <span className="font-display" style={{ fontSize: "1.25rem", fontWeight: 700, letterSpacing: "-0.03em", color: "#1f2937" }}>
-            XY Combinator
+            XyncRoom
           </span>
         </Link>
       </div>

@@ -4,7 +4,7 @@
  * │  ╚═╗║╣  ║  ║ ║║║║║ ╦╚═╗                                      │
  * │  ╚═╝╚═╝ ╩  ╩ ╩╝╚╝╚═╝╚═╝                                      │
  * │                                                                 │
- * │  📊 Dashboard Client — Command Center for XY Combinator         │
+ * │  📊 Dashboard Client — Command Center for XyncRoom         │
  * │  ──────────────────────────────────────────────────────          │
  * │  Manages: Home View, Settings, Profile, Avatar Upload           │
  * │  Integrations: Supabase Auth, Supabase Storage, Framer Motion   │
@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { LogOut, Video, Clock, Copy, Plus, ArrowRight, Home, Users, Settings, Calendar as CalendarIcon, Search, Star } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { motion } from "framer-motion";
+import ScheduleMeetingForm from "./ScheduleMeetingForm";
 
 interface UserInfo {
   email: string;
@@ -38,7 +39,7 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
   const [isStartingMeeting, setIsStartingMeeting] = useState(false);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'home' | 'settings'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'schedule' | 'settings'>('home');
 
   // Settings states
   const [settingsName, setSettingsName] = useState(user.fullName);
@@ -223,15 +224,15 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
             <Home size={20} color={activeTab === 'home' ? yellowAccent : "currentColor"} strokeWidth={2.5} />
             <span>Home</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", color: textLight, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", borderRadius: "100px", fontSize: "0.95rem" }} onMouseOver={(e) => { e.currentTarget.style.background = "#f7f7f7"; e.currentTarget.style.color = textDark; }} onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = textLight; }}>
-            <CalendarIcon size={20} strokeWidth={2.5} />
+          <div onClick={() => setActiveTab('schedule')} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: activeTab === 'schedule' ? charcoal : "transparent", color: activeTab === 'schedule' ? "#fff" : textLight, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", borderRadius: "100px", boxShadow: activeTab === 'schedule' ? "0 8px 24px rgba(36,37,40,0.2)" : "none", fontSize: "0.95rem" }} onMouseOver={(e) => { if(activeTab !== 'schedule') { e.currentTarget.style.background = "#f7f7f7"; e.currentTarget.style.color = textDark; } }} onMouseOut={(e) => { if(activeTab !== 'schedule') { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = textLight; } }}>
+            <CalendarIcon size={20} color={activeTab === 'schedule' ? yellowAccent : "currentColor"} strokeWidth={2.5} />
             <span>Schedule</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", color: textLight, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", borderRadius: "100px", fontSize: "0.95rem" }} onMouseOver={(e) => { e.currentTarget.style.background = "#f7f7f7"; e.currentTarget.style.color = textDark; }} onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = textLight; }}>
             <Users size={20} strokeWidth={2.5} />
             <span>Contacts</span>
           </div>
-          <div onClick={() => setActiveTab('settings')} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: activeTab === 'settings' ? charcoal : "transparent", color: activeTab === 'settings' ? "#fff" : textLight, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", borderRadius: "100px", fontSize: "0.95rem" }} onMouseOver={(e) => { if(activeTab !== 'settings') { e.currentTarget.style.background = "#f7f7f7"; e.currentTarget.style.color = textDark; } }} onMouseOut={(e) => { if(activeTab !== 'settings') { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = textLight; } }}>
+          <div onClick={() => setActiveTab('settings')} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: activeTab === 'settings' ? charcoal : "transparent", color: activeTab === 'settings' ? "#fff" : textLight, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", borderRadius: "100px", boxShadow: activeTab === 'settings' ? "0 8px 24px rgba(36,37,40,0.2)" : "none", fontSize: "0.95rem" }} onMouseOver={(e) => { if(activeTab !== 'settings') { e.currentTarget.style.background = "#f7f7f7"; e.currentTarget.style.color = textDark; } }} onMouseOut={(e) => { if(activeTab !== 'settings') { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = textLight; } }}>
             <Settings size={20} color={activeTab === 'settings' ? yellowAccent : "currentColor"} strokeWidth={2.5} />
             <span>Settings</span>
           </div>
@@ -266,12 +267,19 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
           display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px"
         }}>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-            {activeTab === 'home' ? (
+            {activeTab === 'home' && (
               <>
                 <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0 0 4px 0", color: textDark, letterSpacing: "-1px" }}>Hi, {user.fullName.split(' ')[0]}!</h1>
                 <p style={{ margin: 0, color: textLight, fontSize: "1rem", fontWeight: 600 }}>Let's take a look at your activity today</p>
               </>
-            ) : (
+            )}
+            {activeTab === 'schedule' && (
+              <>
+                <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0 0 4px 0", color: textDark, letterSpacing: "-1px" }}>Schedule</h1>
+                <p style={{ margin: 0, color: textLight, fontSize: "1rem", fontWeight: 600 }}>Set up a new meeting with your team</p>
+              </>
+            )}
+            {activeTab === 'settings' && (
               <>
                 <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0 0 4px 0", color: textDark, letterSpacing: "-1px" }}>Settings</h1>
                 <p style={{ margin: 0, color: textLight, fontSize: "1rem", fontWeight: 600 }}>Manage your personal details and preferences</p>
@@ -311,122 +319,109 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
           animate="show"
         >
           
-          {activeTab === 'home' ? (
-            <>
-              {/* 3. Upcoming Meeting Card (Taupe with soft glowing orbs) */}
-              <motion.div variants={itemVariants} style={{ 
-            background: "linear-gradient(135deg, #d7d2c6 0%, #e8e4db 100%)", borderRadius: "40px", padding: "40px",
-            display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32,
-            boxShadow: softShadow, color: textDark,
-            position: "relative", overflow: "hidden", minHeight: "220px"
-          }}>
-            <div style={{ position: "relative", zIndex: 10 }}>
-              <h3 style={{ margin: "0 0 12px 0", fontSize: "1.8rem", fontWeight: 800, letterSpacing: "-0.5px" }}>Premium Calling</h3>
-              <p style={{ margin: 0, fontSize: "1rem", fontWeight: 600, color: "rgba(42,43,46,0.8)" }}>Experience the highest quality video meetings.</p>
-              
-              <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "12px" }}>
-                 <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0 }} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 32, height: 8, borderRadius: "4px", background: yellowAccent }}></div>
-                    <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "rgba(42,43,46,0.7)" }}>1080p HD Video</span>
-                 </motion.div>
-                 <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.3 }} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 32, height: 8, borderRadius: "4px", background: "#ff6b6b" }}></div>
-                    <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "rgba(42,43,46,0.7)" }}>Crystal Clear Audio</span>
-                 </motion.div>
-                 <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2.6 }} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 32, height: 8, borderRadius: "4px", background: charcoal }}></div>
-                    <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "rgba(42,43,46,0.7)" }}>End-to-End Encryption</span>
-                 </motion.div>
+          {activeTab === 'home' && (
+            <div style={{ display: "grid", gridTemplateColumns: "350px 1fr", gap: 32 }}>
+              {/* Left Column */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                {/* Profile Card */}
+                <motion.div variants={itemVariants} style={{ background: bgCard, borderRadius: "24px", padding: "32px", boxShadow: softShadow, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <div style={{ width: 80, height: 80, background: bgApp, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", fontWeight: 800, color: textDark, marginBottom: 16 }}>
+                    {user.initials}
+                  </div>
+                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: textDark, margin: "0 0 4px 0" }}>{user.fullName}</h2>
+                  <p style={{ margin: "0 0 24px 0", color: textLight, fontSize: "0.9rem", fontWeight: 600 }}>Plan: <span style={{ color: textDark }}>Workplace Basic</span></p>
+                  
+                  <div style={{ width: "100%", height: 1, background: "rgba(36,37,40,0.05)", marginBottom: 16 }}></div>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%" }}>
+                    <button style={{ width: "100%", padding: "10px", borderRadius: "12px", border: "none", background: "rgba(45,91,255,0.05)", color: "#2D5BFF", fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "rgba(45,91,255,0.1)"} onMouseOut={e => e.currentTarget.style.background = "rgba(45,91,255,0.05)"}>Manage Plan</button>
+                    <button style={{ width: "100%", padding: "10px", borderRadius: "12px", border: "none", background: "transparent", color: "#2D5BFF", fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "rgba(45,91,255,0.05)"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>View Plan Details</button>
+                  </div>
+                </motion.div>
+
+                {/* Promo Card */}
+                <motion.div variants={itemVariants} style={{ background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)", borderRadius: "24px", padding: "32px", boxShadow: "0 12px 32px rgba(37,99,235,0.3)", color: "#fff", position: "relative", overflow: "hidden" }}>
+                  <div style={{ position: "relative", zIndex: 10 }}>
+                    <div style={{ display: "inline-block", background: "rgba(255,255,255,0.2)", padding: "4px 10px", borderRadius: "8px", fontSize: "0.8rem", fontWeight: 800, marginBottom: 16 }}>XR Vision Pro</div>
+                    <h3 style={{ fontSize: "1.4rem", fontWeight: 800, margin: "0 0 8px 0", letterSpacing: "-0.5px" }}>Unlock Superpowers!</h3>
+                    <p style={{ margin: "0 0 24px 0", fontSize: "0.9rem", color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>Upgrade now to unlock premium features and extended durations.</p>
+                    <button onClick={() => router.push("/pricing")} style={{ background: "#fff", color: "#1d4ed8", border: "none", padding: "10px 20px", borderRadius: "12px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>Upgrade</button>
+                  </div>
+                  <div style={{ position: "absolute", bottom: -20, right: -20, width: 100, height: 100, background: "rgba(255,255,255,0.1)", borderRadius: "50%" }}></div>
+                </motion.div>
+              </div>
+
+              {/* Right Column */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                {/* Quick Actions Card */}
+                <motion.div variants={itemVariants} style={{ background: bgCard, borderRadius: "24px", padding: "40px", boxShadow: softShadow }}>
+                  
+                  {/* Icon Row */}
+                  <div style={{ display: "flex", gap: 48, marginBottom: 40, justifyContent: "center" }}>
+                    {/* Schedule */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={() => setActiveTab('schedule')}>
+                      <motion.div whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(45,91,255,0.2)" }} style={{ width: 80, height: 80, borderRadius: "24px", background: "#2D5BFF", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 16px rgba(45,91,255,0.1)" }}>
+                        <CalendarIcon size={32} strokeWidth={2.5} />
+                      </motion.div>
+                      <span style={{ fontWeight: 700, color: textDark, fontSize: "0.95rem" }}>Schedule</span>
+                    </div>
+                    {/* Join */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={() => {
+                        const id = prompt("Enter Room ID to join:");
+                        if (id) router.push(`/room/${id}`);
+                      }}>
+                      <motion.div whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(45,91,255,0.2)" }} style={{ width: 80, height: 80, borderRadius: "24px", background: "#2D5BFF", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 16px rgba(45,91,255,0.1)" }}>
+                        <Plus size={36} strokeWidth={3} />
+                      </motion.div>
+                      <span style={{ fontWeight: 700, color: textDark, fontSize: "0.95rem" }}>Join</span>
+                    </div>
+                    {/* Host */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={handleStartMeeting}>
+                      <motion.div whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(249,115,22,0.2)" }} style={{ width: 80, height: 80, borderRadius: "24px", background: "#f97316", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 16px rgba(249,115,22,0.1)" }}>
+                        {isStartingMeeting ? (
+                          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} style={{ width: 28, height: 28, border: `3px solid rgba(255,255,255,0.3)`, borderTopColor: "#fff", borderRadius: "50%" }} />
+                        ) : (
+                          <Video size={36} strokeWidth={2.5} />
+                        )}
+                      </motion.div>
+                      <span style={{ fontWeight: 700, color: textDark, fontSize: "0.95rem" }}>Host</span>
+                    </div>
+                  </div>
+
+                  <div style={{ width: "100%", height: 1, background: "rgba(36,37,40,0.05)", marginBottom: 24 }}></div>
+
+                  {/* Personal Meeting ID */}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                    <span style={{ color: textDark, fontWeight: 800, fontSize: "1.1rem" }}>Personal Meeting ID</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, color: textLight, fontWeight: 700, fontSize: "1.1rem" }}>
+                      801 073 4886
+                      <button style={{ background: "none", border: "none", color: textLight, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }} onClick={() => navigator.clipboard.writeText("801 073 4886")}><Copy size={16} strokeWidth={2.5} /></button>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Upcoming Meetings */}
+                <motion.div variants={itemVariants} style={{ background: bgCard, borderRadius: "24px", padding: "40px", boxShadow: softShadow }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+                    <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: textDark, margin: 0 }}>Meetings</h2>
+                    <span style={{ color: "#2D5BFF", fontWeight: 700, fontSize: "0.95rem", cursor: "pointer" }}>Visit Meetings</span>
+                  </div>
+                  
+                  <div style={{ background: bgApp, padding: "40px 32px", borderRadius: "16px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, textAlign: "center" }}>
+                    <span style={{ color: textDark, fontWeight: 800, fontSize: "1.1rem" }}>No Upcoming Meetings</span>
+                    <button style={{ background: "transparent", border: "2px solid rgba(36,37,40,0.08)", color: "#2D5BFF", fontWeight: 700, padding: "12px 24px", borderRadius: "100px", cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "rgba(45,91,255,0.05)"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>Test Audio and Video</button>
+                  </div>
+                </motion.div>
+
               </div>
             </div>
-          </motion.div>
+          )}
 
-          {/* 4. Action Tiles */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, marginBottom: 40 }}>
-            
-            {/* New Meeting Tile (White Soft Card) */}
-            <motion.div variants={itemVariants} whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.06)" }} style={{
-              background: bgCard, borderRadius: "40px", padding: "32px",
-              display: "flex", flexDirection: "column",
-              boxShadow: softShadow
-            }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
-                 <div style={{ width: 56, height: 56, background: bgApp, borderRadius: "50%", color: textDark, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                   <Video size={24} strokeWidth={2.5} />
-                 </div>
-                 <div style={{ background: "rgba(255,204,0,0.1)", color: "#e6b800", padding: "6px 12px", borderRadius: "100px", fontSize: "0.8rem", fontWeight: 800 }}>Instant</div>
-              </div>
+          {activeTab === 'schedule' && (
+            <ScheduleMeetingForm userFullName={user.fullName} />
+          )}
 
-              <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: textDark, margin: "0 0 8px 0", letterSpacing: "-0.5px" }}>Start Meeting</h2>
-              <p style={{ fontSize: "0.95rem", fontWeight: 600, color: textLight, margin: "0 0 24px 0" }}>Launch a high-fidelity video room.</p>
-              
-              <motion.button 
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleStartMeeting}
-                disabled={isStartingMeeting}
-                style={{
-                  marginTop: "auto", background: charcoal, border: "none", padding: "16px 24px", borderRadius: "100px",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
-                  fontSize: "0.95rem", fontWeight: 700, color: "#fff", cursor: "pointer",
-                  boxShadow: "0 8px 24px rgba(36,37,40,0.2)"
-                }}
-              >
-                {isStartingMeeting ? (
-                  <motion.div 
-                    animate={{ rotate: 360 }} 
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    style={{ width: 18, height: 18, border: `3px solid rgba(255,255,255,0.3)`, borderTopColor: "#fff", borderRadius: "50%" }} 
-                  />
-                ) : (
-                  <>
-                    Launch Room <ArrowRight size={18} strokeWidth={3} />
-                  </>
-                )}
-              </motion.button>
-            </motion.div>
-
-            {/* Join Meeting Tile (White Soft Card) */}
-            <motion.div variants={itemVariants} whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.06)" }} style={{
-              background: bgCard, borderRadius: "40px", padding: "32px",
-              display: "flex", flexDirection: "column",
-              boxShadow: softShadow
-            }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
-                 <div style={{ width: 56, height: 56, background: bgApp, borderRadius: "50%", color: textDark, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                   <Plus size={24} strokeWidth={3} />
-                 </div>
-                 <div style={{ background: "rgba(36,37,40,0.05)", color: textLight, padding: "6px 12px", borderRadius: "100px", fontSize: "0.8rem", fontWeight: 800 }}>Join</div>
-              </div>
-
-              <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: textDark, margin: "0 0 8px 0", letterSpacing: "-0.5px" }}>Join Meeting</h2>
-              <p style={{ fontSize: "0.95rem", fontWeight: 600, color: textLight, margin: "0 0 24px 0" }}>Enter a code to join a room.</p>
-              
-              <div style={{ position: "relative", marginTop: "auto" }}>
-                <input 
-                  type="text" 
-                  placeholder="Paste room ID" 
-                  style={{ 
-                    width: "100%", padding: "16px 56px 16px 24px", borderRadius: "100px",
-                    border: "none", background: bgApp,
-                    color: textDark, fontSize: "0.95rem", fontWeight: 700, outline: "none",
-                  }}
-                />
-                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} style={{
-                  position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
-                  background: charcoal, border: "none", borderRadius: "50%",
-                  width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "#fff", cursor: "pointer", boxShadow: "0 4px 12px rgba(36,37,40,0.2)"
-                }}>
-                  <ArrowRight size={18} strokeWidth={2.5} />
-                </motion.button>
-              </div>
-            </motion.div>
-
-          </div>
-
-            </>
-          ) : (
+          {activeTab === 'settings' && (
             <motion.div variants={itemVariants} style={{ background: bgCard, borderRadius: "40px", padding: "40px", boxShadow: softShadow, color: textDark }}>
               <h2 style={{ fontSize: "1.5rem", fontWeight: 800, margin: "0 0 24px 0" }}>Profile Picture</h2>
               <div style={{ display: "flex", gap: "24px", alignItems: "flex-start", marginBottom: "40px" }}>

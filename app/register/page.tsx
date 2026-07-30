@@ -135,7 +135,7 @@ export default function RegisterPage() {
               className="font-display"
               style={{ fontSize: "1.5rem", fontWeight: 700, letterSpacing: "-0.03em", color: "#1f2937" }}
             >
-              XY Combinator
+              XyncRoom
             </span>
           </Link>
         </div>

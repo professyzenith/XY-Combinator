@@ -2,20 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "XY Combinator — Video meetings, reimagined.",
+  title: "XyncRoom — Video meetings, reimagined.",
   description:
-    "XY Combinator is the next-generation video conferencing platform. Fast, secure, and beautifully designed for the way modern teams actually work.",
-  keywords: ["video conferencing", "team meetings", "video calls", "collaboration", "XY Combinator"],
-  authors: [{ name: "XY Combinator" }],
+    "XyncRoom is the next-generation video conferencing platform. Fast, secure, and beautifully designed for the way modern teams actually work.",
+  keywords: ["video conferencing", "team meetings", "video calls", "collaboration", "XyncRoom"],
+  authors: [{ name: "XyncRoom" }],
   openGraph: {
-    title: "XY Combinator — Video meetings, reimagined.",
+    title: "XyncRoom — Video meetings, reimagined.",
     description: "Fast, secure, beautiful video conferencing for modern teams.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "XY Combinator",
+    title: "XyncRoom",
     description: "Video meetings, reimagined.",
   },
 };

@@ -8,7 +8,7 @@
  * ║   ██╔╝ ██╗   ██║       ╚██████╗╚██████╔╝██║ ╚═╝ ██║██████╔╝     ║
  * ║   ╚═╝  ╚═╝   ╚═╝        ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝      ║
  * ║                                                                  ║
- * ║   🏠 Landing Page — The Front Door of XY Combinator              ║
+ * ║   🏠 Landing Page — The Front Door of XyncRoom              ║
  * ║   📦 Version: 1.0.0                                              ║
  * ║   👤 Author: Pratik Jha                                           ║
  * ║   📅 Last Updated: July 2026                                     ║

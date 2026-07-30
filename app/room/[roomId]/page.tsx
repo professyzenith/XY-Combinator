@@ -4,7 +4,7 @@
  * ║   🎥  V I D E O   R O O M   E N G I N E                          ║
  * ║   ═══════════════════════════════════                              ║
  * ║                                                                   ║
- * ║   The core real-time communication engine of XY Combinator.       ║
+ * ║   The core real-time communication engine of XyncRoom.       ║
  * ║   Powers peer-to-peer video calls via WebRTC with Supabase        ║
  * ║   Realtime as the signaling layer.                                ║
  * ║                                                                   ║
@@ -214,7 +214,7 @@ function RoomContent() {
   
   const roomId = params.roomId as string;
   const initialName = searchParams.get("name") || "Guest";
-  const initialTopic = searchParams.get("topic") || "XY Meeting";
+  const initialTopic = searchParams.get("topic") || "XyncRoom Meeting";
   const initialCapacity = searchParams.get("capacity") ? parseInt(searchParams.get("capacity") as string, 10) : 50;
   const initialCam = searchParams.get("cam") !== "false";
   const initialMic = searchParams.get("mic") !== "false";

@@ -261,7 +261,7 @@ function MeetingRoomUI() {
           color: "rgba(255,255,255,0.18)",
           fontFamily: "var(--font-mono)",
         }}>
-          XY Combinator — Engineering Standup
+          XyncRoom — Engineering Standup
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
           {/* LIVE — sage accent dot */}
@@ -384,7 +384,7 @@ export default function Hero({ visible }: { visible: boolean }) {
     <section
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      aria-label="Hero — XY Combinator: premium video conferencing"
+      aria-label="Hero — XyncRoom: premium video conferencing"
       style={{
         position: "relative",
         minHeight: "100vh",
@@ -446,7 +446,7 @@ export default function Hero({ visible }: { visible: boolean }) {
                 marginBottom: "var(--space-6)",
               }}
             >
-              The world&apos;s best teams<br />meet on XY.
+              The world&apos;s best teams<br />meet on XyncRoom.
             </motion.h1>
 
             {/* Body */}

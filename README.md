@@ -12,10 +12,10 @@
 
 <!-- Badges Row -->
 <div align="center">
-  <img src="https://img.shields.io/github/license/professyzenith/XyncRoom?style=for-the-badge&color=111111" alt="License">
-  <img src="https://img.shields.io/github/stars/professyzenith/XyncRoom?style=for-the-badge&color=FFD700" alt="Stars">
-  <img src="https://img.shields.io/github/forks/professyzenith/XyncRoom?style=for-the-badge&color=0055FF" alt="Forks">
-  <img src="https://img.shields.io/github/issues/professyzenith/XyncRoom?style=for-the-badge&color=FF6B6B" alt="Issues">
+  <img src="https://img.shields.io/github/license/professyzenith/XyncRoom?style=for-the-badge&color=111111&v=1" alt="License">
+  <img src="https://img.shields.io/github/stars/professyzenith/XyncRoom?style=for-the-badge&color=FFD700&v=1" alt="Stars">
+  <img src="https://img.shields.io/github/forks/professyzenith/XyncRoom?style=for-the-badge&color=0055FF&v=1" alt="Forks">
+  <img src="https://img.shields.io/github/issues/professyzenith/XyncRoom?style=for-the-badge&color=FF6B6B&v=1" alt="Issues">
 </div>
 
 <!-- Animated Divider -->

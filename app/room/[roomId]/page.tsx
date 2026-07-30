@@ -752,7 +752,7 @@ function RoomContent() {
           
           <div style={{ width: 1, height: 40, background: "#e5e7eb", margin: "0 8px" }} />
           
-          <ControlButton icon={<MonitorUp size={22} />} label={isScreenSharing ? "Stop" : "Present"} active={isScreenSharing} onClick={toggleScreenShare} />
+          <ControlButton icon={<MonitorUp size={22} />} label={isScreenSharing ? "Stop Sharing" : "Screen Share"} active={isScreenSharing} onClick={toggleScreenShare} />
           <ControlButton icon={<Smile size={22} />} label="React" active={false} />
           <ControlButton icon={<MessageSquare size={22} />} label="Chat" active={chatOpen} onClick={() => setChatOpen(!chatOpen)} />
           <ControlButton icon={<Users size={22} />} label="People" active={false} />

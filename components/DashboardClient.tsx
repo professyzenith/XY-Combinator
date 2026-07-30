@@ -49,6 +49,20 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [settingsMessage, setSettingsMessage] = useState("");
 
+  const [personalMeetingId, setPersonalMeetingId] = useState("");
+
+  useEffect(() => {
+    let id = localStorage.getItem("xyncroom_pm_id");
+    if (!id) {
+      const p1 = Math.floor(Math.random() * 900) + 100;
+      const p2 = Math.floor(Math.random() * 900) + 100;
+      const p3 = Math.floor(Math.random() * 9000) + 1000;
+      id = `${p1} ${p2} ${p3}`;
+      localStorage.setItem("xyncroom_pm_id", id);
+    }
+    setPersonalMeetingId(id);
+  }, []);
+
   const PRESET_AVATARS = [
     // Girls
     `https://api.dicebear.com/9.x/lorelei/svg?seed=Mia&backgroundColor=ffd5dc`,
@@ -207,6 +221,21 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
         borderRadius: "32px", 
         boxShadow: softShadow
       }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10, padding: "0 10px", marginBottom: "32px",
+          fontSize: "1.2rem", fontWeight: 900, color: textDark, letterSpacing: "-0.5px"
+        }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "#fff", fontSize: "0.8rem", flexShrink: 0
+          }}>
+            XR
+          </div>
+          XyncRoom
+        </div>
+
         <div style={{ 
           padding: "20px 16px", background: "rgba(255, 255, 255, 0.6)", borderRadius: "24px", 
           display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
@@ -394,8 +423,8 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
                     <span style={{ color: textDark, fontWeight: 800, fontSize: "1.1rem" }}>Personal Meeting ID</span>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, color: textLight, fontWeight: 700, fontSize: "1.1rem" }}>
-                      801 073 4886
-                      <button style={{ background: "none", border: "none", color: textLight, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }} onClick={() => navigator.clipboard.writeText("801 073 4886")}><Copy size={16} strokeWidth={2.5} /></button>
+                      {personalMeetingId}
+                      <button style={{ background: "none", border: "none", color: textLight, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }} onClick={() => navigator.clipboard.writeText(personalMeetingId)}><Copy size={16} strokeWidth={2.5} /></button>
                     </div>
                   </div>
                 </motion.div>

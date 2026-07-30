@@ -231,6 +231,7 @@ function RoomContent() {
   const [userId, setUserId] = useState<string>("");
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [peopleOpen, setPeopleOpen] = useState(false);
   const [messages, setMessages] = useState<{sender: string, text: string, time: string}[]>([]);
   const [draft, setDraft] = useState("");
   const [copied, setCopied] = useState(false);
@@ -617,7 +618,7 @@ function RoomContent() {
             gap: 20, 
             width: "100%", 
             height: "100%", 
-            maxWidth: chatOpen ? 1200 : 1600,
+            maxWidth: (chatOpen || peopleOpen) ? 1200 : 1600,
             ...getGridStyle()
           }}
         >
@@ -635,6 +636,58 @@ function RoomContent() {
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {/* People Sidebar */}
+        <AnimatePresence>
+          {peopleOpen && (
+            <motion.div
+              initial={{ opacity: 0, width: 0, x: 20 }}
+              animate={{ opacity: 1, width: 340, x: 0 }}
+              exit={{ opacity: 0, width: 0, x: 20 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                background: "#fff",
+                borderRadius: 24,
+                boxShadow: "0 12px 32px rgba(0,0,0,0.05)",
+                border: "1px solid rgba(0,0,0,0.05)",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                flexShrink: 0,
+                height: "100%"
+              }}
+            >
+              <div style={{ padding: "16px 20px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700, color: "#111827" }}>People</h3>
+                <span style={{ fontSize: "0.75rem", color: "#6b7280", background: "#f3f4f6", padding: "4px 10px", borderRadius: 12, fontWeight: 600 }}>{totalParticipants}</span>
+              </div>
+              
+              <div style={{ flex: 1, overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#0d9488", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}>
+                    {initialName.charAt(0).toUpperCase()}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontWeight: 600, color: "#111827", fontSize: "0.9rem" }}>{initialName} (You)</span>
+                    <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>Meeting Host</span>
+                  </div>
+                </div>
+
+                {Object.keys(remoteStreams).map((id, index) => (
+                  <div key={id} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#f3f4f6", color: "#6b7280", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}>
+                      P
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontWeight: 600, color: "#111827", fontSize: "0.9rem" }}>Participant {index + 1}</span>
+                      <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>Joined</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Chat Sidebar */}
         <AnimatePresence>
@@ -754,8 +807,8 @@ function RoomContent() {
           
           <ControlButton icon={<MonitorUp size={22} />} label={isScreenSharing ? "Stop Sharing" : "Screen Share"} active={isScreenSharing} onClick={toggleScreenShare} />
           <ControlButton icon={<Smile size={22} />} label="React" active={false} />
-          <ControlButton icon={<MessageSquare size={22} />} label="Chat" active={chatOpen} onClick={() => setChatOpen(!chatOpen)} />
-          <ControlButton icon={<Users size={22} />} label="People" active={false} />
+          <ControlButton icon={<MessageSquare size={22} />} label="Chat" active={chatOpen} onClick={() => { setChatOpen(!chatOpen); setPeopleOpen(false); }} />
+          <ControlButton icon={<Users size={22} />} label="People" active={peopleOpen} onClick={() => { setPeopleOpen(!peopleOpen); setChatOpen(false); }} />
 
           <div style={{ width: 1, height: 40, background: "#e5e7eb", margin: "0 8px" }} />
 

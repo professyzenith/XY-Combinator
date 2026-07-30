@@ -359,13 +359,6 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
                   </div>
                   <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: textDark, margin: "0 0 4px 0" }}>{user.fullName}</h2>
                   <p style={{ margin: "0 0 24px 0", color: textLight, fontSize: "0.9rem", fontWeight: 600 }}>Plan: <span style={{ color: textDark }}>Workplace Basic</span></p>
-                  
-                  <div style={{ width: "100%", height: 1, background: "rgba(36,37,40,0.05)", marginBottom: 16 }}></div>
-                  
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%" }}>
-                    <button style={{ width: "100%", padding: "10px", borderRadius: "12px", border: "none", background: "rgba(45,91,255,0.05)", color: "#2D5BFF", fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "rgba(45,91,255,0.1)"} onMouseOut={e => e.currentTarget.style.background = "rgba(45,91,255,0.05)"}>Manage Plan</button>
-                    <button style={{ width: "100%", padding: "10px", borderRadius: "12px", border: "none", background: "transparent", color: "#2D5BFF", fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "rgba(45,91,255,0.05)"} onMouseOut={e => e.currentTarget.style.background = "transparent"}>View Plan Details</button>
-                  </div>
                 </motion.div>
 
                 {/* Promo Card */}

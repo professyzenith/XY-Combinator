@@ -354,8 +354,8 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
                 {/* Profile Card */}
                 <motion.div variants={itemVariants} style={{ background: bgCard, borderRadius: "24px", padding: "32px", boxShadow: softShadow, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div style={{ width: 80, height: 80, background: bgApp, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", fontWeight: 800, color: textDark, marginBottom: 16 }}>
-                    {user.initials}
+                  <div style={{ width: 80, height: 80, background: user.avatarUrl ? "#fff" : bgApp, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", fontWeight: 800, color: textDark, marginBottom: 16, overflow: "hidden", border: user.avatarUrl ? "4px solid #fff" : "none", boxShadow: "0 8px 16px rgba(0,0,0,0.08)" }}>
+                    {user.avatarUrl ? <img src={user.avatarUrl} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : user.initials}
                   </div>
                   <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: textDark, margin: "0 0 4px 0" }}>{user.fullName}</h2>
                   <p style={{ margin: "0 0 24px 0", color: textLight, fontSize: "0.9rem", fontWeight: 600 }}>Plan: <span style={{ color: textDark }}>Workplace Basic</span></p>

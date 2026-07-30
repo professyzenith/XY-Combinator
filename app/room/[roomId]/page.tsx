@@ -460,7 +460,13 @@ function RoomContent() {
     if (!localStream) return;
     try {
       if (!isScreenSharing) {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+          video: {
+            width: { ideal: 3840, max: 3840 },
+            height: { ideal: 2160, max: 2160 },
+            frameRate: { ideal: 60, max: 60 }
+          }
+        });
         const screenTrack = screenStream.getVideoTracks()[0];
         
         screenTrack.onended = () => {

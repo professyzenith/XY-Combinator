@@ -434,7 +434,13 @@ function RoomContent() {
   const stopScreenShare = async () => {
     if (!localStream) return;
     try {
-      const camStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const camStream = await navigator.mediaDevices.getUserMedia({ 
+        video: {
+          width: { ideal: 3840, min: 1280 },
+          height: { ideal: 2160, min: 720 },
+          frameRate: { ideal: 60, min: 30 }
+        } 
+      });
       const camTrack = camStream.getVideoTracks()[0];
       camTrack.enabled = camOn;
       

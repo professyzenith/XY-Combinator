@@ -26,7 +26,7 @@ import IntroAnimation from "@/components/IntroAnimation";
 import ScheduleMeetingForm from "./ScheduleMeetingForm";
 
 // ── Admin config ──────────────────────────────────────────────────────────────
-const ADMIN_EMAIL = "jhapiitm@gmail.com";
+const ADMIN_EMAIL = "pratikjha926543@gmail.com";
 
 interface SupportMessage {
   id: string;

@@ -4,6 +4,19 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/utils/supabase/client";
 
+// Emerald colour tokens
+const E = {
+  solid:   "#10b981",
+  dark:    "#059669",
+  light:   "#34d399",
+  grad:    "linear-gradient(135deg, #059669 0%, #10b981 100%)",
+  gradH:   "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
+  headerG: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)",
+  glow:    "rgba(16,185,129,0.45)",
+  ring:    "rgba(16,185,129,0.35)",
+  soft:    "rgba(16,185,129,0.1)",
+};
+
 type Phase = "idle" | "sending" | "success" | "error";
 
 const IconChat = () => (
@@ -19,6 +32,14 @@ const IconX = () => (
 const IconSend = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
+  </svg>
+);
+// Headset icon — the real support symbol
+const IconHeadset = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+    <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
   </svg>
 );
 
@@ -101,8 +122,8 @@ export default function SupportChat() {
           height: 52,
           borderRadius: "50%",
           background: open
-            ? "rgba(55,55,75,0.95)"
-            : "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+            ? "rgba(30,40,35,0.95)"
+            : E.grad,
           border: "none",
           cursor: "pointer",
           display: "flex",
@@ -111,7 +132,7 @@ export default function SupportChat() {
           color: "#fff",
           boxShadow: open
             ? "0 4px 20px rgba(0,0,0,0.3)"
-            : "0 6px 24px rgba(99,102,241,0.5)",
+            : `0 6px 24px ${E.glow}`,
           transition: "background 0.25s, box-shadow 0.25s",
         }}
       >
@@ -134,7 +155,7 @@ export default function SupportChat() {
             position: "absolute",
             inset: -5,
             borderRadius: "50%",
-            border: "2px solid #6366f1",
+            border: `2px solid ${E.solid}`,
             animation: "chatPulse 2.4s ease-out infinite",
             pointerEvents: "none",
           }} />
@@ -168,7 +189,7 @@ export default function SupportChat() {
           >
             {/* Header */}
             <div style={{
-              background: "linear-gradient(135deg, #3730a3 0%, #4f46e5 100%)",
+              background: E.headerG,
               padding: "16px 20px",
               display: "flex",
               alignItems: "center",
@@ -178,13 +199,14 @@ export default function SupportChat() {
                 width: 38,
                 height: 38,
                 borderRadius: "50%",
-                background: "rgba(255,255,255,0.18)",
+                background: "rgba(255,255,255,0.15)",
+                border: "1.5px solid rgba(255,255,255,0.2)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "1.2rem",
+                color: "#fff",
                 flexShrink: 0,
-              }}>🛟</div>
+              }}><IconHeadset /></div>
               <div>
                 <p style={{ margin: 0, color: "#fff", fontWeight: 800, fontSize: "0.95rem" }}>
                   XyncRoom Support
@@ -216,8 +238,8 @@ export default function SupportChat() {
                         width: 60,
                         height: 60,
                         borderRadius: "50%",
-                        background: "rgba(34,197,94,0.1)",
-                        border: "2px solid rgba(34,197,94,0.3)",
+                        background: E.soft,
+                        border: `2px solid ${E.ring}`,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -333,8 +355,8 @@ export default function SupportChat() {
                         marginTop: 14,
                         width: "100%",
                         background: phase === "sending"
-                          ? "rgba(99,102,241,0.4)"
-                          : "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+                          ? "rgba(16,185,129,0.35)"
+                          : E.grad,
                         border: "none",
                         color: "#fff",
                         padding: "13px 20px",
@@ -347,7 +369,7 @@ export default function SupportChat() {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: 8,
-                        boxShadow: phase !== "sending" ? "0 4px 16px rgba(99,102,241,0.3)" : "none",
+                        boxShadow: phase !== "sending" ? `0 4px 16px ${E.ring}` : "none",
                         transition: "background 0.2s, box-shadow 0.2s",
                       }}
                     >
@@ -401,8 +423,8 @@ export default function SupportChat() {
         #support-panel input:focus,
         #support-panel textarea:focus {
           outline: none;
-          border-color: rgba(99,102,241,0.55) !important;
-          box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+          border-color: rgba(16,185,129,0.55) !important;
+          box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
         }
       `}</style>
     </>

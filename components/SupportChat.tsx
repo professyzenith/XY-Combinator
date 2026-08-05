@@ -4,50 +4,54 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/utils/supabase/client";
 
-// Emerald colour tokens
-const E = {
-  solid:   "#10b981",
-  dark:    "#059669",
-  light:   "#34d399",
-  grad:    "linear-gradient(135deg, #059669 0%, #10b981 100%)",
-  gradH:   "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
-  headerG: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)",
-  glow:    "rgba(16,185,129,0.45)",
-  ring:    "rgba(16,185,129,0.35)",
-  soft:    "rgba(16,185,129,0.1)",
-};
-
 type Phase = "idle" | "sending" | "success" | "error";
 
+// ── Minimal icon set ──────────────────────────────────────────────────────────
 const IconChat = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
   </svg>
 );
 const IconX = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 const IconSend = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/>
   </svg>
 );
-// Headset icon — the real support symbol
 const IconHeadset = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
     <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
     <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
   </svg>
 );
 
+// ── Design tokens — light, clean, green ──────────────────────────────────────
+const T = {
+  bg:         "#ffffff",
+  bgMuted:    "#f6fdf9",
+  border:     "#e8f5ee",
+  borderMid:  "#d1ead9",
+  green:      "#16a34a",
+  greenLight: "#22c55e",
+  greenPale:  "#dcfce7",
+  greenText:  "#166534",
+  textDark:   "#111827",
+  textMid:    "#6b7280",
+  textLight:  "#9ca3af",
+  shadow:     "0 4px 24px rgba(0,0,0,0.07)",
+  shadowSm:   "0 2px 8px rgba(0,0,0,0.05)",
+};
+
 export default function SupportChat() {
-  const [open, setOpen] = useState(false);
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [open, setOpen]       = useState(false);
+  const [phase, setPhase]     = useState<Phase>("idle");
+  const [name, setName]       = useState("");
+  const [email, setEmail]     = useState("");
   const [message, setMessage] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [hasMounted, setHasMounted] = useState(false);
@@ -61,8 +65,8 @@ export default function SupportChat() {
     supabase.auth.getUser().then(({ data }) => {
       if (data?.user) {
         const meta = data.user.user_metadata;
-        setName(prev => prev || meta?.full_name || meta?.name || "");
-        setEmail(prev => prev || data.user!.email || "");
+        setName(prev  => prev  || meta?.full_name || meta?.name || "");
+        setEmail(prev => prev  || data.user!.email || "");
       }
     });
     setTimeout(() => textareaRef.current?.focus(), 300);
@@ -74,7 +78,7 @@ export default function SupportChat() {
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrorMsg("Please enter a valid email address.");
+      setErrorMsg("Please enter a valid email.");
       return;
     }
     setErrorMsg("");
@@ -83,8 +87,8 @@ export default function SupportChat() {
       const supabase = createClient();
       const { data: userData } = await supabase.auth.getUser();
       const { error } = await supabase.from("support_messages").insert({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
+        name:    name.trim(),
+        email:   email.trim().toLowerCase(),
         message: message.trim(),
         user_id: userData?.user?.id ?? null,
       });
@@ -96,176 +100,160 @@ export default function SupportChat() {
     }
   };
 
-  const handleReset = () => {
-    setPhase("idle");
-    setMessage("");
-    setErrorMsg("");
-  };
+  const handleReset = () => { setPhase("idle"); setMessage(""); setErrorMsg(""); };
 
   if (!hasMounted) return null;
 
   return (
     <>
-      {/* ── Floating Bubble ─────────────────────────────── */}
+      {/* ── Floating Bubble ────────────────────────────────────────────── */}
       <motion.button
         id="support-bubble"
         onClick={() => setOpen(v => !v)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.06, y: -2 }}
+        whileTap={{ scale: 0.94 }}
         aria-label="Support chat"
         style={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          zIndex: 9900,
-          width: 52,
-          height: 52,
+          position:     "fixed",
+          bottom:       24,
+          right:        24,
+          zIndex:       9900,
+          width:        50,
+          height:       50,
           borderRadius: "50%",
-          background: open
-            ? "rgba(30,40,35,0.95)"
-            : E.grad,
-          border: "none",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
+          background:   open ? "#f9fafb" : T.green,
+          border:       open ? `1.5px solid ${T.borderMid}` : "none",
+          cursor:       "pointer",
+          display:      "flex",
+          alignItems:   "center",
           justifyContent: "center",
-          color: "#fff",
-          boxShadow: open
-            ? "0 4px 20px rgba(0,0,0,0.3)"
-            : `0 6px 24px ${E.glow}`,
-          transition: "background 0.25s, box-shadow 0.25s",
+          color:        open ? T.textMid : "#fff",
+          boxShadow:    open
+            ? T.shadowSm
+            : "0 4px 16px rgba(22,163,74,0.25), 0 1px 4px rgba(0,0,0,0.08)",
+          transition: "all 0.22s ease",
         }}
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={open ? "x" : "chat"}
-            initial={{ rotate: -90, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: 0.18 }}
+            initial={{ rotate: -60, opacity: 0, scale: 0.7 }}
+            animate={{ rotate: 0,   opacity: 1, scale: 1   }}
+            exit={{   rotate:  60, opacity: 0, scale: 0.7 }}
+            transition={{ duration: 0.15 }}
             style={{ display: "flex" }}
           >
             {open ? <IconX /> : <IconChat />}
           </motion.span>
         </AnimatePresence>
-
-        {/* Pulse ring (when closed) */}
-        {!open && (
-          <span style={{
-            position: "absolute",
-            inset: -5,
-            borderRadius: "50%",
-            border: `2px solid ${E.solid}`,
-            animation: "chatPulse 2.4s ease-out infinite",
-            pointerEvents: "none",
-          }} />
-        )}
       </motion.button>
 
-      {/* ── Chat Panel ──────────────────────────────────── */}
+      {/* ── Panel ──────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {open && (
           <motion.div
             id="support-panel"
             key="panel"
-            initial={{ opacity: 0, y: 14, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 460, damping: 34 }}
+            initial={{ opacity: 0, y: 12, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0,  scale: 1    }}
+            exit={{   opacity: 0, y: 8,  scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 480, damping: 36 }}
             style={{
-              position: "fixed",
-              bottom: 88,
-              right: 24,
-              zIndex: 9899,
-              width: "min(340px, calc(100vw - 48px))",
+              position:    "fixed",
+              bottom:      84,
+              right:       24,
+              zIndex:      9899,
+              width:       "min(340px, calc(100vw - 48px))",
               borderRadius: 20,
-              overflow: "hidden",
-              background: "rgba(12,12,18,0.97)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.55), 0 2px 12px rgba(99,102,241,0.12)",
-              backdropFilter: "blur(20px)",
-              fontFamily: "'Nunito', sans-serif",
+              overflow:    "hidden",
+              background:  T.bg,
+              border:      `1px solid ${T.border}`,
+              boxShadow:   "0 8px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05)",
+              fontFamily:  "'Nunito', sans-serif",
             }}
           >
-            {/* Header */}
+            {/* Header — clean white + green strip */}
             <div style={{
-              background: E.headerG,
-              padding: "16px 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
+              background:  T.bgMuted,
+              borderBottom: `1px solid ${T.border}`,
+              padding:     "16px 18px",
+              display:     "flex",
+              alignItems:  "center",
+              gap:         12,
             }}>
+              {/* Icon badge */}
               <div style={{
-                width: 38,
-                height: 38,
+                width:        38,
+                height:       38,
                 borderRadius: "50%",
-                background: "rgba(255,255,255,0.15)",
-                border: "1.5px solid rgba(255,255,255,0.2)",
-                display: "flex",
-                alignItems: "center",
+                background:   T.greenPale,
+                border:       `1.5px solid ${T.borderMid}`,
+                display:      "flex",
+                alignItems:   "center",
                 justifyContent: "center",
-                color: "#fff",
-                flexShrink: 0,
-              }}><IconHeadset /></div>
-              <div>
-                <p style={{ margin: 0, color: "#fff", fontWeight: 800, fontSize: "0.95rem" }}>
+                color:        T.green,
+                flexShrink:   0,
+              }}>
+                <IconHeadset />
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, color: T.textDark, fontWeight: 800, fontSize: "0.92rem" }}>
                   XyncRoom Support
                 </p>
-                <p style={{ margin: 0, color: "rgba(255,255,255,0.65)", fontSize: "0.75rem", fontWeight: 600 }}>
+                <p style={{ margin: 0, color: T.textLight, fontSize: "0.73rem", fontWeight: 600, marginTop: 1 }}>
                   We'll reply to your email
                 </p>
               </div>
+              {/* Online dot */}
+              <div style={{
+                width: 8, height: 8, borderRadius: "50%",
+                background: T.greenLight,
+                flexShrink: 0,
+              }} />
             </div>
 
             {/* Body */}
-            <div style={{ padding: "18px 20px 20px" }}>
+            <div style={{ padding: "18px 18px 20px" }}>
               <AnimatePresence mode="wait">
 
-                {/* ── Success ── */}
+                {/* Success */}
                 {phase === "success" && (
                   <motion.div
                     key="success"
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    style={{ textAlign: "center", padding: "20px 0 12px" }}
+                    style={{ textAlign: "center", padding: "16px 0 8px" }}
                   >
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 280, delay: 0.1 }}
+                      transition={{ type: "spring", stiffness: 300, delay: 0.08 }}
                       style={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: "50%",
-                        background: E.soft,
-                        border: `2px solid ${E.ring}`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        width: 56, height: 56, borderRadius: "50%",
+                        background: T.greenPale,
+                        border: `1.5px solid ${T.borderMid}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
                         margin: "0 auto 14px",
-                        fontSize: "1.8rem",
+                        fontSize: "1.5rem",
                       }}
-                    >
-                      ✅
-                    </motion.div>
-                    <p style={{ color: "#f8fafc", fontWeight: 800, fontSize: "1rem", margin: "0 0 6px" }}>
-                      Message Sent!
+                    >✓</motion.div>
+                    <p style={{ color: T.textDark, fontWeight: 800, fontSize: "0.95rem", margin: "0 0 6px" }}>
+                      Message sent!
                     </p>
-                    <p style={{ color: "rgba(248,250,252,0.55)", fontSize: "0.82rem", fontWeight: 600, margin: "0 0 20px", lineHeight: 1.5 }}>
-                      We'll get back to you at<br />
-                      <span style={{ color: "#818cf8" }}>{email}</span>
+                    <p style={{ color: T.textMid, fontSize: "0.8rem", fontWeight: 600, margin: "0 0 18px", lineHeight: 1.5 }}>
+                      We'll reply to <span style={{ color: T.greenText, fontWeight: 700 }}>{email}</span>
                     </p>
                     <button
                       onClick={handleReset}
                       style={{
-                        background: "rgba(255,255,255,0.06)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        color: "#f8fafc",
-                        padding: "9px 22px",
+                        background: T.greenPale,
+                        border: `1px solid ${T.borderMid}`,
+                        color: T.greenText,
+                        padding: "8px 20px",
                         borderRadius: "100px",
                         fontWeight: 700,
-                        fontSize: "0.85rem",
+                        fontSize: "0.82rem",
                         cursor: "pointer",
                         fontFamily: "'Nunito', sans-serif",
                       }}
@@ -275,32 +263,32 @@ export default function SupportChat() {
                   </motion.div>
                 )}
 
-                {/* ── Form ── */}
+                {/* Form */}
                 {phase !== "success" && (
                   <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-                    {/* Welcome bubble */}
+                    {/* Welcome pill */}
                     <div style={{
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.07)",
-                      borderRadius: "14px 14px 14px 4px",
-                      padding: "12px 14px",
+                      background:   T.bgMuted,
+                      border:       `1px solid ${T.border}`,
+                      borderRadius: "12px 12px 12px 3px",
+                      padding:      "11px 14px",
                       marginBottom: 16,
                     }}>
-                      <p style={{ margin: 0, color: "#f8fafc", fontWeight: 700, fontSize: "0.88rem", lineHeight: 1.5 }}>
-                        👋 Hi! Having trouble with XyncRoom? Tell us below and we'll help you out.
+                      <p style={{ margin: 0, color: T.textDark, fontWeight: 700, fontSize: "0.85rem", lineHeight: 1.55 }}>
+                        👋 Hi! Facing an issue? Tell us and we'll sort it out.
                       </p>
                     </div>
 
-                    {/* Inputs */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {/* Fields */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
                       <input
                         id="support-name"
                         type="text"
                         placeholder="Your name"
                         value={name}
                         onChange={e => { setName(e.target.value); setErrorMsg(""); }}
-                        style={fieldStyle}
+                        style={field}
                       />
                       <input
                         id="support-email"
@@ -308,7 +296,7 @@ export default function SupportChat() {
                         placeholder="Your email"
                         value={email}
                         onChange={e => { setEmail(e.target.value); setErrorMsg(""); }}
-                        style={fieldStyle}
+                        style={field}
                       />
                       <textarea
                         id="support-message"
@@ -317,7 +305,7 @@ export default function SupportChat() {
                         value={message}
                         onChange={e => { setMessage(e.target.value); setErrorMsg(""); }}
                         rows={3}
-                        style={{ ...fieldStyle, resize: "none", lineHeight: 1.6 }}
+                        style={{ ...field, resize: "none", lineHeight: 1.6 }}
                       />
                     </div>
 
@@ -325,18 +313,18 @@ export default function SupportChat() {
                     <AnimatePresence>
                       {errorMsg && (
                         <motion.p
-                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                          animate={{ opacity: 1, height: "auto", marginTop: 8 }}
-                          exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
                           style={{
-                            color: "#fca5a5",
-                            fontSize: "0.78rem",
+                            color: "#dc2626",
+                            fontSize: "0.76rem",
                             fontWeight: 700,
-                            margin: 0,
+                            margin: "8px 0 0",
                             padding: "7px 12px",
-                            background: "rgba(239,68,68,0.1)",
-                            borderRadius: 10,
-                            border: "1px solid rgba(239,68,68,0.2)",
+                            background: "#fef2f2",
+                            borderRadius: 8,
+                            border: "1px solid #fecaca",
                           }}
                         >
                           {errorMsg}
@@ -349,28 +337,29 @@ export default function SupportChat() {
                       id="support-send"
                       onClick={handleSubmit}
                       disabled={phase === "sending"}
-                      whileHover={phase !== "sending" ? { scale: 1.02 } : {}}
+                      whileHover={phase !== "sending" ? { y: -1 } : {}}
                       whileTap={phase !== "sending" ? { scale: 0.98 } : {}}
                       style={{
-                        marginTop: 14,
-                        width: "100%",
-                        background: phase === "sending"
-                          ? "rgba(16,185,129,0.35)"
-                          : E.grad,
-                        border: "none",
-                        color: "#fff",
-                        padding: "13px 20px",
-                        borderRadius: 13,
-                        fontWeight: 800,
-                        fontSize: "0.9rem",
-                        cursor: phase === "sending" ? "not-allowed" : "pointer",
-                        fontFamily: "'Nunito', sans-serif",
-                        display: "flex",
-                        alignItems: "center",
+                        marginTop:    13,
+                        width:        "100%",
+                        background:   phase === "sending" ? "#86efac" : T.green,
+                        border:       "none",
+                        color:        "#fff",
+                        padding:      "12px 20px",
+                        borderRadius: 12,
+                        fontWeight:   800,
+                        fontSize:     "0.88rem",
+                        cursor:       phase === "sending" ? "not-allowed" : "pointer",
+                        fontFamily:   "'Nunito', sans-serif",
+                        display:      "flex",
+                        alignItems:   "center",
                         justifyContent: "center",
-                        gap: 8,
-                        boxShadow: phase !== "sending" ? `0 4px 16px ${E.ring}` : "none",
-                        transition: "background 0.2s, box-shadow 0.2s",
+                        gap:          7,
+                        boxShadow:    phase !== "sending"
+                          ? "0 2px 12px rgba(22,163,74,0.2)"
+                          : "none",
+                        transition: "all 0.18s ease",
+                        letterSpacing: "0.01em",
                       }}
                     >
                       {phase === "sending" ? (
@@ -379,8 +368,8 @@ export default function SupportChat() {
                             animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, duration: 0.75, ease: "linear" }}
                             style={{
-                              width: 16, height: 16,
-                              border: "2.5px solid rgba(255,255,255,0.3)",
+                              width: 14, height: 14,
+                              border: "2px solid rgba(255,255,255,0.4)",
                               borderTopColor: "#fff",
                               borderRadius: "50%",
                             }}
@@ -394,10 +383,11 @@ export default function SupportChat() {
 
                     <p style={{
                       textAlign: "center",
-                      color: "rgba(248,250,252,0.3)",
-                      fontSize: "0.72rem",
+                      color:     T.textLight,
+                      fontSize:  "0.7rem",
                       fontWeight: 600,
-                      margin: "10px 0 0",
+                      margin:    "9px 0 0",
+                      letterSpacing: "0.02em",
                     }}>
                       🔒 Private & secure
                     </p>
@@ -409,38 +399,31 @@ export default function SupportChat() {
         )}
       </AnimatePresence>
 
-      {/* Keyframes */}
       <style>{`
-        @keyframes chatPulse {
-          0%   { transform: scale(1);   opacity: 0.9; }
-          70%  { transform: scale(1.7); opacity: 0;   }
-          100% { transform: scale(1.7); opacity: 0;   }
-        }
         #support-panel input::placeholder,
-        #support-panel textarea::placeholder {
-          color: rgba(248,250,252,0.28);
-        }
+        #support-panel textarea::placeholder { color: #c4c4c4; }
         #support-panel input:focus,
         #support-panel textarea:focus {
           outline: none;
-          border-color: rgba(16,185,129,0.55) !important;
-          box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+          border-color: #86efac !important;
+          box-shadow: 0 0 0 3px rgba(134,239,172,0.25);
         }
       `}</style>
     </>
   );
 }
 
-const fieldStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "11px 13px",
-  borderRadius: 11,
-  border: "1px solid rgba(255,255,255,0.08)",
-  background: "rgba(255,255,255,0.04)",
-  color: "#f8fafc",
-  fontSize: "0.88rem",
-  fontWeight: 600,
-  fontFamily: "'Nunito', sans-serif",
-  boxSizing: "border-box",
-  transition: "border-color 0.2s, box-shadow 0.2s",
+// ── Field style ───────────────────────────────────────────────────────────────
+const field: React.CSSProperties = {
+  width:        "100%",
+  padding:      "10px 13px",
+  borderRadius: 10,
+  border:       "1.5px solid #e8f5ee",
+  background:   "#f9fafb",
+  color:        "#111827",
+  fontSize:     "0.86rem",
+  fontWeight:   600,
+  fontFamily:   "'Nunito', sans-serif",
+  boxSizing:    "border-box",
+  transition:   "border-color 0.18s, box-shadow 0.18s",
 };

@@ -16,7 +16,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, Video, Clock, Copy, Plus, ArrowRight, Home, Users, Settings, Calendar as CalendarIcon, Search, Star } from "lucide-react";
@@ -155,10 +155,10 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
     setHasMounted(true);
   }, []);
 
-  const handleIntroComplete = () => {
+  const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
     sessionStorage.setItem("xy_dashboard_intro_seen", "true");
-  };
+  }, []);
 
   const handleSignOut = () => {
     setIsSigningOut(true);

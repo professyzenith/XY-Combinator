@@ -148,7 +148,7 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
   }, []);
 
   useEffect(() => {
-    const hasSeenIntro = sessionStorage.getItem("xy_intro_seen");
+    const hasSeenIntro = sessionStorage.getItem("xy_dashboard_intro_seen");
     if (hasSeenIntro) {
       setIntroComplete(true);
     }
@@ -157,7 +157,7 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
 
   const handleIntroComplete = () => {
     setIntroComplete(true);
-    sessionStorage.setItem("xy_intro_seen", "true");
+    sessionStorage.setItem("xy_dashboard_intro_seen", "true");
   };
 
   const handleSignOut = () => {

@@ -19,11 +19,23 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, Video, Clock, Copy, Plus, ArrowRight, Home, Users, Settings, Calendar as CalendarIcon, Search, Star } from "lucide-react";
+import { LogOut, Video, Clock, Copy, Plus, ArrowRight, Home, Users, Settings, Calendar as CalendarIcon, Search, Star, Inbox } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import IntroAnimation from "@/components/IntroAnimation";
 import ScheduleMeetingForm from "./ScheduleMeetingForm";
+
+// ── Admin config ──────────────────────────────────────────────────────────────
+const ADMIN_EMAIL = "jhapiitm@gmail.com";
+
+interface SupportMessage {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  status: string;
+  created_at: string;
+}
 
 interface UserInfo {
   email: string;
@@ -40,7 +52,27 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
   const [isStartingMeeting, setIsStartingMeeting] = useState(false);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'home' | 'schedule' | 'settings'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'schedule' | 'settings' | 'inbox'>('home');
+  const isAdmin = user.email === ADMIN_EMAIL;
+
+  // Inbox state
+  const [messages, setMessages] = useState<SupportMessage[]>([]);
+  const [inboxLoading, setInboxLoading] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // Fetch support messages when inbox tab opens (admin only)
+  useEffect(() => {
+    if (activeTab !== 'inbox' || !isAdmin) return;
+    setInboxLoading(true);
+    const sb = createClient();
+    sb.from('support_messages')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        setMessages((data as SupportMessage[]) ?? []);
+        setInboxLoading(false);
+      });
+  }, [activeTab, isAdmin]);
 
   // Settings states
   const [settingsName, setSettingsName] = useState(user.fullName);
@@ -293,6 +325,24 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
             <Star size={20} strokeWidth={2.5} />
             <span>Upgrade</span>
           </div>
+
+          {/* Inbox — visible to admin only */}
+          {isAdmin && (
+            <div
+              onClick={() => setActiveTab('inbox')}
+              style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: activeTab === 'inbox' ? "#166534" : "transparent", color: activeTab === 'inbox' ? "#fff" : "#16a34a", fontWeight: 700, cursor: "pointer", transition: "all 0.2s", borderRadius: "100px", boxShadow: activeTab === 'inbox' ? "0 8px 24px rgba(22,101,52,0.2)" : "none", fontSize: "0.95rem", marginTop: 4 }}
+              onMouseOver={(e) => { if(activeTab !== 'inbox') { e.currentTarget.style.background = "#f0fdf4"; }}}
+              onMouseOut={(e) => { if(activeTab !== 'inbox') { e.currentTarget.style.background = "transparent"; }}}
+            >
+              <Inbox size={20} strokeWidth={2.5} />
+              <span>Inbox</span>
+              {messages.length > 0 && (
+                <span style={{ marginLeft: "auto", background: "#dc2626", color: "#fff", fontSize: "0.68rem", fontWeight: 800, padding: "2px 7px", borderRadius: "100px" }}>
+                  {messages.length}
+                </span>
+              )}
+            </div>
+          )}
         </nav>
 
         {/* Sign out at bottom */}
@@ -335,6 +385,12 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
               <>
                 <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0 0 4px 0", color: textDark, letterSpacing: "-1px" }}>Settings</h1>
                 <p style={{ margin: 0, color: textLight, fontSize: "1rem", fontWeight: 600 }}>Manage your personal details and preferences</p>
+              </>
+            )}
+            {activeTab === 'inbox' && (
+              <>
+                <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0 0 4px 0", color: textDark, letterSpacing: "-1px" }}>📥 Support Inbox</h1>
+                <p style={{ margin: 0, color: textLight, fontSize: "1rem", fontWeight: 600 }}>Messages from your users</p>
               </>
             )}
           </motion.div>
@@ -464,6 +520,102 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
 
           {activeTab === 'schedule' && (
             <ScheduleMeetingForm userFullName={user.fullName} />
+          )}
+
+          {/* ── Admin Inbox ──────────────────────────────────────────── */}
+          {activeTab === 'inbox' && isAdmin && (
+            <motion.div variants={itemVariants} style={{ maxWidth: 680 }}>
+              {inboxLoading ? (
+                <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                    style={{ width: 32, height: 32, border: "3px solid #bbf7d0", borderTopColor: "#16a34a", borderRadius: "50%" }}
+                  />
+                </div>
+              ) : messages.length === 0 ? (
+                <div style={{ background: bgCard, borderRadius: 24, padding: "60px 40px", textAlign: "center", boxShadow: softShadow }}>
+                  <div style={{ fontSize: "3rem", marginBottom: 16 }}>📭</div>
+                  <p style={{ color: textDark, fontWeight: 800, fontSize: "1.1rem", margin: "0 0 8px" }}>No messages yet</p>
+                  <p style={{ color: textLight, fontWeight: 600, margin: 0 }}>When users send support messages, they'll show up here.</p>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {messages.map((msg) => (
+                    <motion.div
+                      key={msg.id}
+                      layout
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onClick={() => setExpandedId(expandedId === msg.id ? null : msg.id)}
+                      style={{
+                        background: bgCard,
+                        borderRadius: 20,
+                        padding: "18px 22px",
+                        boxShadow: softShadow,
+                        cursor: "pointer",
+                        border: expandedId === msg.id ? "1.5px solid #bbf7d0" : "1.5px solid transparent",
+                        transition: "border 0.2s",
+                      }}
+                    >
+                      {/* Top row */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#dcfce7", border: "1.5px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#166534", fontSize: "1rem", flexShrink: 0 }}>
+                          {msg.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ margin: 0, color: textDark, fontWeight: 800, fontSize: "0.92rem" }}>{msg.name}</p>
+                          <p style={{ margin: 0, color: "#16a34a", fontWeight: 600, fontSize: "0.78rem" }}>{msg.email}</p>
+                        </div>
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <p style={{ margin: "0 0 4px", color: textLight, fontSize: "0.72rem", fontWeight: 600 }}>
+                            {new Date(msg.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                          <span style={{ background: msg.status === 'resolved' ? '#dcfce7' : '#fef9c3', color: msg.status === 'resolved' ? '#166534' : '#854d0e', fontSize: "0.68rem", fontWeight: 800, padding: "2px 8px", borderRadius: "100px" }}>
+                            {msg.status === 'resolved' ? '✓ Resolved' : '● Open'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Preview (collapsed) */}
+                      {expandedId !== msg.id && (
+                        <p style={{ margin: "8px 0 0 52px", color: textLight, fontWeight: 600, fontSize: "0.83rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {msg.message}
+                        </p>
+                      )}
+
+                      {/* Full message (expanded) */}
+                      <AnimatePresence>
+                        {expandedId === msg.id && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 12, padding: "14px 16px", marginTop: 12 }}>
+                              <p style={{ margin: 0, color: "#14532d", fontWeight: 600, fontSize: "0.88rem", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+                                {msg.message}
+                              </p>
+                            </div>
+                            <p style={{ margin: "10px 0 0", color: textLight, fontSize: "0.76rem", fontWeight: 600 }}>
+                              Reply to:{" "}
+                              <a
+                                href={`mailto:${msg.email}?subject=Re: Your XyncRoom Support Request`}
+                                onClick={e => e.stopPropagation()}
+                                style={{ color: "#16a34a", fontWeight: 700, textDecoration: "none" }}
+                              >
+                                {msg.email}
+                              </a>
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
           )}
 
           {activeTab === 'settings' && (

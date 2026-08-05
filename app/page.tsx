@@ -20,7 +20,6 @@
 
 import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
-import IntroAnimation from "@/components/IntroAnimation";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import MarqueeSection from "@/components/MarqueeSection";
@@ -115,30 +114,11 @@ function AmbientBackground() {
    PAGE
    ───────────────────────────────────────────────────────────────────────────── */
 export default function Home() {
-  const [introComplete, setIntroComplete] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    const hasSeenIntro = sessionStorage.getItem("xy_intro_seen");
-    if (hasSeenIntro) {
-      setIntroComplete(true);
-    }
-    setHasMounted(true);
-  }, []);
-
-  const handleIntroComplete = useCallback(() => {
-    setIntroComplete(true);
-    sessionStorage.setItem("xy_intro_seen", "true");
-  }, []);
-
-  if (!hasMounted) return null;
-
   return (
     <>
       <a href="#main-content" className="skip-to-content">Skip to content</a>
       <CustomCursor />
       <ScrollProgress />
-      {!introComplete && <IntroAnimation onComplete={handleIntroComplete} />}
       <AmbientBackground />
 
       <div
@@ -146,7 +126,7 @@ export default function Home() {
         role="main"
         style={{
           position: "relative", zIndex: 1,
-          opacity: introComplete ? 1 : 0,
+          opacity: 1,
           transition: "opacity 0.9s ease",
         }}
       >
@@ -154,7 +134,7 @@ export default function Home() {
           <ScrollFXInit />
           <Navbar />
           <main>
-            <Hero visible={introComplete} />
+            <Hero visible={true} />
             <MarqueeSection />
             <FeaturesSection />
             <PricingSection />

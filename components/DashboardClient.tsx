@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { LogOut, Video, Clock, Copy, Plus, ArrowRight, Home, Users, Settings, Calendar as CalendarIcon, Search, Star } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { motion } from "framer-motion";
+import IntroAnimation from "@/components/IntroAnimation";
 import ScheduleMeetingForm from "./ScheduleMeetingForm";
 
 interface UserInfo {
@@ -50,6 +51,9 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
   const [settingsMessage, setSettingsMessage] = useState("");
 
   const [personalMeetingId, setPersonalMeetingId] = useState("");
+
+  const [introComplete, setIntroComplete] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     let id = localStorage.getItem("xyncroom_pm_id");
@@ -143,6 +147,19 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const hasSeenIntro = sessionStorage.getItem("xy_intro_seen");
+    if (hasSeenIntro) {
+      setIntroComplete(true);
+    }
+    setHasMounted(true);
+  }, []);
+
+  const handleIntroComplete = () => {
+    setIntroComplete(true);
+    sessionStorage.setItem("xy_intro_seen", "true");
+  };
+
   const handleSignOut = () => {
     setIsSigningOut(true);
     // Instantly navigate to the home page for a smooth, zero-delay transition
@@ -201,16 +218,22 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
   };
 
+  if (!hasMounted) return null;
+
   return (
-    <div style={{ 
-      display: "flex", 
-      minHeight: "100vh", 
-      background: bgApp, 
-      color: textDark, 
-      fontFamily: fontFam, 
-      padding: "24px", 
-      gap: "24px" 
-    }}>
+    <>
+      {!introComplete && <IntroAnimation onComplete={handleIntroComplete} />}
+      <div style={{ 
+        display: "flex", 
+        minHeight: "100vh", 
+        background: bgApp, 
+        color: textDark, 
+        fontFamily: fontFam, 
+        padding: "24px", 
+        gap: "24px",
+        opacity: introComplete ? 1 : 0,
+        transition: "opacity 0.9s ease"
+      }}>
       
       {/* 1. Left Sidebar Navigation (Floating Pill) */}
       <aside style={{ 
@@ -496,7 +519,7 @@ export default function DashboardClient({ user }: { user: UserInfo }) {
 
         </motion.div>
       </main>
-      
     </div>
+    </>
   );
 }

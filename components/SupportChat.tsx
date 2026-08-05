@@ -32,19 +32,20 @@ const IconHeadset = () => (
 
 // ── Design tokens — light, clean, green ──────────────────────────────────────
 const T = {
-  bg:         "#ffffff",
-  bgMuted:    "#f6fdf9",
-  border:     "#e8f5ee",
-  borderMid:  "#d1ead9",
+  bg:         "#f0fdf4",   // light mint green
+  bgMuted:    "#dcfce7",   // slightly richer mint
+  bgCard:     "#ffffff",   // white only for inputs
+  border:     "#bbf7d0",   // fresh green border
+  borderMid:  "#86efac",
   green:      "#16a34a",
   greenLight: "#22c55e",
   greenPale:  "#dcfce7",
   greenText:  "#166534",
-  textDark:   "#111827",
-  textMid:    "#6b7280",
-  textLight:  "#9ca3af",
-  shadow:     "0 4px 24px rgba(0,0,0,0.07)",
-  shadowSm:   "0 2px 8px rgba(0,0,0,0.05)",
+  textDark:   "#14532d",   // deep green for headings
+  textMid:    "#166534",
+  textLight:  "#4ade80",
+  shadow:     "0 4px 24px rgba(22,163,74,0.08)",
+  shadowSm:   "0 2px 8px rgba(22,163,74,0.06)",
 };
 
 export default function SupportChat() {
@@ -168,7 +169,7 @@ export default function SupportChat() {
               overflow:    "hidden",
               background:  T.bg,
               border:      `1px solid ${T.border}`,
-              boxShadow:   "0 8px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05)",
+              boxShadow:   "0 8px 40px rgba(22,163,74,0.12), 0 2px 8px rgba(0,0,0,0.04)",
               fontFamily:  "'Nunito', sans-serif",
             }}
           >
@@ -191,16 +192,16 @@ export default function SupportChat() {
                 display:      "flex",
                 alignItems:   "center",
                 justifyContent: "center",
-                color:        T.green,
+                color:        T.greenText,
                 flexShrink:   0,
               }}>
                 <IconHeadset />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, color: T.textDark, fontWeight: 800, fontSize: "0.92rem" }}>
+                <p style={{ margin: 0, color: "#14532d", fontWeight: 800, fontSize: "0.92rem" }}>
                   XyncRoom Support
                 </p>
-                <p style={{ margin: 0, color: T.textLight, fontSize: "0.73rem", fontWeight: 600, marginTop: 1 }}>
+                <p style={{ margin: 0, color: "#4ade80", fontSize: "0.73rem", fontWeight: 600, marginTop: 1 }}>
                   We'll reply to your email
                 </p>
               </div>
@@ -231,17 +232,17 @@ export default function SupportChat() {
                       transition={{ type: "spring", stiffness: 300, delay: 0.08 }}
                       style={{
                         width: 56, height: 56, borderRadius: "50%",
-                        background: T.greenPale,
-                        border: `1.5px solid ${T.borderMid}`,
+                        background: "#f0fdf4",
+                      border: `1.5px solid ${T.border}`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         margin: "0 auto 14px",
                         fontSize: "1.5rem",
                       }}
                     >✓</motion.div>
-                    <p style={{ color: T.textDark, fontWeight: 800, fontSize: "0.95rem", margin: "0 0 6px" }}>
+                    <p style={{ color: "#14532d", fontWeight: 800, fontSize: "0.95rem", margin: "0 0 6px" }}>
                       Message sent!
                     </p>
-                    <p style={{ color: T.textMid, fontSize: "0.8rem", fontWeight: 600, margin: "0 0 18px", lineHeight: 1.5 }}>
+                    <p style={{ color: "#166534", fontSize: "0.8rem", fontWeight: 600, margin: "0 0 18px", lineHeight: 1.5 }}>
                       We'll reply to <span style={{ color: T.greenText, fontWeight: 700 }}>{email}</span>
                     </p>
                     <button
@@ -275,7 +276,7 @@ export default function SupportChat() {
                       padding:      "11px 14px",
                       marginBottom: 16,
                     }}>
-                      <p style={{ margin: 0, color: T.textDark, fontWeight: 700, fontSize: "0.85rem", lineHeight: 1.55 }}>
+                      <p style={{ margin: 0, color: "#14532d", fontWeight: 700, fontSize: "0.85rem", lineHeight: 1.55 }}>
                         👋 Hi! Facing an issue? Tell us and we'll sort it out.
                       </p>
                     </div>
@@ -418,9 +419,9 @@ const field: React.CSSProperties = {
   width:        "100%",
   padding:      "10px 13px",
   borderRadius: 10,
-  border:       "1.5px solid #e8f5ee",
-  background:   "#f9fafb",
-  color:        "#111827",
+  border:       `1.5px solid #bbf7d0`,
+  background:   "#f0fdf4",
+  color:        "#14532d",
   fontSize:     "0.86rem",
   fontWeight:   600,
   fontFamily:   "'Nunito', sans-serif",
